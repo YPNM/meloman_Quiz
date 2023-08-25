@@ -1,8 +1,262 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ru">
   <head>
+    <!-- Обязательные метатеги -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/img/music_record.png">
+    <title>Meloman Quiz</title>
   </head>
+
   <body>
-    <a href="{{ url_for('admin.index') }}">Go to admin!</a>
+
+    <div class="intro">
+      <header class="header">
+        <div class="city-selector" type="button" data-bs-toggle="modal" data-bs-target="#cityModal">
+          <img src="../assets/img/location.png">
+          <h2 id="cityHeader">Город</h2>
+          <div class="modal fade" id="cityModal" tabindex="-1" aria-labelledby="cityModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="cityModalLabel">Выберите город</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Здесь вы можете добавить форму или список городов для выбора -->
+                  <ul>
+                    <li><a href="#" onclick="selectCity('Астана')">Астана</a></li>
+                    <li><a href="#" onclick="selectCity('Петропавловск')">Петропавловск</a></li>
+                    <li><a href="#">Киев</a></li>
+                    <!-- Добавьте свои города здесь -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+          <nav class="navbar navbar-expand-lg navbar-dark">
+                <a class="navbar-brand" href="index.html">
+                  <img src="/assets/img/logo 2.png" alt="" class="logo-header">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse ms-auto" id="navbarNav">
+                  <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="index.html">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="shedule.html">Расписание</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Фотоотчёты</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Мероприятия</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Контакты </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="table.html">Таблица </a>
+                    </li>
+                  </ul>
+                </div>
+            </nav>
+      </header>
+      <div class="title">
+        <h1>MELOMAN QUIZ</h1>
+      </div>
+      <div class="reg_btn">
+        <a href="https://wa.me/77755603383?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%AF%20%D1%85%D0%BE%D1%82%D0%B5%D0%BB%20%D0%B1%D1%8B%20%D0%B7%D0%B0%D1%80%D0%B5%D0%B3%D0%B8%D1%81%D1%82%D1%80%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%D1%81%D1%8F%20%D0%BD%D0%B0%20%D0%B1%D0%BB%D0%B8%D0%B6%D0%B0%D0%B9%D1%88%D1%83%D1%8E%20%D0%B8%D0%B3%D1%80%D1%83!"><button type="button" class="btn btn-outline-light">Зарегистрироваться на игру</button></a>
+      </div>
+      <div class="music_record">
+        <img src="../assets/img/music_record.png" draggable="false">
+      </div>
+    </div>
+    <div class="container">
+      <h2>БЛИЖАЙШИЕ ИГРЫ</h2>
+      <div class="next_games">
+        <div class="next-game-block">
+          <h1 class="game_name">НАЗВАНИЕ</h1>
+          <div class="date">
+            <img src="../assets/img/calendar.png">
+            <p>ДАТА :</p>
+          </div>
+          <div class="location">
+            <img src="../assets/img/home.png">
+            <p>МЕСТО :</p>
+          </div>
+          <div class="entry">
+            <p>ЗАПИСЬ:</p>
+            <p class="state">ОТКРЫТА</p>
+          </div>
+          <img src="../assets/img/rectangle_next_game.png">
+        </div>
+        <div class="next-game-block">
+          <h1 class="game_name">НАЗВАНИЕ</h1>
+          <div class="date">
+            <img src="../assets/img/calendar.png">
+            <p>ДАТА :</p>
+          </div>
+          <div class="location">
+            <img src="../assets/img/home.png">
+            <p>МЕСТО :</p>
+          </div>
+          <div class="entry">
+            <p>ЗАПИСЬ:</p>
+            <p class="state">ОТКРЫТА</p>
+          </div>
+          <img src="../assets/img/rectangle_next_game.png">
+        </div>
+        <div class="next-game-block">
+          <h1 class="game_name">НАЗВАНИЕ</h1>
+          <div class="date">
+            <img src="../assets/img/calendar.png">
+            <p>ДАТА :</p>
+          </div>
+          <div class="location">
+            <img src="../assets/img/home.png">
+            <p>МЕСТО :</p>
+          </div>
+          <div class="entry">
+            <p>ЗАПИСЬ:</p>
+            <p class="state">ОТКРЫТА</p>
+          </div>
+          <img src="../assets/img/rectangle_next_game.png">
+        </div>
+      </div>
+    </div>
+
+    <div class="shedule-btn">
+      <a href="shedule.html"><button type="button" class="btn btn-outline-light shedule-btn">РАСПИСАНИЕ ИГР</button></a>
+    </div>
+
+    <div class="details-container">
+        <h2>ДЕТАЛИ ПРОВЕДЕНИЯ ИГР</h2>
+        <div class="center-container">
+          <div class="frame">
+            <img src="../assets/img/video_bg.png" alt="Рамка">
+            <div class="video-container">
+              <iframe src="https://www.youtube.com/embed/xpIgD6HIgv4" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="details-text-container">
+      <div class="content-container">
+        <div class="combined-container">
+          <div class="image-container">
+            <img src="../assets/img/rectangle-under-video.png" id="dynamic-image">
+            <div class="text-container">
+              <h4>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur, quos dicta voluptatem numquam unde nam voluptas officia laborum, voluptatibus assumenda optio incidunt magni? Ipsam inventore quidem consequuntur ad aut qui.</h4>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="rules-btn">ПРАВИЛА ИГРЫ</button>
+      </div>
+    </div>
+
+    <div class="rules">
+      <img src="../assets/img/rule 1.png">
+      <img src="../assets/img/rule-2.png">
+      <img src="../assets/img/rule-3.png">
+    </div>
+
+
+    <div class="text-rules">
+      <div class="galochka">
+          <img src="../assets/img/galochka.png">
+          <div class="text-rules-container">
+            <h3>Lorem Ipsum</h3>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illo quasi quae atque perspiciatis sint qui dicta recusandae, harum quidem! Id voluptatum accusantium modi ad aliquam doloribus facilis voluptatem tenetur nam?</p>
+          </div>
+        </div>
+      <div class="galochka">
+        <img src="../assets/img/no-phones.png">
+        <div class="text-rules-container">
+          <h3>Lorem Ipsum</h3>
+          <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illo quasi quae atque perspiciatis sint qui dicta recusandae, harum quidem! Id voluptatum accusantium modi ad aliquam doloribus facilis voluptatem tenetur nam?</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="photos-container">
+      <h2>ФОТООТЧЁТЫ С ИГР</h2>
+      <div class="last-photos">
+        <div class="card" style="width: 18rem;">
+          <img src="../assets/img/photo.png" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Название Игры</h5>
+            <p class="card-text">ДАТА: </p>
+            <p class="card-text">МЕСТО: </p>
+            <a href="#" class="watch-photo-btn btn btn-primary">ДАЛЕЕ</a>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+          <img src="../assets/img/photo.png" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Название Игры</h5>
+            <p class="card-text">ДАТА: </p>
+            <p class="card-text">МЕСТО: </p>
+            <a href="#" class="watch-photo-btn btn btn-primary">ДАЛЕЕ</a>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+          <img src="../assets/img/photo.png" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Название Игры</h5>
+            <p class="card-text">ДАТА: </p>
+            <p class="card-text">МЕСТО: </p>
+            <a href="#" class="watch-photo-btn btn btn-primary">ДАЛЕЕ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container">
+      <div class="order-container">
+        <div class="buttons">
+          <a href="https://wa.me/77755603383?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%AF%20%D0%B1%D1%8B%20%D1%85%D0%BE%D1%82%D0%B5%D0%BB%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%D0%BA%D0%BE%D1%80%D0%BF%D0%BE%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B5%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5!"><button class="order-btn">ЗАКАЗАТЬ КОРПОРАТИВНОЕ МЕРОПРИЯТИЕ</button></a>
+          <a href="https://wa.me/77755603383?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%AF%20%D0%B1%D1%8B%20%D1%85%D0%BE%D1%82%D0%B5%D0%BB%20%D0%BA%D1%83%D0%BF%D0%B8%D1%82%D1%8C%20%D1%84%D1%80%D0%B0%D0%BD%D1%88%D0%B8%D0%B7%D1%83%20Meloman%20Quiz!"><button class="order-btn">ЗАКАЗАТЬ ФРАНШИЗУ</button></a>
+        </div>
+        <div class="music-key">
+          <img src="../assets/img/music-key.png">
+        </div>
+      </div>
+    </div>
+
+    <footer id="nav-footer" class="page-footer">
+      <div class="container footer-container">
+        <div class="logo-footer">
+          <a href="#"><img src="../assets/img/logo-footer.png" class="logo-footer"></a>
+        </div>
+        <div class="socials">
+          <img src="../assets/img/Instagram.png" class="instagram-footer">
+          <img src="../assets/img/Instagram.png" class="tik-tok-footer">
+          <img src="../assets/img/Instagram.png" class="youtube-footer">
+        </div>
+        <div class="numbers">
+          <a href="tel:+7 775 560 3383"><h5>+7 775 560 3383</h5></a>
+        </div>
+      </div>
+    </footer>
+    
+
+    <!-- Вариант 1: Bootstrap в связке с Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- Подключение вашего JavaScript файла -->
+    <script src="../assets/js/city-selector.js"></script>
   </body>
 </html>

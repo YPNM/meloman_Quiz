@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'Academy Engraved LET';
+    src: url('AcademyEngravedLetPlain.eot');
+    src: url('AcademyEngravedLetPlain.eot?#iefix') format('embedded-opentype'),
+        url('AcademyEngravedLetPlain.woff2') format('woff2'),
+        url('AcademyEngravedLetPlain.woff') format('woff'),
+        url('AcademyEngravedLetPlain.svg#AcademyEngravedLetPlain') format('svg');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+

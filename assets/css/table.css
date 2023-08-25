@@ -1,0 +1,214 @@
+@import "fonts.css";
+
+.raiting-description h2 {
+    margin-top: 15px;
+}
+
+.raiting-description p {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-family: 'Apparat';
+    color: #fff;
+    padding: 0px 300px;
+    font-size: 25px;
+}
+
+.top-comands-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 44px;
+    margin-bottom: 70px;
+    width: 100%;
+    height: 230px;
+    background: linear-gradient(to bottom, #461053,  #1e0533, #461053 );
+    box-shadow: 0px 0px 20px #dba63456;
+}
+
+.top-comand {
+   width: 210px;
+   height: 160px;
+   border: solid 4px;
+   border-color: #efd562;
+   border-radius: 20px;
+   background: linear-gradient(#462638, #5d354e);
+   position: relative; /* Установка родительского элемента как относительно позиционированного */
+   display: inline-block; /* Для того чтобы размер элемента соответствовал содержимому */
+   margin-right: 35px;
+}
+
+.name-place-container {
+    display: flex;
+}
+
+.name-place-container h5 {
+    padding-left: 10px;
+    padding-top: 5px;
+    color: #fff;
+    font-weight: 100;
+    font-size: 18px;
+    width: 120px;
+}
+
+.place {
+    position: absolute; /* Абсолютное позиционирование внутри родительского элемента */
+    right: 0;
+}
+
+.place img {
+    display: block;
+    border-radius: 0px 20px 0px 0px;
+}
+
+
+.place h4 {
+    position: absolute;
+    color: #ebce5c;
+    top: 4px;
+    right: 15px;
+}
+
+.score {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: #ebce5c;
+}
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    border: solid 4px;
+    border-color: #d0a336;
+    background: linear-gradient(#3b232b, #402c33);
+    justify-content: center;
+    border-radius: 20px 15px 15px 20px;
+    width: 40vw;
+    height: 50px;
+    padding-left: 20px;
+    font-size: 20px;
+    font-weight: 200;
+    font-family: 'Apparat';
+    color: #eed361;
+}
+
+.search-button {
+    display: flex;
+    align-items: center;
+    width: 70px;
+    height: 50px;
+    border-radius: 0px 30px 30px 0px;
+    background: linear-gradient(to bottom, #ead673, #c9a44b);
+    background-color: #ead673;
+    transition: all 0.3s;
+}
+
+.search-button::before {
+    content: '';
+    display: block;
+    background: #1e0533;
+    width: 15px;
+    height: 50px;
+    border-radius: 0px 80px 80px 0px;
+}
+
+.search-button:hover {
+    background: #fff;
+}
+
+.search-button img {
+    width: 35px;
+    height: 35px;
+    margin-left: 6px;
+}
+
+::-webkit-input-placeholder {
+    color: #eed361;
+    font-size: 20px;
+    font-weight: 200;
+    font-family: 'Apparat';
+}
+
+.show-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.btn-game {
+    width: 100px;
+    height: 0px;
+    border-bottom: 50px solid green;
+    border-left: 0 solid transparent;
+    border-right: 50px solid transparent;
+}
+
+.btn-season {
+    width: 100px;
+    height: 0px;
+    border-top: 50px solid green;
+    border-left: 50px solid transparent;
+    border-right: 0 solid transparent;
+}
+
+.table {
+    display: grid;
+    justify-content: center;
+    margin-bottom: 60px;
+}
+
+.table-header {
+    font-family: 'Apparat';
+    font-size: 25px;
+    background: linear-gradient(to bottom, #ead673, #d0a336);
+    width: 70vw;
+    border-radius: 20px 20px 0px 0px;
+}
+
+.game-table {
+    border: 3px solid #d0a336;
+    width: 70vw;
+    margin-top: -2px;
+    background: linear-gradient(to bottom, #461053,  #1e0533, #461053 );
+    color: #fff;
+    font-family: 'Apparat';
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.game-table th {
+    padding: 15px;
+}
+
+thead th:nth-child(1) {
+    width: 1%;
+}
+
+thead th:nth-child(2) {
+    width: 70%;
+}
+
+thead th:nth-child(3) {
+    width: 9%;
+}
+
+thead th:nth-child(4) {
+    width: 10%;
+}
+
+thead th:nth-child(5) {
+    width: 10%;
+}
+
+
+th,
+td {
+  padding: 10px;
+}
