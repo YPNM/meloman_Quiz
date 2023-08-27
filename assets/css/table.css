@@ -10,7 +10,7 @@
     text-align: center;
     font-family: 'Apparat';
     color: #fff;
-    padding: 0px 300px;
+    padding: 0px 10vw;
     font-size: 25px;
 }
 
@@ -35,7 +35,6 @@
    background: linear-gradient(#462638, #5d354e);
    position: relative; /* Установка родительского элемента как относительно позиционированного */
    display: inline-block; /* Для того чтобы размер элемента соответствовал содержимому */
-   margin-right: 35px;
 }
 
 .name-place-container {
@@ -136,46 +135,163 @@
 }
 
 .show-buttons {
+    margin-left: 60vw;
+    width: 300px;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 50px;
     margin-bottom: 20px;
 }
 
-.btn-game {
-    width: 100px;
-    height: 0px;
-    border-bottom: 50px solid green;
-    border-left: 0 solid transparent;
-    border-right: 50px solid transparent;
+.game-label-button,
+.season-label-button {
+    z-index: 2;
+    text-align: center;
+    font-size: 14px;
+    position: absolute;
+    bottom: 10px;
+    left: 45%; /* Центрирование текста над кнопками */
+    transform: translateX(-50%);
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 
-.btn-season {
-    width: 100px;
-    height: 0px;
-    border-top: 50px solid green;
-    border-left: 50px solid transparent;
-    border-right: 0 solid transparent;
+.season-label-button {
+    left: 78%; /* Центрирование текста над кнопками */
 }
+
+input[type="radio"] {
+    display: none;
+}
+  
+
+.game-btn {
+    position: absolute;
+    bottom: 0;
+    width: 100px; /* Ширина кнопки */
+    border-right: 50px solid transparent;
+    border-bottom: 40px solid #e1bd4e; /* Цвет кнопки */
+    cursor: pointer;
+    border-radius: 10px 0px 0px 10px;
+    transition: all 0.2s;
+}
+
+.season-btn {
+    position: absolute;
+    bottom: 0;
+    width: 100px; /* Ширина кнопки */
+    border-left: 50px solid transparent;
+    border-top: 40px solid #e1bd4e; /* Цвет кнопки */
+    cursor: pointer;
+    border-radius: 0px 10px 10px 0px;
+    left: 170px;
+    transition: all 0.2s;
+}
+
+input[type="radio"]:hover + .game-btn {
+    border-bottom: 40px solid #ffe38f;
+}
+
+input[type="radio"]:hover + .season-btn {
+    border-top: 40px solid #ffe38f;
+}
+
+input[type="radio"]:checked + .game-btn {
+    border-bottom: 40px solid #ffffff;
+}
+
+input[type="radio"]:checked + .season-btn {
+    border-top: 40px solid #ffffff;
+}
+
+.dropbtn {
+    height: 40px;
+    background-color: #e1bd4e;
+    padding: 0px 15px;
+    border-radius: 10px;
+    color: black;
+    font-size: 16px;
+    border: none;
+    transition: all 0.2s;
+  }
+  
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    left: -150px;
+    bottom: -5px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content button {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {background-color: #f1f1f1}
+  
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  .dropdown:hover .dropbtn {
+    background-color: #ffe38f;
+  }
+
 
 .table {
     display: grid;
-    justify-content: center;
     margin-bottom: 60px;
+    justify-content: center;
 }
 
-.table-header {
+table {
+    border: 3px solid #d0a336;
+    width: 80vw;
+}
+
+
+.season-table thead,
+.game-table thead {
     font-family: 'Apparat';
     font-size: 25px;
     background: linear-gradient(to bottom, #ead673, #d0a336);
-    width: 70vw;
     border-radius: 20px 20px 0px 0px;
 }
 
-.game-table {
-    border: 3px solid #d0a336;
-    width: 70vw;
-    margin-top: -2px;
+.season-table tbody,
+.game-table tbody {
+    margin-top: -1px;
     background: linear-gradient(to bottom, #461053,  #1e0533, #461053 );
     color: #fff;
     font-family: 'Apparat';
@@ -183,32 +299,92 @@
     font-size: 20px;
 }
 
-.game-table th {
-    padding: 15px;
-}
 
-thead th:nth-child(1) {
+.season-table thead th:nth-child(1) {
     width: 1%;
 }
 
-thead th:nth-child(2) {
-    width: 70%;
+.season-table thead th:nth-child(2) {
+    width: 60%;
 }
 
-thead th:nth-child(3) {
+.season-table thead th:nth-child(3) {
     width: 9%;
 }
 
-thead th:nth-child(4) {
-    width: 10%;
+.season-table thead th:nth-child(4) {
+    width: 25%;
 }
 
-thead th:nth-child(5) {
-    width: 10%;
+.season-table thead th:nth-child(5) {
+    width: 5%;
+}
+
+.game-table thead th:nth-child(1){
+    width: 1%;
 }
 
 
 th,
 td {
-  padding: 10px;
+    border: 1px solid #ead673;
+    padding: 10px;
+}
+
+.carousel-inner {
+    width: 300px;
+    overflow: hidden; /* Добавьте этот стиль */
+}
+
+
+.carousel-item.active {
+    display: flex;
+    justify-content: center;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 50px; /* Ширина кнопок управления */
+}
+
+
+@media screen and (max-width: 780px) {
+    .raiting-description p {
+        font-size: 20px;
+    }
+
+    .search-form {
+        width: 100vw;
+    }
+
+    .search-input {
+        width: 65vw;
+    }
+
+    .show-buttons {
+        margin-left: 20vw;
+        display: flex;
+        justify-content: center;
+    }
+
+    table {
+        width: 100vw;
+        border: 0px;
+        margin-left: 0;
+    }
+
+    .season-table thead,
+    .game-table thead {
+        font-size: 20px;
+    }
+
+    .season-table tbody,
+    .game-table tbody {
+        font-size: 18px;
+    }
+
+    .dropdown-content {
+        min-width: 100px;
+    }
+
 }

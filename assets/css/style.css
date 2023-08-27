@@ -548,6 +548,10 @@ a {
 }
 
 @media screen and (max-width: 767px) {
+    html {
+        overflow-x: hidden;
+    }
+
     .city-selector h2 {
         font-size: 15px;
     }
