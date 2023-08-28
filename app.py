@@ -21,18 +21,21 @@ secureApp.config['SECURITY_REGISTERABLE'] = True
 
 secureApp.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 secureApp.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-secureApp.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://{config.DB_USER}:{config.DB_PASS}@{config.DB_HOST}:3306/{config.DB_DATABASE}'
+secureApp.config[
+    'SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://{config.DB_USER}:{config.DB_PASS}@{config.DB_HOST}:3306/{config.DB_DATABASE}'
 
 db = SQLAlchemy(secureApp)
 
 roles_users_table = db.Table('roles_users',
-                            db.Column('users_id', db.Integer(), db.ForeignKey('users.id')),
-                            db.Column('roles_id', db.Integer(), db.ForeignKey('roles.id')))
+                             db.Column('users_id', db.Integer(), db.ForeignKey('users.id')),
+                             db.Column('roles_id', db.Integer(), db.ForeignKey('roles.id')))
+
 
 class Roles(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
+
 
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer(), primary_key=True)
@@ -42,9 +45,11 @@ class Users(db.Model, UserMixin):
 
     roles = db.relationship('Roles', secondary=roles_users_table, backref='user', lazy=True)
 
+
 # Create a datastore and instantiate Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, Users, Roles)
 security = Security(secureApp, user_datastore)
+
 
 # Create the tables for the users and roles and add a user to the user table
 # This decorator registers a function to be run before the first request to the app
@@ -56,8 +61,10 @@ def create_user():
     user_datastore.create_user(email='admin', password='admin')
     db.session.commit()
 
+
 # Instantiate Flask-Admin
 admin = Admin(secureApp, name='Admin', base_template='my_master.html', template_mode='bootstrap3')
+
 
 # Create a ModelView to add to our administrative interface
 class UserModelView(ModelView):
@@ -71,22 +78,26 @@ class UserModelView(ModelView):
 
     column_list = ['email', 'password']
 
+
 # Add administrative views to Flask-Admin
 admin.add_view(UserModelView(Users, db.session))
+
 
 # Add the context processor
 @security.context_processor
 def security_context_processor():
     return dict(
-        admin_base_template = admin.base_template,
-        admin_view = admin.index_view,
-        get_url = url_for,
-        h = admin_helpers
+        admin_base_template=admin.base_template,
+        admin_view=admin.index_view,
+        get_url=url_for,
+        h=admin_helpers
     )
+
 
 # Define the index route
 @secureApp.route('/')
 def index():
     return render_template('index.html')
+
 
 secureApp.run()

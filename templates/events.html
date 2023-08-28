@@ -8,7 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/table.css">
+    <link rel="stylesheet" href="../assets/css/events.css">
+    <link rel="stylesheet" href="../assets/css/photo.css">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +37,6 @@
                   <ul>
                     <li><a href="#" onclick="selectCity('Астана')">Астана</a></li>
                     <li><a href="#" onclick="selectCity('Петропавловск')">Петропавловск</a></li>
-                    <li><a href="#">Киев</a></li>
                     <!-- Добавьте свои города здесь -->
                   </ul>
                 </div>
@@ -63,10 +63,10 @@
                 <a class="nav-link" href="photos.html">Фотоотчёты</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="events.html">Мероприятия</a>
+                <a class="nav-link active" aria-current="page" href="events.html">Мероприятия</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="table.html">Таблица</a>
+                <a class="nav-link" href="table.html">Таблица</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="shop.html">Каталог</a>
@@ -82,144 +82,32 @@
         <h1>MELOMAN QUIZ</h1>
       </div>
     </div>
-
-    <div class="raiting-description">
-        <h2>Рейтинг команд</h2>
-        <p>Данный рейтинг основан на истории ваших игр,
-            количестве положительных и отрицательных результатах. Другими словами: 
-            самый показательный пример ваших музыкальных познаний 
-            в сравнении с остальными участниками нашего проекта.</p>
-    </div>
-
-    <div class="top-comands-container">
-      <div id="ComandCarousel" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <div class="top-comand d-flex">
-                <div class="name-place-container">
-                    <h5>Название команды</h5>
-                    <div class="place">
-                        <img src="../assets/img/record.png">
-                        <h4>1</h4>
-                    </div>
-                </div>
-                <div class="score">
-                    <h5>6000 баллов</h5>
+    <h2>Мероприятия</h2>
+    <div class="container d-flex flex-wrap">
+        <div class="card-container">
+            <div class="rectangle">
+                28.08.2023
+            </div>
+            <div class="card">
+                <img class="card-img-top" src="../assets/img/photo.png" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <a href="#" class="btn btn-primary show-btn">Подробнее</a>
                 </div>
             </div>
-          </div>
-          <div class="carousel-item">
-              <div class="top-comand d-flex">
-                  <div class="name-place-container">
-                      <h5>Другая команда</h5>
-                      <div class="place">
-                          <img src="../assets/img/record.png">
-                          <h4>2</h4>
-                      </div>
-                  </div>
-                  <div class="score">
-                      <h5>6000 баллов</h5>
-                  </div>
-              </div>
-          </div>
-          <a class="carousel-control-prev" href="#ComandCarousel" role="button" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only"></span>
-          </a>
-          <a class="carousel-control-next" href="#ComandCarousel" role="button" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only"></span>
-          </a>
         </div>
-      </div>
-    </div>
-
-    <form class="search-form">
-        <input type="search" value="" placeholder="Поиск команды" class="search-input">
-        <div class="search-button">
-          <img src="../assets/img/search.svg">
+        <div class="card-container">
+            <div class="rectangle">
+                28.08.2023
+            </div>
+            <div class="card">
+                <img class="card-img-top" src="../assets/img/photo.png" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <a href="#" class="btn btn-primary show-btn">Подробнее</a>
+                </div>
+            </div>
         </div>
-    </form>
-
-    <div class="show-buttons">
-      <label for="game" class="game-label-button">За игру</label>
-      <label for="season" class="season-label-button">За Сезон</label>
-      <input type="radio" checked="checked" id="game" name="table-status">
-      <span class="game-btn"></span>
-      <input type="radio" id="season" name="table-status">
-      <span class="season-btn"></span>
-
-      <div class="dropdown">
-        <button class="dropbtn" id="dropdown-id">Игра 1</button>
-          <div class="dropdown-content">
-            <a href="#">Игра 1</a>
-            <a href="#">Игра 2</a>
-            <a href="#">Игра 3</a>
-          </div>
-      </div>
-
-    </div>
-
-    <div class="table table-responsive">
-      <table class="season-table">
-        <thead>
-          <tr>
-            <th>№</th>
-            <th>Название</th>
-            <th>Игры</th>
-            <th>Средний балл</th>
-            <th>Баллы</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th id="number">№</th>
-            <th id="team-name">Название Команды</th>
-            <th id="games-quant">№</th>
-            <th id="score" >№</th>
-            <th id="rang">№</th>
-          </tr>
-          <tr>
-            <th id="number">№</th>
-            <th id="team-name">Название Команды</th>
-            <th id="games-quant">№</th>
-            <th id="score" >№</th>
-            <th id="rang">№</th>
-          </tr>
-        </tbodyd>
-      </table>
-
-      <table class="game-table">
-        <thead>
-          <tr>
-            <th>№</th>
-            <th>Название</th>
-            <th>1</th>
-            <th>2</th>
-            <th>3</th>
-            <th>4</th>
-            <th>5</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th id="number">№</th>
-            <th id="team-name">Название Команды</th>
-            <th id="round-1">№</th>
-            <th id="round-2" >№</th>
-            <th id="round-3">№</th>
-            <th id="round-4">№</th>
-            <th id="round-5">№</th>
-          </tr>
-          <tr>
-            <th id="number">№</th>
-            <th id="team-name">Название Команды</th>
-            <th id="games-quant">№</th>
-            <th id="score" >№</th>
-            <th id="rang">№</th>
-          </tr>
-        </tbodyd>
-      </table>
     </div>
     <footer id="nav-footer" class="page-footer">
         <div class="container footer-container">
