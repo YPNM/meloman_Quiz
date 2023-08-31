@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "admin/partials/header.html" %}
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include "admin/partials/_navbar.html" %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      {% include "admin/partials/_settings-panel.html" %}
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+      {% include "admin/partials/_sidebar.html" %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Добавление сезона</h4>
+                  <p class="card-description">
+                    Заполните форму и нажмите на добавить
+                  </p>
+                  <form class="forms-sample" action="{{ url_for('admin_seasons_create') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                      <label for="season">Название сезона<code>*</code></label>
+                      <input type="text" class="form-control" name="seasonName" id="season" placeholder="Сезон" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="seasonDescription">Описание<code>*</code></label>
+                      <input type="text" class="form-control" name="seasonDescription" id="seasonDescription" placeholder="Описание" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="seasonCity">Город<code>*</code></label><br>
+
+                        <select class="form-select" id="seasonCity" name="seasonCity" required>
+                          {% if cities %}
+                          <option value="not" selected>Выберите город</option>
+                            {% for city in cities %}
+                              <option value="{{ city[0] }}">{{ city[1] }}</option>
+                            {% endfor %}
+                          {% else %}
+                          <option value="notfound" selected>Города не найдены</option>
+                          {% endif %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="fileupload">Загрузите заставку<code>*</code></label>
+                      <input type="file" name="fileupload" id="fileupload" class="form-control"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2">Добавить</button>
+                    <a class="btn btn-light" href="{{ url_for('admin_seasons') }}">Назад</a>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        {% include "admin/partials/_footer.html" %}
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+</html>

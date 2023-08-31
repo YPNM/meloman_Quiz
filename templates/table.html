@@ -7,14 +7,14 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/table.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/front/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/front/table.css') }}">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <title>Meloman Quiz</title>
-    <link rel="shortcut icon" href="../assets/img/diskOption1.png">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='/images/front/diskOption1.png') }}">
   </head>
 
   <body>
@@ -22,9 +22,10 @@
     <div class="intro">
       <header class="header">
         <div class="city-selector" type="button" data-bs-toggle="modal" data-bs-target="#cityModal">
-          <img src="../assets/img/location.png">
+          <img src="{{ url_for('static', filename='/images/front/location.png') }}">
           <h2 id="cityHeader">Город</h2>
           <div class="modal fade" id="cityModal" tabindex="-1" aria-labelledby="cityModalLabel" aria-hidden="true">
+            <input type="hidden" id="currentPage" value="table">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -34,9 +35,9 @@
                 <div class="modal-body">
                   <!-- Здесь вы можете добавить форму или список городов для выбора -->
                   <ul>
-                    <li><a href="#" onclick="selectCity('Астана')">Астана</a></li>
-                    <li><a href="#" onclick="selectCity('Петропавловск')">Петропавловск</a></li>
-                    <li><a href="#">Киев</a></li>
+                      {% for i in range(cityNames|length) %}
+                      <li><a href="#" onclick="selectCity('{{ cityNames[i] }}')">{{ cityNames[i] }}</a></li>
+                    {% endfor %}
                     <!-- Добавьте свои города здесь -->
                   </ul>
                 </div>
@@ -46,7 +47,7 @@
         </div>
         <nav class="navbar navbar-expand-lg navbar-dark">
           <a class="navbar-brand" href="index.html">
-            <img src="/assets/img/logo 2.png" alt="" class="logo-header">
+            <img src="{{ url_for('static', filename='/images/front/logo-2.png') }}" alt="" class="logo-header">
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -54,22 +55,22 @@
           <div class="collapse navbar-collapse ms-auto" id="navbarNav">
             <ul class="navbar-nav ml-auto">
               <li class="nav-item">
-                <a class="nav-link"  href="index.html">Главная</a>
+                <a class="nav-link"  href="index">Главная</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="shedule.html">Расписание</a>
+                <a class="nav-link" href="shedule">Расписание</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="photos.html">Фотоотчёты</a>
+                <a class="nav-link" href="photos">Фотоотчёты</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="events.html">Мероприятия</a>
+                <a class="nav-link" href="events">Мероприятия</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="table.html">Таблица</a>
+                <a class="nav-link active" aria-current="page" href="table">Таблица</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="shop.html">Каталог</a>
+                <a class="nav-link" href="shop">Каталог</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Контакты </a>
@@ -94,34 +95,24 @@
     <div class="top-comands-container">
       <div id="ComandCarousel" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
-          <div class="carousel-item active">
+            {% for key, values in comands_score.items() %}
+                  {% if loop.index <= 3 %}
+          <div class="carousel-item {% if loop.index == 1 %}active{% endif %} ">
             <div class="top-comand d-flex">
                 <div class="name-place-container">
-                    <h5>Название команды</h5>
+                    <h5>{{ key }}</h5>
                     <div class="place">
-                        <img src="../assets/img/record.png">
-                        <h4>1</h4>
+                        <img src="{{ url_for('static', filename='/images/front/record.png') }}">
+                        <h4>{{ loop.index }}</h4>
                     </div>
                 </div>
                 <div class="score">
-                    <h5>6000 баллов</h5>
+                    <h5>{{ values }} баллов</h5>
                 </div>
             </div>
           </div>
-          <div class="carousel-item">
-              <div class="top-comand d-flex">
-                  <div class="name-place-container">
-                      <h5>Другая команда</h5>
-                      <div class="place">
-                          <img src="../assets/img/record.png">
-                          <h4>2</h4>
-                      </div>
-                  </div>
-                  <div class="score">
-                      <h5>6000 баллов</h5>
-                  </div>
-              </div>
-          </div>
+                          {% endif %}
+              {% endfor %}
           <a class="carousel-control-prev" href="#ComandCarousel" role="button" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only"></span>
@@ -137,24 +128,24 @@
     <form class="search-form">
         <input type="search" value="" placeholder="Поиск команды" class="search-input">
         <div class="search-button">
-          <img src="../assets/img/search.svg">
+          <img src="{{ url_for('static', filename='/images/front/search.svg') }}">
         </div>
     </form>
 
     <div class="show-buttons">
       <label for="game" class="game-label-button">За игру</label>
       <label for="season" class="season-label-button">За Сезон</label>
-      <input type="radio" checked="checked" id="game" name="table-status">
+      <input type="radio" id="game" name="table-status">
       <span class="game-btn"></span>
-      <input type="radio" id="season" name="table-status">
+      <input type="radio" id="season" checked="checked" name="table-status">
       <span class="season-btn"></span>
 
       <div class="dropdown">
-        <button class="dropbtn" id="dropdown-id">Игра 1</button>
+        <button class="dropbtn" id="game-selector">{{ selected_game }}</button>
           <div class="dropdown-content">
-            <a href="#">Игра 1</a>
-            <a href="#">Игра 2</a>
-            <a href="#">Игра 3</a>
+              {% for key in game_names.keys() %}
+            <a href="#" onclick="selectGame('{{ key }}')">{{ key }}</a>
+              {% endfor %}
           </div>
       </div>
 
@@ -172,21 +163,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th id="number">№</th>
-            <th id="team-name">Название Команды</th>
-            <th id="games-quant">№</th>
-            <th id="score" >№</th>
-            <th id="rang">№</th>
+        {% for key, value in comands_score.items() %}
+          <tr class="team-row">
+            <td>{{ loop.index }}</td>
+            <td class="team-name">{{ key }}</td>
+            <td>{{ game_counter.get(key) }}</td>
+            <td>{{ value / game_counter.get(key) }}</td>
+            <td>{{ value }}</td>
           </tr>
-          <tr>
-            <th id="number">№</th>
-            <th id="team-name">Название Команды</th>
-            <th id="games-quant">№</th>
-            <th id="score" >№</th>
-            <th id="rang">№</th>
-          </tr>
-        </tbodyd>
+        {%  endfor  %}
+        </tbody>
       </table>
 
       <table class="game-table">
@@ -194,57 +180,51 @@
           <tr>
             <th>№</th>
             <th>Название</th>
-            <th>1</th>
-            <th>2</th>
-            <th>3</th>
-            <th>4</th>
-            <th>5</th>
+              {%  for i in range(round_counter) %}
+            <th>{{ i + 1 }}</th>
+              {% endfor %}
+            <th>Всего</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th id="number">№</th>
-            <th id="team-name">Название Команды</th>
-            <th id="round-1">№</th>
-            <th id="round-2" >№</th>
-            <th id="round-3">№</th>
-            <th id="round-4">№</th>
-            <th id="round-5">№</th>
+        {% for key, value in game_result.items() %}
+          <tr class="team-row">
+            <td>{{ loop.index }}</td>
+            <td class="team-name">{{ key }}</td>
+              {% for round in game_result.get(key) %}
+                <td>{{ round[3] }}</td>
+              {% endfor %}
+            <td>{{ game_result.get(key)[0][4]|int }}</td>
           </tr>
-          <tr>
-            <th id="number">№</th>
-            <th id="team-name">Название Команды</th>
-            <th id="games-quant">№</th>
-            <th id="score" >№</th>
-            <th id="rang">№</th>
-          </tr>
-        </tbodyd>
+        {% endfor %}
+        </tbody>
       </table>
     </div>
     <footer id="nav-footer" class="page-footer">
-        <div class="container footer-container">
-          <div class="logo-footer">
-            <a href="#"><img src="../assets/img/logo-footer.png" class="logo-footer"></a>
-          </div>
-          <div class="socials">
-            <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="../assets/img/Instagram.png" class="instagram-footer"></a>
-          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="../assets/img/tik-tok.png" class="tik-tok-footer"></a>
-          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="../assets/img/нщгегиу.png" class="youtube-footer"></a>
-          </div>
-          <div class="numbers">
-            <a href="tel:+7 775 560 3383"><h5>+7 775 560 3383</h5></a>
-          </div>
+      <div class="container footer-container">
+        <div class="logo-footer">
+          <a href="#"><img src="{{ url_for('static', filename='/images/front/logo-footer.png') }}" class="logo-footer"></a>
         </div>
-      </footer>
-
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-      <script src="../assets/js/table-selector.js"></script>
-      <script src="../assets/js/city-selector.js"></script>
-      <script>
-        $(document).ready(function(){
-          $('#ComandCarousel').carousel();
-        });
-      </script>
+        <div class="socials">
+          <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="{{ url_for('static', filename='/images/front/Instagram.png') }}" class="instagram-footer"></a>
+          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="{{ url_for('static', filename='/images/front/tik-tok.png') }}" class="tik-tok-footer"></a>
+          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="{{ url_for('static', filename='/images/front/youtube.png') }}" class="youtube-footer"></a>
+        </div>
+        <div class="numbers">
+          <a href="tel:+7 775 560 3383"><h5>+7 775 560 3383</h5></a>
+        </div>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='/js/city-selector.js') }}"></script>
+    <script src="{{ url_for('static', filename='/js/table-selector.js') }}"></script>
+    <script src="{{ url_for('static', filename='/js/game-selector.js') }}"></script>
+    <script src="{{ url_for('static', filename='/js/team-finder.js') }}"></script>
+    <script>
+            $(document).ready(function(){
+            $('#ComandCarousel').carousel();
+            });
+    </script>
     </body>
 </html>

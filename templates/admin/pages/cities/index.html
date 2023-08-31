@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "admin/partials/header.html" %}
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include "admin/partials/_navbar.html" %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      {% include "admin/partials/_settings-panel.html" %}
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+      {% include "admin/partials/_sidebar.html" %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Города</h4>
+                  <p class="card-description">
+                    Выберите город или <a href="{{ url_for('admin_cities_create')}}"><code>добавьте новый</code></a>
+                  </p>
+                  {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                      {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                              {{ message }}
+                        </div>
+                      {% endfor %}
+                      </ul>
+                    {% endif %}
+                  {% endwith %}
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>
+                            Город
+                          </th>
+                          <th>
+                            Функция
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% if current_user.superadmin %}
+                        {% for city in cities %}
+                          <tr>
+                            <td>
+                              {{ city[1] }}
+                            </td>
+                            <td>
+                              <div class="dropdown position-static">
+                                  <button class="btn btn-success dropdown-toggle toggle-dark btn-lg mb-0 me-0" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Действие</button>
+                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                    <a class="dropdown-item" href="{{ url_for('admin_cities_edit', city_id=city[0]) }}">Изменить</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{ url_for('admin_cities_delete', city_id=city[0]) }}">Удалить</a>
+                                  </div>
+                              </div>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                      {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        {% include "admin/partials/_footer.html" %}
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "admin/partials/header.html" %}
+<style>
+  input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}</style>
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include "admin/partials/_navbar.html" %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      {% include "admin/partials/_settings-panel.html" %}
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+      {% include "admin/partials/_sidebar.html" %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  {% if current_user.superadmin %}
+                    <h4 class="card-title">Добавление товара</h4>
+                    <p class="card-description">
+                      Заполните форму и нажмите на добавить
+                    </p>
+                    <form class="forms-sample" action="{{ url_for('admin_catalog_create') }}" method="POST" enctype="multipart/form-data">
+                      <div class="form-group">
+                        <label for="itemName">Название<code>*</code></label>
+                        <input type="text" class="form-control" name="itemName" id="itemName" placeholder="Название товара" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="itemDescription">Описание<code>*</code></label>
+                        <input type="text" class="form-control" name="itemDescription" id="itemDescription" placeholder="Описание" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="itemCost">Стоимость<code>*</code></label>
+                        <input class="form-control" min="0" max="1000000" type="number" value="0" id="itemCost" name="itemCost" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="bookingLink">Номер телефона для брони<code>*</code></label>
+                        <input type="text" class="form-control" name="bookingLink" id="bookingLink" placeholder="+77051236644" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="fileupload">Загрузите заставку<code>*</code></label>
+                        <input type="file" name="fileupload" id="fileupload" class="form-control"/>
+                      </div>
+                      <button type="submit" class="btn btn-primary me-2">Добавить</button>
+                      <a class="btn btn-light" href="{{ url_for('admin_catalog') }}">Назад</a>
+                    </form>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        {% include "admin/partials/_footer.html" %}
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+</html>

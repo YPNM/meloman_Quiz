@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "admin/partials/header.html" %}
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include "admin/partials/_navbar.html" %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      {% include "admin/partials/_settings-panel.html" %}
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+      {% include "admin/partials/_sidebar.html" %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Изменение сезона</h4>
+                    <p class="card-description">
+                      Заполните форму и нажмите на изменить
+                    </p>
+                    {% if season %}
+                    <form class="forms-sample" action="{{ url_for('admin_seasons_edit', season_id=season[0]) }}" method="POST" enctype="multipart/form-data">
+                      <div class="form-group">
+                        <label for="season">Название сезона<code>*</code></label>
+                        <input type="text" class="form-control" name="seasonName" id="season" placeholder="Сезон" value="{{ season[1] }}" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="seasonDescription">Описание<code>*</code></label>
+                        <input type="text" class="form-control" name="seasonDescription" id="seasonDescription" placeholder="Описание" value="{{ season[2] }}" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="seasonCity">Город<code>*</code></label><br>
+                          <select class="form-select" id="seasonCity" name="seasonCity" required>
+                            {% if cities %}
+                            <option value="not">Выберите город</option>
+                            <option value="{{ season[3] }}" selected>{{ season[4] }}</option>
+                              {% for city in cities %}
+                                {% if season[3] != city[0] %}
+                                  <option value="{{ city[0] }}">{{ city[1] }}</option>
+                                {% endif %}
+                              {% endfor %}
+                            {% else %}
+                            <option value="notfound" selected>Города не найдены</option>
+                            {% endif %}
+                          </select>
+                      </div>
+                      <div class="form-group">
+                        <img src="data:image/png;base64,{{ season[5] }}" width="150" height="150">
+                        <input type="file" name="fileupload" id="fileupload" class="form-control"/>
+                      </div>
+                      <button type="submit" class="btn btn-primary me-2">Изменить</button>
+                      <a class="btn btn-light" href="{{ url_for('admin_seasons') }}">Назад</a>
+                    </form>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        {% include "admin/partials/_footer.html" %}
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+</html>

@@ -7,13 +7,13 @@
       <!-- Bootstrap CSS -->
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
       <!-- CSS -->
-      <link rel="stylesheet" href="../assets/css/style.css">
-      <link rel="stylesheet" href="../assets/css/shop.css">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/front/style.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/front/shop.css') }}">
       <!-- Fonts -->
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-      <link rel="shortcut icon" href="../assets/img/diskOption1.png">
+      <link rel="shortcut icon" href="{{ url_for('static', filename='/images/front/diskOption1.png') }}">
       <title>Meloman Quiz</title>
     </head>
 
@@ -22,9 +22,10 @@
         <div class="intro">
           <header class="header">
             <div class="city-selector" type="button" data-bs-toggle="modal" data-bs-target="#cityModal">
-              <img src="../assets/img/location.png">
+              <img src="{{ url_for('static', filename='/images/front/location.png') }}">
               <h2 id="cityHeader">Город</h2>
               <div class="modal fade" id="cityModal" tabindex="-1" aria-labelledby="cityModalLabel" aria-hidden="true">
+                  <input type="hidden" id="currentPage" value="shop">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -34,10 +35,9 @@
                     <div class="modal-body">
                       <!-- Здесь вы можете добавить форму или список городов для выбора -->
                       <ul>
-                        <li><a href="#" onclick="selectCity('Астана')">Астана</a></li>
-                        <li><a href="#" onclick="selectCity('Петропавловск')">Петропавловск</a></li>
-                        <li><a href="#">Киев</a></li>
-                        <!-- Добавьте свои города здесь -->
+                        {% for i in range(cityNames|length) %}
+                            <li><a href="#" onclick="selectCity('{{ cityNames[i] }}')">{{ cityNames[i] }}</a></li>
+                        {% endfor %}
                       </ul>
                     </div>
                   </div>
@@ -46,7 +46,7 @@
             </div>
             <nav class="navbar navbar-expand-lg navbar-dark">
                 <a class="navbar-brand" href="index.html">
-                  <img src="/assets/img/logo 2.png" alt="" class="logo-header">
+                  <img src="{{ url_for('static', filename='/images/front/logo-2.png') }}" alt="" class="logo-header">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
@@ -54,22 +54,22 @@
                 <div class="collapse navbar-collapse ms-auto" id="navbarNav">
                   <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                      <a class="nav-link" href="index.html">Главная</a>
+                      <a class="nav-link" href="index">Главная</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="shedule.html">Расписание</a>
+                      <a class="nav-link" href="shedule">Расписание</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="photos.html">Фотоотчёты</a>
+                      <a class="nav-link" href="photos">Фотоотчёты</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="#">Мероприятия</a>
+                      <a class="nav-link" href="events">Мероприятия</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="table.html">Таблица</a>
+                      <a class="nav-link" href="table">Таблица</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="shop.html">Каталог</a>
+                      <a class="nav-link active" aria-current="page" href="shop">Каталог</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="#">Контакты </a>
@@ -86,45 +86,46 @@
         </div>
 
         <div class="shop-container container">
+            {% for i in range(all_catalog|length) %}
             <div class="ware-container">
                 <div class="inner-container">
-                    <img src="../assets/img/photo.png">
+                    <div class="image-container">
+                        <img src="data:image/jpeg;base64,{{ all_catalog[i][5] | safe }}">
+                    </div>
                     <div class="txt-container">
-                        <h5>Название товара</h5>
-                        <p>Описание Описание Описание Описание Описание Описание Описание Описание</p>
+                        <div class="details">
+                            <h5>{{ all_catalog[i][1] }}</h5>
+                            <h5>{{ all_catalog[i][3] }} ТГ</h5>
+                        </div>
+                        <p>{{ all_catalog[i][2]}} Описание описание</p>
                     </div>
                 </div>
                 <div class="sign-up">
-                    <button class="buy-btn">КУПИТЬ</button>
+                    <a href="https://wa.me/{{ all_catalog[i][4][1:] }}?text=Здравствуйте! Я хотел бы приобрести {{ all_catalog[i][1] }}"><button class="buy-btn">КУПИТЬ</button></a>
                 </div>
             </div>
-            <div class="ware-container">
-
-            </div>
-            <div class="ware-container">
-
-            </div>
+            {% endfor %}
         </div>
 
         <footer id="nav-footer" class="page-footer">
             <div class="container footer-container">
               <div class="logo-footer">
-                <a href="#"><img src="../assets/img/logo-footer.png" class="logo-footer"></a>
+                <a href="#"><img src="{{ url_for('static', filename='/images/front/logo-footer.png') }}" class="logo-footer"></a>
               </div>
               <div class="socials">
-                <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="../assets/img/Instagram.png" class="instagram-footer"></a>
-                <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="../assets/img/tik-tok.png" class="tik-tok-footer"></a>
-                <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="../assets/img/нщгегиу.png" class="youtube-footer"></a>
+                <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="{{ url_for('static', filename='/images/front/Instagram.png') }}" class="instagram-footer"></a>
+                <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="{{ url_for('static', filename='/images/front/tik-tok.png') }}" class="tik-tok-footer"></a>
+                <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="{{ url_for('static', filename='/images/front/youtube.png') }}" class="youtube-footer"></a>
               </div>
               <div class="numbers">
                 <a href="tel:+7 775 560 3383"><h5>+7 775 560 3383</h5></a>
               </div>
             </div>
-          </footer>
+        </footer>
 
           <!-- Вариант 1: Bootstrap в связке с Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <!-- Подключение вашего JavaScript файла -->
-        <script src="../assets/js/city-selector.js"></script>
+        <script src="{{ url_for('static', filename='/js/city-selector.js') }}"></script>
     </body>
 </html>

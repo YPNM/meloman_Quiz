@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "admin/partials/header.html" %}
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include "admin/partials/_navbar.html" %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      {% include "admin/partials/_settings-panel.html" %}
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+      {% include "admin/partials/_sidebar.html" %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Изменение фотоотчета</h4>
+                  <p class="card-description">
+                    Заполните форму и нажмите на изменить
+                  </p>
+                  {% if photo %}
+                  <form class="forms-sample" action="{{ url_for('admin_photos_edit', game_id=photo[0]) }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                      <label for="game">Выберите игру<code>*</code></label>
+                      <select class="form-select" id="game" name="game" required>
+                          {% if games %}
+                          <option value="not" >Выберите игру</option>
+                          <option value="{{photo[0]}}" selected>{{ photo[1] }}</option>
+                            {% for game in games %}
+                              {% if game[0] != photo[0] %}
+                                <option value="{{ game[0] }}">{{ game[1] }}</option>
+                              {% endif %}
+                            {% endfor %}
+                          {% else %}
+                          <option value="notfound" selected>Игры не найдены</option>
+                          {% endif %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="photoLink">Ссылка<code>*</code></label>
+                      <input type="text" class="form-control" name="photoLink" id="photoLink" placeholder="Ссылка" value="{{photo[2]}}" required>
+                    </div>
+                    <div class="form-group">
+                      <img src="data:image/png;base64,{{ photo[3] }}" width="150" height="150">
+                      <input type="file" name="fileupload" id="fileupload" class="form-control"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2">Изменить</button>
+                    <a class="btn btn-light" href="{{ url_for('admin_photos') }}">Назад</a>
+                  {% endif %}
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        {% include "admin/partials/_footer.html" %}
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+</html>

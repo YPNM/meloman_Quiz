@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "admin/partials/header.html" %}
+<style>
+  input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}</style>
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include "admin/partials/_navbar.html" %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      {% include "admin/partials/_settings-panel.html" %}
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+      {% include "admin/partials/_sidebar.html" %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <form action="{{ url_for('admin_tables_show', game_id=game_id) }}" method="POST">
+                  <div class="card-body">
+                    <h4 class="card-title">Таблица игры</h4>
+                    <p class="card-description">
+                      Введите в каждое поле количество очков и нажмите на сохранить</a>
+                    </p>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                          <div class="alert alert-{{ category }}" role="alert">
+                                {{ message }}
+                          </div>
+                        {% endfor %}
+                        </ul>
+                      {% endif %}
+                    {% endwith %}
+                      <div class="table-responsive">
+                          <table class="table table-hover">
+                            <thead>
+                              <tr>
+                                <th>
+                                  Команды
+                                </th>
+                                {% if rounds %}
+                                  {% for round in rounds %}
+                                      <th>
+                                        {{ round[1] }}
+                                      </th>
+                                  {% endfor %}
+                                      <th>
+                                        Итог
+                                      </th>
+                                {% else %}
+                                  <th>
+                                      Нет раундов
+                                  </th>
+                                {% endif %}
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {% if scoresDictionary != None %}
+                              {% if teams %}
+                                  {% for key, value in scoresDictionary.items() %}
+                                    <tr>
+                                      <td>
+                                        {{ key }}
+                                      </td>
+                                      {% for item in value %}
+                                        <td>
+                                          <input style="border: none;" min="0" max="100" type="number" name="{{ item[0] }}/{{ item[2] }}" value="{{ item[3] }}">
+                                        </td>
+                                      {% endfor %}
+                                      <td>
+                                          {{ value[0][4] }}
+                                      </td>
+                                    </tr>
+                                  {% endfor %}
+                                 {% for team in teams %}
+                                  {% if team[1] not in scoresDictionary.keys() %}
+                                    <tr>
+                                      <td>
+                                        {{ team[1] }}
+                                      </td>
+                                      {% for round in rounds %}
+                                      <td>
+                                        <input style="border: none;" min="0" max="100" type="number" name="{{ round[0] }}/{{ team[0] }}">
+                                      </td>
+                                      {% endfor %}
+                                    </tr>
+                                  {% endif %}
+                                {% endfor %}
+                              {% else %}
+                                <tr>
+                                  <td>
+                                    Нет команд
+                                  </td>
+                                </tr>
+                              {% endif %}
+                            {% else %}
+                              {% for team in teams %}
+                                <tr>
+                                  <td>
+                                    {{team[1]}}
+                                  </td>
+                                  {% for round in rounds %}
+                                      <td>
+                                        <input style="border: none;" min="0" max="100" type="number" name="{{ round[0] }}/{{ team[0] }}">
+                                      </td>
+                                  {% endfor %}
+                                </tr>
+                              {% endfor %}
+                            {% endif %}
+                            </tbody>
+                          </table>
+                      </div>
+                  </div>
+                  <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-primary me-2">Сохранить</button>
+                    <a class="btn btn-light" href="{{ url_for('admin_tables') }}">Назад</a>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        {% include "admin/partials/_footer.html" %}
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+</html>

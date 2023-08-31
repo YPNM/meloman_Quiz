@@ -1,0 +1,17 @@
+.card {
+    max-width: 20rem;
+}
+
+.location-event,
+.time-event{
+    margin-bottom: 5px;
+}
+
+.location-event p,
+.time-event p{
+    margin: 0;
+}
+
+.location-event img {
+    margin-right: 10px;
+}

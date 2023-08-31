@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "admin/partials/header.html" %}
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include "admin/partials/_navbar.html" %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      {% include "admin/partials/_settings-panel.html" %}
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+      {% include "admin/partials/_sidebar.html" %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Изменение города</h4>
+                  <p class="card-description">
+                    Заполните форму и нажмите на изменить
+                  </p>
+                  {% if city %}
+                  <form class="forms-sample" action="{{ url_for('admin_cities_edit', city_id=city[0]) }}" method="POST">
+                    <div class="form-group">
+                      <label for="city">Название города</label>
+                        <input type="text" class="form-control" name="cityName" id="city" placeholder="Город" value="{{ city[1] }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2">Изменить</button>
+                    <a class="btn btn-light" href="{{ url_for('admin_cities') }}">Назад</a>
+                  </form>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        {% include "admin/partials/_footer.html" %}
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+</html>

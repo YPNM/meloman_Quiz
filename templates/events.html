@@ -7,15 +7,15 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/events.css">
-    <link rel="stylesheet" href="../assets/css/photo.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/front/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/front/events.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/front/photo.css') }}">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <title>Meloman Quiz</title>
-    <link rel="shortcut icon" href="../assets/img/diskOption1.png">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='/images/front/diskOption1.png') }}">
   </head>
 
   <body>
@@ -23,9 +23,10 @@
     <div class="intro">
       <header class="header">
         <div class="city-selector" type="button" data-bs-toggle="modal" data-bs-target="#cityModal">
-          <img src="../assets/img/location.png">
+          <img src="{{ url_for('static', filename='/images/front/location.png') }}">
           <h2 id="cityHeader">Город</h2>
           <div class="modal fade" id="cityModal" tabindex="-1" aria-labelledby="cityModalLabel" aria-hidden="true">
+              <input type="hidden" id="currentPage" value="events">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -46,7 +47,7 @@
         </div>
         <nav class="navbar navbar-expand-lg navbar-dark">
           <a class="navbar-brand" href="index.html">
-            <img src="/assets/img/logo 2.png" alt="" class="logo-header">
+            <img src="{{ url_for('static', filename='/images/front/logo-2.png') }}" alt="" class="logo-header">
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -54,22 +55,22 @@
           <div class="collapse navbar-collapse ms-auto" id="navbarNav">
             <ul class="navbar-nav ml-auto">
               <li class="nav-item">
-                <a class="nav-link"  href="index.html">Главная</a>
+                <a class="nav-link"  href="index">Главная</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="shedule.html">Расписание</a>
+                <a class="nav-link" href="shedule">Расписание</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="photos.html">Фотоотчёты</a>
+                <a class="nav-link" href="photos">Фотоотчёты</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="events.html">Мероприятия</a>
+                <a class="nav-link active" aria-current="page" href="events">Мероприятия</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="table.html">Таблица</a>
+                <a class="nav-link" href="table">Таблица</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="shop.html">Каталог</a>
+                <a class="nav-link" href="shop">Каталог</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Контакты </a>
@@ -84,55 +85,49 @@
     </div>
     <h2>Мероприятия</h2>
     <div class="container d-flex flex-wrap">
+        {% for i in range(all_events|length) %}
         <div class="card-container">
             <div class="rectangle">
-                28.08.2023
+                {{ all_events[i][3].strftime('%d.%m.%Y') }}
             </div>
             <div class="card">
-                <img class="card-img-top" src="../assets/img/photo.png" alt="Card image cap">
+                <img class="card-img-top" src="data:image/jpeg;base64,{{ all_events[i][9] | safe }}" alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <a href="#" class="btn btn-primary show-btn">Подробнее</a>
+                    <h5 class="card-title">{{ all_events[i][1] }}</h5>
+                    <div class="location-event">
+                        <p>МЕСТО : {{ all_events[i][6] }}</p>
+                    </div>
+                    <div class="time-event">
+                        <p>ВРЕМЯ : {{ all_events[i][3].strftime('%H:%M') }}</p>
+                    </div>
+                    <div class="price-event">
+                        <p>ЦЕНА : {% if all_events[i][4] != 0 %}{{  all_events[i][4] }} ТГ{% else %}БЕСПЛАТНО{% endif %}</p>
+                    </div>
+                    <p>{{ all_events[i][2] }}</p>
+                    <a href="https://wa.me/{{ all_events[i][8][1:] }}?text=Здравствуйте! Я хотел бы узнать подробнее про {{ all_events[i][1] }}" class="btn btn-primary show-btn">Подробнее</a>
                 </div>
             </div>
         </div>
-        <div class="card-container">
-            <div class="rectangle">
-                28.08.2023
-            </div>
-            <div class="card">
-                <img class="card-img-top" src="../assets/img/photo.png" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <a href="#" class="btn btn-primary show-btn">Подробнее</a>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
     <footer id="nav-footer" class="page-footer">
-        <div class="container footer-container">
-          <div class="logo-footer">
-            <a href="#"><img src="../assets/img/logo-footer.png" class="logo-footer"></a>
-          </div>
-          <div class="socials">
-            <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="../assets/img/Instagram.png" class="instagram-footer"></a>
-          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="../assets/img/tik-tok.png" class="tik-tok-footer"></a>
-          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="../assets/img/нщгегиу.png" class="youtube-footer"></a>
-          </div>
-          <div class="numbers">
-            <a href="tel:+7 775 560 3383"><h5>+7 775 560 3383</h5></a>
-          </div>
+      <div class="footer-container">
+        <div class="logo-footer">
+          <a href="#"><img src="{{ url_for('static', filename='/images/front/logo-footer.png') }}" class="logo-footer"></a>
         </div>
-      </footer>
+        <div class="socials">
+          <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="{{ url_for('static', filename='/images/front/Instagram.png') }}" class="instagram-footer"></a>
+          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="{{ url_for('static', filename='/images/front/tik-tok.png') }}" class="tik-tok-footer"></a>
+          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="{{ url_for('static', filename='/images/front/youtube.png') }}" class="youtube-footer"></a>
+        </div>
+        <div class="numbers">
+          <a href="tel:+7 775 560 3383"><h5>+7 775 560 3383</h5></a>
+        </div>
+      </div>
+    </footer>
 
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-      <script src="../assets/js/table-selector.js"></script>
-      <script src="../assets/js/city-selector.js"></script>
-      <script>
-        $(document).ready(function(){
-          $('#ComandCarousel').carousel();
-        });
-      </script>
+      <script src="{{ url_for('static', filename='/js/city-selector.js') }}"></script>
     </body>
 </html>

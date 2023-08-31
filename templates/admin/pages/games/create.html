@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "admin/partials/header.html" %}
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include "admin/partials/_navbar.html" %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      {% include "admin/partials/_settings-panel.html" %}
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+      {% include "admin/partials/_sidebar.html" %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Добавление игры</h4>
+                  <p class="card-description">
+                    Заполните форму и нажмите на добавить
+                  </p>
+                  <form class="forms-sample" action="{{ url_for('admin_games_create') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                      <label for="game">Название игры<code>*</code></label>
+                      <input type="text" class="form-control" name="gameName" id="game" placeholder="Игра" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="gameDescription">Описание<code>*</code></label>
+                      <input type="text" class="form-control" name="gameDescription" id="gameDescription" placeholder="Описание" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="gameType">Тип игры<code>*</code></label><br>
+                        <select class="form-select" id="gameType" name="gameType" required>
+                          {% if gametypes %}
+                          <option value="not" selected>Выберите тип игры</option>
+                            {% for gametype in gametypes %}
+                              <option value="{{ gametype[0] }}">{{ gametype[1] }}</option>
+                            {% endfor %}
+                          {% else %}
+                          <option value="notfound" selected>Типы игр не найдены</option>
+                          {% endif %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="gameDate">Дата<code>*</code></label>
+                      <input type="datetime-local" id="gameDate" name="gameDate" placeholder="Дата" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="gameCity">Город<code>*</code></label><br>
+                        <select class="form-select" id="gameCity" name="gameCity" required>
+                          {% if cities %}
+                          <option value="not" selected>Выберите город</option>
+                            {% for city in cities %}
+                              <option value="{{ city[0] }}">{{ city[1] }}</option>
+                            {% endfor %}
+                          {% else %}
+                          <option value="notfound" selected>Города не найдены</option>
+                          {% endif %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="gameLocation">Локация<code>*</code></label>
+                      <input type="text" class="form-control" name="gameLocation" id="gameLocation" placeholder="Локация" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="season">Сезон<code>*</code></label>
+                      <select class="form-select" id="season" name="season" required>
+                          {% if seasons %}
+                          <option value="not" selected>Выберите сезон</option>
+                            {% for season in seasons %}
+                              <option value="{{ season[0] }}">{{ season[1] }}</option>
+                            {% endfor %}
+                          {% else %}
+                          <option value="notfound" selected>Сезоны не найдены</option>
+                          {% endif %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="reserveLink">Номер для брони<code>*</code></label>
+                      <input type="text" class="form-control" name="reserveLink" id="reserveLink" placeholder="+77056669292" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="fileupload">Загрузите заставку<code>*</code></label>
+                      <input type="file" name="fileupload" id="fileupload" class="form-control"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2">Добавить</button>
+                    <a class="btn btn-light" href="{{ url_for('admin_games') }}">Назад</a>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        {% include "admin/partials/_footer.html" %}
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+</html>
