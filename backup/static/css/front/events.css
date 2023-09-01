@@ -1,0 +1,25 @@
+.card {
+    max-width: 20rem;
+}
+
+.card-body h5 {
+    color: #edd260;
+}
+
+.card-container {
+    margin-bottom: 15px;
+}
+
+.location-event,
+.time-event{
+    margin-bottom: 5px;
+}
+
+.location-event p,
+.time-event p{
+    margin: 0;
+}
+
+.location-event img {
+    margin-right: 10px;
+}

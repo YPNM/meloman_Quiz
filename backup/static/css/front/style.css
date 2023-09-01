@@ -1,0 +1,677 @@
+@import "fonts.css";
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+    padding: 0;
+}
+
+
+html {
+    font-size: 100%;
+}
+
+body {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+    background-color: #130426;
+    overflow-x: hidden;
+}
+
+
+.city-selector {
+    padding-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.city-selector img {
+    margin-right: 6px;
+}
+
+.city-selector h2{
+    font-size: 25px;
+}
+
+.navbar {
+    padding-top: 0;
+}
+
+.logo-header {
+    width: 200px;
+}
+
+
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+h1 {
+    font-family: 'Academy Engraved LET';
+    font-size: 95px;
+    font-weight: 100;
+    font-style: normal;
+    color: #deb34f;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-family: 'Apparat';
+    font-size: 50px;
+    font-weight: lighter;
+    color: #fff;
+    text-align: center;
+}
+
+
+/* Intro */
+.intro{
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar-nav {
+    margin-left: auto;
+    padding-right: 80px;
+}
+
+.navbar-brand {
+    padding-left: 10px;
+}
+
+.nav-item {
+    margin-left: auto;
+    font-size: 25px;
+    font-family: 'Apparat';
+    font-weight: 100;
+}
+
+.nav-link {
+    color: white;
+}
+
+.title {
+    margin-bottom: 15px;
+}
+
+
+.reg_btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn {
+    font-family: 'Apparat';
+    font-size: 25px;
+    font-weight: 100;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.btn-outline-light {
+    border-radius: 25px;
+}
+
+.music_record {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 60px;
+    margin-bottom: 120px;
+}
+
+.next_games {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.next-game-block {
+    display: inline-block;
+    position: relative;
+    margin: 31px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 25px; /* Закругленные края блока */
+    overflow: hidden;
+  }
+  
+  .next-game-block:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(62, 42, 69, 0.4); /* Свечение вокруг блока */
+  }
+  
+  
+  .next-game-block img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .next-game-block p {
+    margin-top: 10px;
+    text-align: center;
+  }
+
+h1.game_name {
+    position: absolute;
+    color: rgba(218, 178, 253, 0.7);
+    font-family: 'Apparat';
+    font-weight: 200;
+    font-size: 25px;
+    display: block;
+    left: 0;
+    padding-top: 19px;
+    width: 100%;
+    left: 5px;
+}
+
+.date {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    padding-top: 58px;
+    padding-left: 26px; 
+}
+
+.date p {
+    margin: 0;
+    font-family: 'Apparat';
+    font-size: 16px;
+    font-weight: 100;
+    align-self: center;
+    color: rgba(218, 178, 253, 0.7)
+}
+
+.date img {
+    margin-right: 19px;
+}
+
+.location {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    padding-top: 115px;
+    padding-left: 26px; 
+}
+
+.location img {
+    margin-right: 19px;
+}
+
+.location p {
+    margin: 0;
+    font-family: 'Apparat';
+    font-size: 16px;
+    font-weight: 100;
+    align-self: center;
+    color: rgba(218, 178, 253, 0.7)
+}
+
+.entry {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    padding-top: 172px;
+    padding-bottom: 24px;
+    padding-left: 73px;
+}
+
+.entry p {
+    margin: 0;
+    margin-right: 15px;
+    font-family: 'Apparat';
+    font-size: 16px;
+    font-weight: 100;
+    color: #dab2fd;
+    align-self: center;
+}
+
+p.state {
+    margin: 0;
+    font-family: 'Apparat';
+    font-size: 16px;
+    font-weight: 100;
+    color: #dab2fd;
+    align-self: center;
+    text-decoration-line: underline;
+}
+
+.shedule-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+    margin-bottom: 50px;
+}
+
+.details-container {
+    justify-content: center;
+    align-items: center;
+}
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .frame {
+    margin-top: 35px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .frame img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 40px;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.7);
+  }
+  
+  .video-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 99%; /* Здесь вы можете настроить ширину видео относительно рамки */
+    height: 97%;
+    border-radius: 40px; /* Закругленные края видео */
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Тень вокруг видео */
+  }
+  
+  .video-container iframe {
+    width: 100%;
+    height: 100%;
+  }
+
+  .details-text-container {
+    position: relative;
+    display: flex;
+    justify-content: center; /* Центрируем по горизонтали */
+    align-items: center; /* Выравниваем по вертикали */
+    margin-bottom: 60px;
+  }
+  
+  .content-container {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+  }
+  
+  .image-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    max-width: 765px;
+  }
+  
+  .image-container img {
+    width: 100%;
+  }
+  
+  .text-container {
+    padding: 30px 45px;
+    position: absolute;
+  }
+  
+  .text-container h4 {
+    font-family: 'Apparat';
+    color: #dab2fd;
+    font-weight: bold;
+    text-align: left;
+    font-size: 20px;
+    margin: 0;
+  }
+
+  .rules-btn {
+    position: absolute;
+    background: linear-gradient(to bottom, #ead673, #c9a44b);
+    background-color: #dec364;
+    color: #000;
+    border-radius: 20px;
+    border: 0px;
+    padding: 10px 25px;
+    padding-bottom: 5px;
+    font-size: 25px;
+    font-family: 'Apparat';
+    font-weight: 400;
+    margin-top: 165px;
+    margin-left: 60px;
+    transition: all 0.5s;
+  }
+
+  .rules-btn:hover {
+    background-color: #fff;
+    background: #fff;
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px #fff;
+  }
+
+  .rules {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .rules img {
+    display: inline-block;
+    position: relative;
+  }
+
+  .text-rules {
+    margin-left: 200px;
+    margin-right: 250px;
+  }
+
+  .galochka {
+    margin-bottom: 35px;
+    display: flex;
+    position: relative;
+  }
+
+  .galochka img {
+    height: 75px;
+    padding-right: 35px;
+  }
+
+  .text-rules-container {
+    font-family: 'Apparat';
+    color: #dab2fd;
+  }
+
+  .text-rules-container h3 {
+    padding-left: 10px;
+    font-size: 34px;
+    font-weight: bold;
+  }
+
+  .text-rules-container p {
+    font-size: 25px;
+    font-weight: 200;
+    line-height: 1.3;
+  }
+
+.last-photos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    display: inline-block;
+    position: relative;
+    margin: 50px;
+    border-radius: 25px; /* Закругленные края блока */
+    overflow: hidden;
+    background: radial-gradient(#1d0533 40%, #461053);
+    border: 0;
+    box-shadow: 0px 0px 15px #ffffff43;
+    
+  }
+
+  .card-body h5 {
+    color: #dab2fd;
+    font-size: 25px;
+    font-weight: bold;
+  }
+
+  .card-body p {
+    color: #dab2fd;
+    font-size: 15px;
+    font-weight: 100;
+    margin-bottom: 15px;
+  }
+
+  .watch-photo-btn {
+    background: linear-gradient(to bottom, #ead673, #d3a53b);
+    background-color: #dec364;
+    color: #000;
+    border-radius: 25px;
+    border: 0;
+    font-family: 'Apparat';
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+  }
+  
+.watch-photo-btn:hover {
+    background: #fff;
+    background-color: #fff;
+    box-shadow: 0px 0px 15px #fff;
+    color: #000;
+    transition: all 0.3s;
+}
+
+.order-container {
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 75px;
+    flex-wrap: wrap;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column; /* Display buttons in a column */
+    gap: 15px; /* Gap between buttons */
+    margin-right: 56px;
+}
+
+.order-btn {
+    width: 415px;
+    background: linear-gradient(to bottom, #ead673, #d3a53b);
+    background-color: #dec364;
+    color: #000;
+    border-radius: 20px;
+    border: 0px;
+    padding: 10px 25px;
+    padding-bottom: 5px;
+    font-size: 20px;
+    font-family: 'Apparat';
+    font-weight: 400;
+    margin-top: 35px;
+    transition: all 0.5s;
+}
+
+.order-btn:hover {
+    background: #fff;
+    background-color: #fff;
+    box-shadow: 0px 0px 15px #fff;
+    color: #000;
+    transition: all 0.3s;
+}
+
+.page-footer {
+    display: flex;
+    background: linear-gradient(to bottom, #ead673, #d3a53b);
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-footer {
+    width: 128px;
+    margin-right: 100px; 
+}
+
+.socials {
+    margin-right: 100px; 
+}
+
+.socials img {
+    margin-right: 10px;
+}
+
+.page-footer h5 {
+    color: #270648;
+    font-family: 'Apparat';
+    transition: all 0.2s;
+}
+
+.page-footer h5:hover{
+    color: #fff;
+}
+
+a {
+    text-decoration: none;
+}
+
+@media screen and (max-width: 767px) {
+    html {
+        overflow-x: hidden;
+    }
+
+    .city-selector h2 {
+        font-size: 15px;
+    }
+
+    .logo-header {
+        width: 150px;
+    }
+
+    .navbar-nav {
+        padding-right: 15px;
+    }
+
+    h1 {
+        font-size: 11vw; 
+    }
+
+    h2 {
+        font-size: 8vw;
+    }
+    
+    .music_record img {
+        width: 100%;
+    }
+    .next_game_rect {
+        padding: 0px;
+    }
+
+    .image-container img {
+        height: 250px;
+    }
+
+    .text-container {
+        padding: 20px 20px;
+    }
+
+    .rules-btn {
+        margin-top: 260px;
+    }
+
+    .frame img {
+        border-radius: 45px 45px 0px 0px;
+    }
+
+    .video-container {
+        border-radius: 45px 45px 0px 0px;
+    }
+
+    .rules-btn {
+        margin-left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 20px;
+    }
+
+    .rules-btn:hover {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 20px;
+      }
+
+    .rules img {
+        width: 50%
+    }
+
+    .text-rules {
+        margin: 0px 15px;
+    }
+
+    .text-rules-container h3 {
+        font-size: 28px;
+    }
+
+    .text-rules-container p {
+        font-size: 20px
+    }
+
+    .card {
+        margin-bottom: 10px;
+    }
+
+    .order-container {
+        margin-top: 15px;
+    }
+
+    .order-btn {
+        width: 80vw;
+    }
+
+    .buttons {
+        margin-right: 0;
+        margin-bottom: 30px;
+    }
+
+    .logo-footer {
+        margin-right: 10px;
+    }
+
+    .logo-footer img {
+        width: 120px;
+
+    }
+
+    .socials {
+        margin-right: 10px;
+    }
+
+    .socials img {
+        margin-right: 0px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .numbers {
+        padding-top: 10px;
+    }
+}
+
