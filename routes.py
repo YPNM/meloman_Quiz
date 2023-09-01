@@ -1289,15 +1289,19 @@ def table():
                                    game_result=game_result, selected_game=selected_game, game_names=games_names_id,
                                    round_counter=len(list(game_result.values())[0]), cityNames=list(cities.keys()))
         else:
-            game_result = scoreModel.get_scores_by_game_id(games_names_id.get(collections.deque(games_names_id, maxlen=1)[0]))
+            game_result = scoreModel.get_scores_by_game_id(
+                games_names_id.get(collections.deque(games_names_id, maxlen=1)[0]))
             round_counter = len(list(game_result.values())[0])
             return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
-                                   game_result=game_result, selected_game=collections.deque(games_names_id, maxlen=1)[0],
-                                   game_names=games_names_id, round_counter=round_counter, cityNames=list(cities.keys()))
+                                   game_result=game_result,
+                                   selected_game=collections.deque(games_names_id, maxlen=1)[0],
+                                   game_names=games_names_id, round_counter=round_counter,
+                                   cityNames=list(cities.keys()))
 
         # game_counter - {"Название команды": Количество посещённых игр}
         # Comands_score - {"Название команды": int(Количество набранных очков за все игры)}
-    return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()), game_names={}, round_counter=0, game_result={})
+    return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),
+                           game_names={}, round_counter=0, game_result={})
 
 
 @app.route("/shop")
@@ -1305,6 +1309,12 @@ def shop():
     catalogModel = db_init.CatalogDB()
     all_catalog = catalogModel.get_all_catalog()
     return render_template('shop.html', all_catalog=all_catalog)
+
+
+@app.route("/contacts")
+@app.route("/contacts.html")
+def contacts():
+    return render_template('contacts.html')
 
 
 if __name__ == "__main__":

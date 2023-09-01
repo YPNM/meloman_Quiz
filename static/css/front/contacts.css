@@ -1,0 +1,89 @@
+@import "fonts.css";
+
+.social-networks-container {
+    margin-bottom: 20px;
+}
+
+.social-networks-container img{
+    margin-right: 10px;
+}
+
+h3 {
+    font-family: 'Apparat', serif;
+    font-size: 25px;
+    color: #fff;
+}
+
+.administration-container {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.administrator {
+    margin-right: 65px;
+    margin-bottom: 45px;
+}
+
+.administration h3 {
+    margin-right: 65px;
+    margin-bottom: 15px;
+}
+
+.projects h3{
+    margin-bottom: 15px;
+}
+
+.admin-rectangle-bg {
+    height: 150px;
+    width: 510px;
+    background: linear-gradient(to right, #461053, #160329, #461053);
+    border: 3px solid #d0a236;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(208, 162, 54, 0.67);
+    display: flex;
+}
+
+.admin-photo img {
+    height: 144px;
+    border-radius: 18px 0 0 18px;
+}
+
+.admin-name h4 {
+    color: #efc35b;
+    font-family: 'Apparat', serif;
+    font-size: 20px;
+    padding-left: 28px;
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+
+.admin-name h5 {
+    text-align: left;
+    color: #efc35b;
+    font-family: 'Apparat', serif;
+    font-size: 20px;
+    padding-left: 28px;
+    margin-bottom: 10px;
+}
+
+.admin-numbers {
+    display: flex;
+}
+
+.number-container {
+    margin-right: 60px;
+}
+
+.contact-img {
+
+}
+
+.project-rectangle-bg {
+    height: 150px;
+    width: 305px;
+    background: linear-gradient(to right, #461053, #160329, #461053);
+    border: 3px solid #d0a236;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(208, 162, 54, 0.67);
+}

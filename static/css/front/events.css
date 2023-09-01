@@ -2,6 +2,10 @@
     max-width: 20rem;
 }
 
+.card-body h5 {
+    color: #edd260;
+}
+
 .location-event,
 .time-event{
     margin-bottom: 5px;
