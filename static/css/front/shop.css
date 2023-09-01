@@ -93,8 +93,13 @@
         margin-right: 0;
     }
 
+    .txt-container {
+        width: auto;
+    }
+
     .ware-container img {
         width: 296px;
+        height: auto;
     }
 
     .sign-up {

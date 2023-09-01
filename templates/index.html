@@ -97,7 +97,7 @@
           <h1 class="game_name">{{ next_games[i][0] }}</h1>
           <div class="date">
             <img src="{{ url_for('static', filename='/images/front/calendar.png') }}">
-            <p>ДАТА :  {{ next_games[i][1] }}</p>
+            <p>ДАТА :  {{ next_games[i][1].strftime('%d.%m.%Y %H:%M') }}</p>
           </div>
           <div class="location">
             <img src="{{ url_for('static', filename='/images/front/home.png') }}">
@@ -105,7 +105,7 @@
           </div>
           <div class="entry">
             <p>ЗАПИСЬ:</p>
-            <a href="http://wa.me/{{ next_games[i][3] }}?text=Здравствуйте, я хотел бы записаться на игру {{ next_games[i][0] }}, которая будет проходить {{ next_games[i][1] }}. Количество человек: "><p class="state">ОТКРЫТА</p></a>
+            <a href="http://wa.me/{{ next_games[i][3] }}?text=Здравствуйте, я хотел бы записаться на игру {{ next_games[i][0] }}, которая будет проходить {{ next_games[i][1].strftime('%d.%m.%Y %H:%M') }}. Количество человек: "><p class="state">ОТКРЫТА</p></a>
           </div>
           <img src="{{ url_for('static', filename='/images/front/rectangle_next_game.png') }}">
         </div>
@@ -138,7 +138,6 @@
             </div>
           </div>
         </div>
-        <button type="button" class="rules-btn">ПРАВИЛА ИГРЫ</button>
       </div>
     </div>
 
@@ -171,10 +170,10 @@
       <div class="last-photos">
           {% for i in range(last_photos|length) %}
             <div class="card" style="width: 18rem;">
-              <img src="data:image/jpeg;base64,{{ last_photos[i][5] | safe }}" class="card-img-top" alt="...">
+              <img src="data:image/jpeg;base64,{{ last_photos[i][3] | safe }}" class="card-img-top" alt="...">
               <div class="card-body">
                 <h5 class="card-title">{{ last_photos[i][1] }}</h5>
-                <p class="card-text">ДАТА: {{ last_photos[i][4] }}</p>
+                <p class="card-text">ДАТА: {{ last_photos[i][4].strftime('%d.%m.%Y') }}</p>
                 <p class="card-text">МЕСТО: {{ last_photos[i][5] }}</p>
                 <a href="{{ last_photos[i][2] }}" class="watch-photo-btn btn btn-primary">ДАЛЕЕ</a>
               </div>

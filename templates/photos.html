@@ -91,7 +91,7 @@
               <img src="data:image/jpeg;base64,{{ all_photos[i][3] | safe }}" class="card-img-top" alt="...">
               <div class="card-body">
                 <h5 class="card-title">{{ all_photos[i][1] }}</h5>
-                <p class="card-text">ДАТА: {{ all_photos[i][4] }}</p>
+                <p class="card-text">ДАТА: {{ all_photos[i][4].strftime('%d.%m.%Y') }}</p>
                 <p class="card-text">МЕСТО: {{ all_photos[i][5] }}</p>
                 <a href="{{ all_photos[i][2] }}" class="btn btn-primary show-btn">Посмотреть</a>
               </div>

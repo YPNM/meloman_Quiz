@@ -69,6 +69,7 @@ h3 {
 
 .admin-numbers {
     display: flex;
+    align-items: center;
 }
 
 .number-container {
@@ -86,4 +87,74 @@ h3 {
     border: 3px solid #d0a236;
     border-radius: 20px;
     box-shadow: 0 0 20px rgba(208, 162, 54, 0.67);
+}
+
+.project-rectangle-bg img {
+    height: 144px;
+}
+
+@media screen and (max-width: 780px) {
+
+    .social-networks-container img {
+        width: 120px;
+    }
+
+    .administration-container {
+        display: block;
+        margin-bottom: 30px;
+    }
+
+    .administrator {
+        margin-right: 0;
+    }
+
+    .admin-rectangle-bg {
+        width: 100%;
+        height: auto;
+    }
+
+    .admin-photo {
+        height: auto;
+    }
+
+    .admin-photo img {
+        border-radius: 17px 0 0 17px;
+        height: 195px;
+    }
+
+    .admin-name {
+        padding-left: 0;
+    }
+
+    .admin-name h4 {
+        padding-left: 5px;
+        font-size: 20px;
+    }
+
+    .admin-name h5 {
+        text-align: center;
+        padding-left: 5px;
+        font-size: 20px;
+    }
+
+    .admin-numbers {
+        display: block;
+    }
+
+    .contact-img {
+        margin-bottom: 15px;
+    }
+
+    .number-container {
+        margin-right: 10px;
+    }
+
+    .projects {
+        display: block;
+    }
+
+    .project {
+        display: flex;
+        justify-content: center;
+    }
 }

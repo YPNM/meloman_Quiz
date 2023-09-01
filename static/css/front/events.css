@@ -6,6 +6,10 @@
     color: #edd260;
 }
 
+.card-container {
+    margin-bottom: 15px;
+}
+
 .location-event,
 .time-event{
     margin-bottom: 5px;
