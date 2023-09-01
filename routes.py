@@ -385,6 +385,7 @@ def admin_games_create():
             gameLocation = request.form.get('gameLocation')
             gameCity = request.form.get('gameCity')
             gameType = request.form.get('gameType')
+            gamePrice = request.form.get('gamePrice')
             gameSeason = request.form.get('season')
             reserveLink = request.form.get('reserveLink')
             file = request.files['fileupload']
@@ -409,17 +410,17 @@ def admin_games_create():
                 return redirect(url_for('admin_games'))
 
             if (
-                    gameName != '' and gameLocation != '' and gameCity != '' and gameDescription != '' and reserveLink != '' and gameType != ''):
+                    gamePrice != '' and gameName != '' and gameLocation != '' and gameCity != '' and gameDescription != '' and reserveLink != '' and gameType != ''):
                 gamesModel = db_init.GamesDB()
                 status = gamesModel.create_new_game(gameName=gameName, gameDescription=gameDescription,
                                                     gameTypeId=gameType, gameDate=gameDate, location=gameLocation,
                                                     season_id=gameSeason, city_id=gameCity, bookingLink=reserveLink,
-                                                    previewPhotoBase64=image_string.decode())
+                                                    previewPhotoBase64=image_string.decode(), price=gamePrice)
                 if (status == True):
                     flash("Игра успешно добавлена", "success")
                     return redirect(url_for('admin_games'))
                 elif (status == 2):
-                    flash("Данный игра уже существует в базе!", "danger")
+                    flash("Данная игра уже существует в базе!", "danger")
                     return redirect(url_for('admin_games'))
                 elif (status == 3):
                     flash("Произошла непредвиденная ошибка!", "danger")
@@ -457,6 +458,7 @@ def admin_games_edit(game_id):
             gameDate = request.form.get('gameDate')
             gameLocation = request.form.get('gameLocation')
             gameCity = request.form.get('gameCity')
+            gamePrice = request.form.get('gamePrice')
             gameType = request.form.get('gameType')
             gamePublished = request.form.get('published') != None
             gameScorePublished = request.form.get('scorePublished') != None
@@ -487,12 +489,12 @@ def admin_games_edit(game_id):
                                                     gameTypeId=gameType, gameDate=gameDate, location=gameLocation,
                                                     city_id=gameCity, season_id=gameSeason, bookingLink=reserveLink,
                                                     published=gamePublished, scorePublished=gameScorePublished,
-                                                    previewPhotoBase64=image_string.decode())
+                                                    previewPhotoBase64=image_string.decode(), price=gamePrice)
             else:
                 status = gamesModel.edit_game_by_id(game_id=game_id, gameName=gameName, gameDescription=gameDescription,
                                                     gameTypeId=gameType, gameDate=gameDate, location=gameLocation,
                                                     city_id=gameCity, season_id=gameSeason, bookingLink=reserveLink,
-                                                    published=gamePublished, scorePublished=gameScorePublished)
+                                                    published=gamePublished, scorePublished=gameScorePublished, price=gamePrice)
             if (status == True):
                 flash("Игра успешно обновлена", "success")
                 return redirect(url_for('admin_games'))
@@ -582,6 +584,46 @@ def admin_rounds_delete(round_id, game_id):
     else:
         abort(403)
 
+#TeamsInGame Route
+@app.route("/admin/teamsingame", methods=["GET"], strict_slashes=False)
+@login_required
+def admin_teamsingame():
+    if (current_user.superadmin or current_user.city_superadmin):
+        if (current_user.superadmin):
+            games = db_init.GamesDB().get_all_games()
+        else:
+            games = db_init.GamesDB().get_all_games(current_user.city_id.decode())
+        return render_template("admin/pages/teamsInGame/index.html", title="Игры", games=games)
+    else:
+        abort(403)
+
+@app.route("/admin/teamsingame/show/<string:game_id>", methods=["GET", "POST"], strict_slashes=False)
+@login_required
+def admin_teamsingame_show(game_id):
+    if (current_user.superadmin or current_user.city_superadmin):
+        if(request.method == "GET"):
+            teams = db_init.TeamsDB().get_all_teams()
+            teamsInGame = db_init.TeamsInGame().get_all_teams_in_game(gameId=game_id)
+            returnTeams = []
+            for team in teams:
+                for teamInGame in teamsInGame:
+                    if(team[0] == teamInGame[1]):
+                        returnTeams.append([team[0], team[1], teamInGame[2]])
+            return render_template("admin/pages/teamsInGame/show.html", title="Команды в игре",
+                                   teams=returnTeams, game_id=game_id)
+        if(request.method == "POST"):
+            teamsInGameModel = db_init.TeamsInGame()
+            dictionary = request.form.to_dict()
+            print(dictionary)
+            status = teamsInGameModel.add_team(dictionary=dictionary)
+            if (status == True):
+                flash("Данные обновлены", "success")
+                return redirect(url_for('admin_teamsingame_show', game_id=game_id))
+            else:
+                flash("Произошла непредвиденная ошибка", "danger")
+                return redirect(url_for('admin_teamsingame_show', game_id=game_id))
+    else:
+        abort(403)
 
 # Teams Route
 @app.route("/admin/teams", methods=["GET"], strict_slashes=False)
@@ -1318,4 +1360,4 @@ def contacts():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5555)

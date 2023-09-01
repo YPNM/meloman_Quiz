@@ -2,7 +2,12 @@
 <html lang="en">
 
 {% include "admin/partials/header.html" %}
-
+<style>
+  input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}</style>
 <body>
   <div class="container-scroller">
     <!-- partial:../../partials/_navbar.html -->
@@ -84,6 +89,10 @@
                     <div class="form-group">
                       <label for="reserveLink">Номер для брони<code>*</code></label>
                       <input type="text" class="form-control" name="reserveLink" id="reserveLink" placeholder="+77056669292" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="gamePrice">Стоимость <code>*</code></label>
+                      <input class="form-control" min="0" max="1000000" type="number" value="0" id="gamePrice" name="gamePrice" required>
                     </div>
                     <div class="form-group">
                       <label for="fileupload">Загрузите заставку<code>*</code></label>

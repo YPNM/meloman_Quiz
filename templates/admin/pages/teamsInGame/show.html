@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "admin/partials/header.html" %}
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include "admin/partials/_navbar.html" %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      {% include "admin/partials/_settings-panel.html" %}
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+      {% include "admin/partials/_sidebar.html" %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <form action="{{ url_for('admin_teamsingame_show', game_id=game_id) }}" method="POST">
+                  <div class="card-body">
+                  <h4 class="card-title">Команды в игре</h4>
+                  <p class="card-description">
+                    Выберите команду и нажмите на сохранить</code></a>
+                  </p>
+                  {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                      {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                              {{ message }}
+                        </div>
+                      {% endfor %}
+                      </ul>
+                    {% endif %}
+                  {% endwith %}
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>
+                            Название команды
+                          </th>
+                          <th>
+                            Статус
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for team in teams %}
+                          <tr>
+                            <td>
+                                {{ team[1] }}
+                            </td>
+                            <td>
+                                {% if team[2] %}
+                                    <input style="border: none;" type="checkbox" name="{{ game_id }}/{{ team[0] }}" checked>
+                                {% else %}
+                                    <input style="border: none;" type="checkbox" name="{{ game_id }}/{{ team[0] }}">
+                                {% endif %}
+                            </td>
+                          </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-primary me-2">Сохранить</button>
+                    <a class="btn btn-light" href="{{ url_for('admin_teamsingame') }}">Назад</a>
+                  </div>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        {% include "admin/partials/_footer.html" %}
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+</html>

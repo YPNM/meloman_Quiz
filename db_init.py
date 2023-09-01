@@ -90,6 +90,7 @@ def init_db(force=False):
                             published BOOLEAN NOT NULL,
                             score_published BOOLEAN NOT NULL,
                             booking_link VARCHAR(128) NOT NULL,
+                            price INT NOT NULL,
                             city_id BINARY(36) NOT NULL,
                             FOREIGN KEY (city_id) REFERENCES cities(city_id),
                             season_id BINARY(36) NOT NULL,
@@ -106,6 +107,18 @@ def init_db(force=False):
                                 team_id BINARY(36) PRIMARY KEY,
                                 team_name VARCHAR(128) NOT NULL,
                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+                                '''
+                   )
+
+    cursor.execute('''CREATE TABLE IF NOT EXISTS teams_in_game (
+                                game_id BINARY(36) NOT NULL,
+                                FOREIGN KEY (game_id) REFERENCES games(game_id),
+                                team_id BINARY(36) NOT NULL,
+                                FOREIGN KEY (team_id) REFERENCES teams(team_id),
+                                status BOOLEAN NOT NULL,
+                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                PRIMARY KEY(game_id, team_id)
                                 ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
                                 '''
                    )
@@ -351,11 +364,11 @@ class SeasonsDB():
 
 class GamesDB():
 
-    def is_exists(self, gameId):
+    def is_exists(self, gameName):
         try:
             conn, cursor = start_connection()
-            prepared_query = 'SELECT game_id FROM games WHERE game_id = %s'
-            data = (f'{gameId}',)
+            prepared_query = 'SELECT game_name FROM games WHERE game_name = %s'
+            data = (f'{gameName}',)
             cursor.execute(prepared_query, data)
             cursor.fetchall()
             stop_connection(conn, cursor)
@@ -367,25 +380,29 @@ class GamesDB():
             print(err)
             return 3
 
-    def create_new_game(self, gameName, gameDescription, gameDate, gameTypeId, location, season_id, city_id, bookingLink, previewPhotoBase64):
-        conn, cursor = start_connection()
-        prepared_query = 'INSERT INTO games(game_id, game_name, game_description, game_type_id, game_time, location, season_id, city_id, published, score_published, booking_link, preview_photo) VALUES (UUID(),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-        data = (f'{gameName}', f'{gameDescription}', f'{gameTypeId}', f'{gameDate}', f'{location}', f'{season_id}', f'{city_id}', False, False, f'{bookingLink}', f'{previewPhotoBase64}')
-        cursor.execute(prepared_query, data)
-        conn.commit()
-        stop_connection(conn, cursor)
-        return True
+    def create_new_game(self, gameName, gameDescription, gameDate, gameTypeId, location, season_id, price, city_id, bookingLink, previewPhotoBase64):
+        status = self.is_exists(gameName)
+        if(status):
+            conn, cursor = start_connection()
+            prepared_query = 'INSERT INTO games(game_id, game_name, game_description, game_type_id, game_time, location, season_id, city_id, price, published, score_published, booking_link, preview_photo) VALUES (UUID(),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+            data = (f'{gameName}', f'{gameDescription}', f'{gameTypeId}', f'{gameDate}', f'{location}', f'{season_id}', f'{city_id}', price, False, False, f'{bookingLink}', f'{previewPhotoBase64}')
+            cursor.execute(prepared_query, data)
+            conn.commit()
+            stop_connection(conn, cursor)
+            return True
+        else:
+            return status
 
-    def edit_game_by_id(self, game_id, gameName, gameDescription, gameTypeId, gameDate, location, season_id, city_id, bookingLink, published, scorePublished, previewPhotoBase64=None):
+    def edit_game_by_id(self, game_id, gameName, gameDescription, gameTypeId, gameDate, location, season_id, city_id, price, bookingLink, published, scorePublished, previewPhotoBase64=None):
         try:
             conn, cursor = start_connection()
             if(previewPhotoBase64 != None):
-                prepared_query = 'UPDATE games SET game_name = %s, game_description = %s, game_type_id = %s, game_time = %s, location = %s, season_id = %s, city_id = %s, booking_link = %s, published = %s, score_published = %s, preview_photo = %s WHERE game_id = %s'
-                data = (f'{gameName}', f'{gameDescription}', f'{gameTypeId}' ,f'{gameDate}', f'{location}', f'{season_id}', f'{city_id}', f'{bookingLink}', published, scorePublished, f'{previewPhotoBase64}', f'{game_id}')
+                prepared_query = 'UPDATE games SET game_name = %s, game_description = %s, game_type_id = %s, game_time = %s, price=%s, location = %s, season_id = %s, city_id = %s, booking_link = %s, published = %s, score_published = %s, preview_photo = %s WHERE game_id = %s'
+                data = (f'{gameName}', f'{gameDescription}', f'{gameTypeId}' ,f'{gameDate}', price, f'{location}', f'{season_id}', f'{city_id}', f'{bookingLink}', published, scorePublished, f'{previewPhotoBase64}', f'{game_id}')
 
             else:
-                prepared_query = 'UPDATE games SET game_name = %s, game_description = %s, game_type_id = %s, game_time = %s, location = %s, season_id = %s, city_id = %s, booking_link = %s, published = %s, score_published = %s WHERE game_id = %s'
-                data = (f'{gameName}', f'{gameDescription}', f'{gameTypeId}',f'{gameDate}', f'{location}', f'{season_id}', f'{city_id}', f'{bookingLink}', published, scorePublished, f'{game_id}')
+                prepared_query = 'UPDATE games SET game_name = %s, game_description = %s, game_type_id = %s, game_time = %s, price=%s, location = %s, season_id = %s, city_id = %s, booking_link = %s, published = %s, score_published = %s WHERE game_id = %s'
+                data = (f'{gameName}', f'{gameDescription}', f'{gameTypeId}',f'{gameDate}', price, f'{location}', f'{season_id}', f'{city_id}', f'{bookingLink}', published, scorePublished, f'{game_id}')
             cursor.execute(prepared_query, data)
             conn.commit()
             stop_connection(conn, cursor)
@@ -396,7 +413,7 @@ class GamesDB():
 
     def get_all_games(self, city_id=None, season_id=None):
         conn, cursor = start_connection()
-        prepared_query = 'SELECT g.game_id, g.game_name, g.game_description, gt.game_type_name, g.game_time, c.city_name, g.location, s.season_name, g.published, g.score_published, g.booking_link, g.preview_photo, c.city_id FROM games AS g LEFT JOIN cities AS c ON g.city_id = c.city_id LEFT JOIN seasons AS s ON s.season_id = g.season_id LEFT JOIN game_types AS gt ON gt.game_type_id = g.game_type_id'
+        prepared_query = 'SELECT g.game_id, g.game_name, g.game_description, gt.game_type_name, g.game_time, c.city_name, g.location, s.season_name, g.published, g.score_published, g.booking_link, g.price, g.preview_photo, c.city_id FROM games AS g LEFT JOIN cities AS c ON g.city_id = c.city_id LEFT JOIN seasons AS s ON s.season_id = g.season_id LEFT JOIN game_types AS gt ON gt.game_type_id = g.game_type_id'
         data = []
 
         if(city_id):
@@ -450,7 +467,7 @@ class GamesDB():
 
     def get_game_by_id(self, gameId):
         conn, cursor = start_connection()
-        prepared_query = 'SELECT g.game_id, g.game_name, g.game_description, g.game_type_id, gt.game_type_name, g.game_time, c.city_id, c.city_name, g.location, s.season_id, s.season_name, g.score_published, g.published, g.booking_link, g.preview_photo FROM games AS g LEFT JOIN cities AS c ON g.city_id = c.city_id LEFT JOIN seasons AS s ON s.season_id = g.season_id LEFT JOIN game_types AS gt ON g.game_type_id = gt.game_type_id WHERE g.game_id = %s'
+        prepared_query = 'SELECT g.game_id, g.game_name, g.game_description, g.game_type_id, gt.game_type_name, g.game_time, c.city_id, c.city_name, g.location, s.season_id, s.season_name, g.score_published, g.published, g.booking_link, g.price, g.preview_photo FROM games AS g LEFT JOIN cities AS c ON g.city_id = c.city_id LEFT JOIN seasons AS s ON s.season_id = g.season_id LEFT JOIN game_types AS gt ON g.game_type_id = gt.game_type_id WHERE g.game_id = %s'
         data = (f'{gameId}',)
         cursor.execute(prepared_query, data)
         result = cursor.fetchone()
@@ -513,6 +530,37 @@ class RoundsDB():
         conn.commit()
         stop_connection(conn, cursor)
         return True
+
+class TeamsInGame():
+
+    def __init__(self):
+        pass
+
+    def add_team(self, dictionary):
+        conn, cursor = start_connection()
+        for key, value in dictionary.items():
+            if(value != ''):
+                key = key.split('/')
+                game_id = key[0]
+                team_id = key[1]
+                value = value != None
+                print(game_id, team_id, value)
+                prepared_query = 'INSERT INTO teams_in_game(game_id, team_id, status) VALUES (%s,%s,%s) ON DUPLICATE KEY UPDATE status = %s'
+                data = (f'{game_id}', f'{team_id}', value, value)
+                cursor.execute(prepared_query, data)
+        conn.commit()
+        stop_connection(conn, cursor)
+        return True
+
+    def get_all_teams_in_game(self, gameId):
+        conn, cursor = start_connection()
+        prepared_query = 'SELECT game_id, team_id, status FROM teams_in_game WHERE game_id = %s'
+        data = (f'{gameId}',)
+        cursor.execute(prepared_query, data)
+        results = cursor.fetchall()
+        stop_connection(conn, cursor)
+        return convert_bytes_to_string(results)
+
 
 class TeamsDB():
 
