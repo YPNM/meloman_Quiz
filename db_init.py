@@ -467,7 +467,7 @@ class GamesDB():
 
     def get_game_by_id(self, gameId):
         conn, cursor = start_connection()
-        prepared_query = 'SELECT g.game_id, g.game_name, g.game_description, g.game_type_id, gt.game_type_name, g.game_time, c.city_id, c.city_name, g.location, s.season_id, s.season_name, g.score_published, g.published, g.booking_link, g.price, g.preview_photo FROM games AS g LEFT JOIN cities AS c ON g.city_id = c.city_id LEFT JOIN seasons AS s ON s.season_id = g.season_id LEFT JOIN game_types AS gt ON g.game_type_id = gt.game_type_id WHERE g.game_id = %s'
+        prepared_query = 'SELECT g.game_id, g.game_name, g.game_description, g.game_type_id, gt.game_type_name, g.game_time, c.city_id, c.city_name, g.location, s.season_id, s.season_name, g.published, g.score_published, g.booking_link, g.price, g.preview_photo FROM games AS g LEFT JOIN cities AS c ON g.city_id = c.city_id LEFT JOIN seasons AS s ON s.season_id = g.season_id LEFT JOIN game_types AS gt ON g.game_type_id = gt.game_type_id WHERE g.game_id = %s'
         data = (f'{gameId}',)
         cursor.execute(prepared_query, data)
         result = cursor.fetchone()
@@ -504,10 +504,9 @@ class RoundsDB():
 
     def create_new_rounds(self, game_id, roundsCount):
         conn, cursor = start_connection()
-
         for i in range(1, roundsCount+1):
             prepared_query = 'INSERT INTO rounds(round_id, round_name, game_id) VALUES (UUID(),%s,%s)'
-            data = (f'Раунд {i}', f'{game_id}')
+            data = (f'{i}', f'{game_id}')
             cursor.execute(prepared_query, data)
             conn.commit()
         stop_connection(conn, cursor)
@@ -536,18 +535,12 @@ class TeamsInGame():
     def __init__(self):
         pass
 
-    def add_team(self, dictionary):
+    def add_team(self, values):
         conn, cursor = start_connection()
-        for key, value in dictionary.items():
-            if(value != ''):
-                key = key.split('/')
-                game_id = key[0]
-                team_id = key[1]
-                value = value != None
-                print(game_id, team_id, value)
-                prepared_query = 'INSERT INTO teams_in_game(game_id, team_id, status) VALUES (%s,%s,%s) ON DUPLICATE KEY UPDATE status = %s'
-                data = (f'{game_id}', f'{team_id}', value, value)
-                cursor.execute(prepared_query, data)
+        for value in values:
+            prepared_query = 'INSERT INTO teams_in_game(game_id, team_id, status) VALUES (%s,%s,%s) ON DUPLICATE KEY UPDATE status = %s'
+            data = (f'{value[0]}', f'{value[1]}', value[2], value[2])
+            cursor.execute(prepared_query, data)
         conn.commit()
         stop_connection(conn, cursor)
         return True
@@ -657,35 +650,12 @@ class ScoresDB():
 
     def get_scores_by_game_id(self, game_id):
         conn, cursor = start_connection()
-        prepared_query = 'SELECT r.round_id, r.round_name, s.team_id, s.score, (SELECT SUM(score) FROM scores WHERE t.team_id = team_id GROUP BY team_id) AS total, t.team_name FROM rounds AS r LEFT JOIN games AS g ON r.game_id = g.game_id LEFT JOIN scores AS s ON s.round_id = r.round_id LEFT JOIN teams AS t ON s.team_id = t.team_id WHERE g.game_id = %s ORDER BY total DESC, r.round_name'
+        prepared_query = 'SELECT r.round_id, r.round_name, s.team_id, s.score, (SELECT SUM(score) FROM scores WHERE t.team_id = team_id GROUP BY team_id) AS total, t.team_name FROM rounds AS r LEFT JOIN games AS g ON r.game_id = g.game_id LEFT JOIN scores AS s ON s.round_id = r.round_id LEFT JOIN teams AS t ON s.team_id = t.team_id WHERE g.game_id = %s ORDER BY total DESC, s.team_id, r.round_name;'
         data = (f'{game_id}',)
         cursor.execute(prepared_query, data)
         results = cursor.fetchall()
         stop_connection(conn, cursor)
-        try:
-            if(results[0][2] != None):
-                dictionary = {}
-                for result in results:
-                    if(result[5] not in dictionary.keys()):
-                        dictionary[result[5]] = []
-                    sortedArray = convert_bytes_to_string(result[:5], True)
-                    dictionary[result[5]].append(sortedArray)
-                sortedDict = {}
-                dictValues = list(dictionary.values())
-                if(dictValues[0][0][4] == dictValues[1][0][4] and dictValues[0][len(dictValues[0])-1][3] < dictValues[1][len(dictValues[1])-1][3]):
-                    dictKeys = list(dictionary.keys())
-                    sortedDict[dictKeys[1]] = list(dictionary.values())[1]
-                    sortedDict[dictKeys[0]] = list(dictionary.values())[0]
-                    for item in dictKeys[2:]:
-                        sortedDict[item] = dictionary[item]
-                    return sortedDict
-                else:
-                    return dictionary
-            else:
-                return None
-        except Exception as e:
-            print(e)
-            return None
+        return results
 
 
 
@@ -937,3 +907,20 @@ class CatalogDB():
         conn.commit()
         stop_connection(conn, cursor)
         return True
+
+def tests():
+    game_id = '3b1f2f3d-48ad-11'
+    teamsInGame = TeamsInGame()
+    scoresModel = ScoresDB()
+    roundsModel = RoundsDB()
+    scoresDictionary = {
+        'teams_id': [],
+        'items': []
+    }
+    teams = teamsInGame.get_all_teams_in_game(game_id)
+    allscores = scoresModel.get_scores_by_game_id(game_id=game_id)
+    rounds = roundsModel.get_all_rounds(game_id=game_id)
+    for team in teams:
+        print(team)
+
+tests()
