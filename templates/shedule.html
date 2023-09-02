@@ -113,12 +113,12 @@
             <div class="game">
                 <div class="game-background">
                     <div class="game-preview">
-                        <img src="data:image/jpeg;base64,{{ selected_games[i][10] | safe }}">
+                        <img src="data:image/jpeg;base64,{{ selected_games[i][11] | safe }}">
                     </div>
                     <div class="description">
                         <div class="details">
                             <p>{{ selected_games[i][4].strftime('%d %B') }}</p>
-                            <p class="price">2500 ТГ</p>
+                            <p class="price">{{ selected_games[i][10] }} ТГ</p>
                         </div>
                         <h4>{{ selected_games[i][1] }}</h4>
                         <div class="loc">

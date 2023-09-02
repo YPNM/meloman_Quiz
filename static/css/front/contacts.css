@@ -104,6 +104,11 @@ h3 {
         margin-bottom: 30px;
     }
 
+    .administration h3 {
+        margin-right: 0;
+        text-align: center;
+    }
+
     .administrator {
         margin-right: 0;
     }
@@ -156,5 +161,20 @@ h3 {
     .project {
         display: flex;
         justify-content: center;
+    }
+}
+
+@media screen and (max-width: 410px) {
+
+    .social-networks-container img {
+        width: 100px;
+    }
+
+    .admin-photo img {
+        display: none;
+    }
+
+    .admin-name {
+        width: inherit;
     }
 }

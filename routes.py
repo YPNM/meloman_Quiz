@@ -385,6 +385,7 @@ def admin_games_create():
             gameLocation = request.form.get('gameLocation')
             gameCity = request.form.get('gameCity')
             gameType = request.form.get('gameType')
+            gamePrice = request.form.get('gamePrice')
             gameSeason = request.form.get('season')
             reserveLink = request.form.get('reserveLink')
             file = request.files['fileupload']
@@ -409,17 +410,17 @@ def admin_games_create():
                 return redirect(url_for('admin_games'))
 
             if (
-                    gameName != '' and gameLocation != '' and gameCity != '' and gameDescription != '' and reserveLink != '' and gameType != ''):
+                    gamePrice != '' and gameName != '' and gameLocation != '' and gameCity != '' and gameDescription != '' and reserveLink != '' and gameType != ''):
                 gamesModel = db_init.GamesDB()
                 status = gamesModel.create_new_game(gameName=gameName, gameDescription=gameDescription,
                                                     gameTypeId=gameType, gameDate=gameDate, location=gameLocation,
                                                     season_id=gameSeason, city_id=gameCity, bookingLink=reserveLink,
-                                                    previewPhotoBase64=image_string.decode())
+                                                    previewPhotoBase64=image_string.decode(), price=gamePrice)
                 if (status == True):
                     flash("Игра успешно добавлена", "success")
                     return redirect(url_for('admin_games'))
                 elif (status == 2):
-                    flash("Данный игра уже существует в базе!", "danger")
+                    flash("Данная игра уже существует в базе!", "danger")
                     return redirect(url_for('admin_games'))
                 elif (status == 3):
                     flash("Произошла непредвиденная ошибка!", "danger")
@@ -457,6 +458,7 @@ def admin_games_edit(game_id):
             gameDate = request.form.get('gameDate')
             gameLocation = request.form.get('gameLocation')
             gameCity = request.form.get('gameCity')
+            gamePrice = request.form.get('gamePrice')
             gameType = request.form.get('gameType')
             gamePublished = request.form.get('published') != None
             gameScorePublished = request.form.get('scorePublished') != None
@@ -487,12 +489,12 @@ def admin_games_edit(game_id):
                                                     gameTypeId=gameType, gameDate=gameDate, location=gameLocation,
                                                     city_id=gameCity, season_id=gameSeason, bookingLink=reserveLink,
                                                     published=gamePublished, scorePublished=gameScorePublished,
-                                                    previewPhotoBase64=image_string.decode())
+                                                    previewPhotoBase64=image_string.decode(), price=gamePrice)
             else:
                 status = gamesModel.edit_game_by_id(game_id=game_id, gameName=gameName, gameDescription=gameDescription,
                                                     gameTypeId=gameType, gameDate=gameDate, location=gameLocation,
                                                     city_id=gameCity, season_id=gameSeason, bookingLink=reserveLink,
-                                                    published=gamePublished, scorePublished=gameScorePublished)
+                                                    published=gamePublished, scorePublished=gameScorePublished, price=gamePrice)
             if (status == True):
                 flash("Игра успешно обновлена", "success")
                 return redirect(url_for('admin_games'))
@@ -582,6 +584,45 @@ def admin_rounds_delete(round_id, game_id):
     else:
         abort(403)
 
+#TeamsInGame Route
+@app.route("/admin/teamsingame", methods=["GET"], strict_slashes=False)
+@login_required
+def admin_teamsingame():
+    if (current_user.superadmin or current_user.city_superadmin):
+        if (current_user.superadmin):
+            games = db_init.GamesDB().get_all_games()
+        else:
+            games = db_init.GamesDB().get_all_games(current_user.city_id.decode())
+        return render_template("admin/pages/teamsInGame/index.html", title="Игры", games=games)
+    else:
+        abort(403)
+
+@app.route("/admin/teamsingame/show/<string:game_id>", methods=["GET", "POST"], strict_slashes=False)
+@login_required
+def admin_teamsingame_show(game_id):
+    if (current_user.superadmin or current_user.city_superadmin):
+        if(request.method == "GET"):
+            teams = db_init.TeamsDB().get_all_teams()
+            teamsInGame = db_init.TeamsInGame().get_all_teams_in_game(gameId=game_id)
+            returnTeams = []
+            for team in teams:
+                for teamInGame in teamsInGame:
+                    if(team[0] == teamInGame[1]):
+                        returnTeams.append([team[0], team[1], teamInGame[2]])
+            return render_template("admin/pages/teamsInGame/show.html", title="Команды в игре",
+                                   teams=returnTeams, game_id=game_id)
+        if(request.method == "POST"):
+            teamsInGameModel = db_init.TeamsInGame()
+            dictionary = request.form.to_dict()
+            status = teamsInGameModel.add_team(dictionary=dictionary)
+            if (status == True):
+                flash("Данные обновлены", "success")
+                return redirect(url_for('admin_teamsingame_show', game_id=game_id))
+            else:
+                flash("Произошла непредвиденная ошибка", "danger")
+                return redirect(url_for('admin_teamsingame_show', game_id=game_id))
+    else:
+        abort(403)
 
 # Teams Route
 @app.route("/admin/teams", methods=["GET"], strict_slashes=False)
@@ -687,7 +728,6 @@ def admin_tables_show(game_id):
         if request.method == "POST":
             scoresModel = db_init.ScoresDB()
             dictionary = request.form.to_dict()
-            print(dictionary)
             status = scoresModel.add_scores(dictionary=dictionary)
             if (status == True):
                 flash("Данные обновлены", "success")
@@ -1156,19 +1196,18 @@ def index():
     if selected_city is not None:
         try:
             next_games = []
-            last_photos = []
             all_games = gamesModel.get_all_games(cities.get(selected_city),
                                                  seasonsModel.get_last_season(cities.get(selected_city))[0][0])
             last_photos = photosModel.get_all_photos(cities.get(selected_city))
             for i in range(len(all_games)):
                 if all_games[i][4] > datetime.datetime.now() and all_games[i][8]:
                     next_games.append([all_games[i][1], all_games[i][4], all_games[i][6], str(all_games[i][10])[1:]])
-
             if len(next_games) > 3:
                 del (next_games[3:len(next_games)])
 
             if len(last_photos) > 3:
                 del (last_photos[3:len(last_photos)])
+                last_photos.reverse()
             return render_template('index.html', cityNames=list(cities.keys()), next_games=next_games,
                                    last_photos=last_photos)
         except IndexError:
@@ -1181,7 +1220,6 @@ def index():
 def shedule():
     selected_city = request.args.get("selectedCity")
     selected_game_type = request.args.get("game-type")
-    print(selected_game_type)
     cityModel = db_init.CitiesDB()
     gamesModel = db_init.GamesDB()
     seasonsModel = db_init.SeasonsDB()
@@ -1194,22 +1232,25 @@ def shedule():
         cities[allCities[i][1]] = allCities[i][0]
 
     if selected_city is not None:
-        all_games = gamesModel.get_all_published_games(cities.get(selected_city),
-                                                       seasonsModel.get_last_season(cities.get(selected_city))[0][0])
-        for i in range(len(all_games)):
-            if all_games[i][4] > datetime.datetime.now():
-                del (all_games[0:i])
-                break
-        if selected_game_type == "all" or selected_game_type is None:
-            return render_template('shedule.html', cityNames=list(cities.keys()), game_types=game_types,
-                                   selected_games=all_games)
-        elif selected_game_type != "all":
-            selected_games = []
+        try:
+            all_games = gamesModel.get_all_published_games(cities.get(selected_city),
+                                                           seasonsModel.get_last_season(cities.get(selected_city))[0][0])
             for i in range(len(all_games)):
-                if all_games[i][3] == selected_game_type:
-                    selected_games.append(all_games[i])
-            return render_template('shedule.html', cityNames=list(cities.keys()), game_types=game_types,
-                                   selected_games=selected_games)
+                if all_games[i][4] > datetime.datetime.now():
+                    del (all_games[0:i])
+                    break
+            if selected_game_type == "all" or selected_game_type is None:
+                return render_template('shedule.html', cityNames=list(cities.keys()), game_types=game_types,
+                                       selected_games=all_games)
+            elif selected_game_type != "all":
+                selected_games = []
+                for i in range(len(all_games)):
+                    if all_games[i][3] == selected_game_type:
+                        selected_games.append(all_games[i])
+                return render_template('shedule.html', cityNames=list(cities.keys()), game_types=game_types,
+                                       selected_games=selected_games)
+        except IndexError:
+            return render_template('shedule.html', game_types=game_types, cityNames=list(cities.keys()))
 
     return render_template('shedule.html', game_types=game_types, cityNames=list(cities.keys()))
 
@@ -1264,39 +1305,43 @@ def table():
         cities[allCities[i][1]] = allCities[i][0]
 
     if selected_city is not None:
-        comands_score = {}
-        all_results = []
-        all_games = gamesModel.get_all_games_with_score(cities.get(selected_city),
+        try:
+            comands_score = {}
+            all_results = []
+            all_games = gamesModel.get_all_games_with_score(cities.get(selected_city),
                                                         seasonsModel.get_last_season(cities.get(selected_city))[0][0])
-        games_names_id = {}
-        for i in range(len(all_games)):
-            games_names_id[all_games[i][1]] = all_games[i][0]
-            all_results.append(scoreModel.get_scores_by_game_id(all_games[i][0]))
-        game_counter = Counter()
-        for d in all_results:
-            game_counter.update(d.keys())
+            games_names_id = {}
+            for i in range(len(all_games)):
+                games_names_id[all_games[i][1]] = all_games[i][0]
+                all_results.append(scoreModel.get_scores_by_game_id(all_games[i][0]))
+            game_counter = Counter()
+            for d in all_results:
+                game_counter.update(d.keys())
         # Считаю результаты за последний сезон
-        for i in range(len(all_results)):
-            for keys, values in all_results[i].items():
-                if comands_score.get(keys, 0) == 0:
-                    comands_score[keys] = int(values[0][4])
-                else:
-                    comands_score[keys] += int(values[0][4])
+            for i in range(len(all_results)):
+                for keys, values in all_results[i].items():
+                    if comands_score.get(keys, 0) == 0:
+                        comands_score[keys] = int(values[0][4])
+                    else:
+                        comands_score[keys] += int(values[0][4])
         # Получаю результаты за выбранную игру
-        if selected_game is not None:
-            game_result = scoreModel.get_scores_by_game_id(games_names_id.get(selected_game))
-            return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
+            if selected_game is not None:
+                game_result = scoreModel.get_scores_by_game_id(games_names_id.get(selected_game))
+                return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
                                    game_result=game_result, selected_game=selected_game, game_names=games_names_id,
                                    round_counter=len(list(game_result.values())[0]), cityNames=list(cities.keys()))
-        else:
-            game_result = scoreModel.get_scores_by_game_id(
-                games_names_id.get(collections.deque(games_names_id, maxlen=1)[0]))
-            round_counter = len(list(game_result.values())[0])
-            return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
+            else:
+                game_result = scoreModel.get_scores_by_game_id(
+                    games_names_id.get(collections.deque(games_names_id, maxlen=1)[0]))
+                round_counter = len(list(game_result.values())[0])
+                return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
                                    game_result=game_result,
                                    selected_game=collections.deque(games_names_id, maxlen=1)[0],
                                    game_names=games_names_id, round_counter=round_counter,
                                    cityNames=list(cities.keys()))
+        except IndexError:
+            return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),
+                                   game_names={}, round_counter=0, game_result={})
 
         # game_counter - {"Название команды": Количество посещённых игр}
         # Comands_score - {"Название команды": int(Количество набранных очков за все игры)}
@@ -1318,4 +1363,4 @@ def contacts():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

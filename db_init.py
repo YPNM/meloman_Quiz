@@ -431,7 +431,7 @@ class GamesDB():
 
     def get_all_published_games(self, city_id=None, season_id=None):
         conn, cursor = start_connection()
-        prepared_query = 'SELECT g.game_id, g.game_name, g.game_description, gt.game_type_name, g.game_time, c.city_name, g.location, s.season_name, g.score_published, g.booking_link, g.preview_photo, c.city_id FROM games AS g LEFT JOIN cities AS c ON g.city_id = c.city_id LEFT JOIN seasons AS s ON s.season_id = g.season_id LEFT JOIN game_types AS gt ON gt.game_type_id = g.game_type_id WHERE g.published'
+        prepared_query = 'SELECT g.game_id, g.game_name, g.game_description, gt.game_type_name, g.game_time, c.city_name, g.location, s.season_name, g.score_published, g.booking_link, g.price, g.preview_photo, c.city_id FROM games AS g LEFT JOIN cities AS c ON g.city_id = c.city_id LEFT JOIN seasons AS s ON s.season_id = g.season_id LEFT JOIN game_types AS gt ON gt.game_type_id = g.game_type_id WHERE g.published'
         data = []
 
         if(city_id):
