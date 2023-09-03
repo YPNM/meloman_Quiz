@@ -1,10 +1,16 @@
 import collections
 import datetime
 import locale
+import time
+import ssl
+
+context = ('ssl/certificate.crt','ssl/private.key')
 from collections import Counter
 
 locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
-
+import pptx_creator
+import tempfile
+import shutil
 from flask import (
     Flask,
     render_template,
@@ -12,7 +18,8 @@ from flask import (
     flash,
     url_for,
     session,
-    abort
+    abort,
+    send_file
 )
 
 from datetime import timedelta
@@ -846,6 +853,20 @@ def admin_tables_show(game_id):
     else:
         abort(403)
 
+@app.route("/admin/tables/export/<string:game_id>", methods=["GET"], strict_slashes=False)
+@login_required
+def admin_pptx_export(game_id):
+    if (current_user.superadmin or db_init.RoundsDB().admin_permission_check(game_id, current_user.city_id.decode())):
+        if(request.method == 'GET'):
+            try:
+                dir = tempfile.mkdtemp()
+                path = pptx_creator.create_powerpoint_with_table(dir, game_id)
+                return send_file(path, as_attachment=True)
+            except Exception as err:
+                print(err)
+                abort(404)
+    else:
+        abort(403)
 
 # Games routing
 @app.route("/admin/events", methods=["GET"], strict_slashes=False)
@@ -1476,4 +1497,4 @@ def contacts():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)

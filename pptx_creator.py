@@ -12,11 +12,101 @@ def iter_cells(table):
             yield cell
 
 
-def create_powerpoint_with_table(game_id):
+def create_powerpoint_with_table(folder, game_id):
     # Создаем новую презентацию
+
+    teamsInGame = db_init.TeamsInGame()
+    scoresModel = db_init.ScoresDB()
+    roundsModel = db_init.RoundsDB()
+    scoresDictionary = {}
+
+    teams = teamsInGame.get_all_teams_in_game(game_id, active=True)
+    allscores = scoresModel.get_scores_by_game_id(game_id=game_id)
+    rounds = roundsModel.get_all_rounds(game_id=game_id)
+
+    # template
+    for round in rounds:
+        for score in allscores:
+            if (score[4] not in scoresDictionary.keys()):
+                scoresDictionary[score[4]] = {'total': 0, 'items': []}
+            if (round[0] == score[0]):
+                scoresDictionary[score[4]]['total'] += score[3]
+                scoresDictionary[score[4]]['items'].append(score)
+
+    # find empty rounds
+    for key, value in scoresDictionary.items():
+        if (len(value['items']) < len(rounds)):
+            existRounds = []
+            team_id = ''
+            for item in value['items']:
+                existRounds.append(item[0])
+                team_id = item[2]
+            for round in rounds:
+                if (round[0] not in existRounds):
+                    value['items'].append([round[0], round[1], team_id, '', key])
+
+    # sorting by ascending order
+    sortedDict = dict(sorted(scoresDictionary.items(), key=lambda x: x[1]['total'], reverse=True))
+
+    submitDict = {}
+    temp = {
+        'max': 0,
+        'key': '',
+    }
+    for key, value in sortedDict.items():
+        if (key not in submitDict.keys()):
+            if (value['total'] == temp['max']):
+                length = len(value['items']) - 1
+                secondLength = len(sortedDict[key]['items']) - 1
+                while length != -1:
+                    if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
+                        res = dict()
+                        for secondKey in submitDict.keys():
+                            if (secondKey == temp['key']):
+                                res[key] = {
+                                    'total': value['total'],
+                                    'items': value['items']
+                                }
+
+                            res[secondKey] = submitDict[secondKey]
+                        submitDict = res
+                        length = -1
+                    elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
+                        length -= 1
+                        secondLength -= 1
+                        continue
+                    elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
+                        submitDict[key] = {
+                            'total': value['total'],
+                            'items': value['items']
+                        }
+                        length = -1
+            else:
+                temp['max'] = value['total']
+                temp['key'] = key
+                submitDict[key] = {
+                    'total': value['total'],
+                    'items': value['items']
+                }
+    # add new teams without scores
+    for team in teams:
+        if (team[3] not in submitDict.keys()):
+            submitDict[team[3]] = {
+                'total': None,
+                'id': team[1]
+            }
+
     prs = Presentation()
-    result_model = db_init.ScoresDB()
-    game_result = result_model.get_scores_by_game_id(game_id)
+    game_result = {}
+
+    for key, value in submitDict.items():
+        game_result[key] = []
+        for i in range(0, len(value['items'])):
+            arr = value['items'][i]
+            arr.append(value['total'])
+            game_result[key].append(arr)
+    print(game_result)
+
     rows = len(game_result.keys()) + 1
     cols = len(game_result.get(next(iter(game_result.keys())))) + 3
     table_length = Inches(4) + Inches(1) + (cols - 2) * Inches(0.7)
@@ -68,7 +158,7 @@ def create_powerpoint_with_table(game_id):
                 elif j == 1:
                     cell.text = str(comands[i - 1])
                 elif j == cols - 1:
-                    cell.text = str(float(game_result.get(comands[i - 1])[0][4]))
+                    cell.text = str(float(game_result.get(comands[i - 1])[0][5]))
                 else:
                     cell.text = str(game_result.get(comands[i - 1])[j - 2][3])
                 cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(255, 255, 255)
@@ -82,7 +172,7 @@ def create_powerpoint_with_table(game_id):
             table.table.columns[i].width = Inches(1)
         else:
             table.table.columns[i].width = Inches(0.7)
-
+    path = f'{folder}/table.pptx'
     # Сохраняем презентацию
-    prs.save("Таблица.pptx")
-
+    prs.save(path)
+    return path
