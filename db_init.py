@@ -489,6 +489,15 @@ class GamesDB():
 
 class RoundsDB():
 
+    def get_last_round(self, game_id):
+        conn, cursor = start_connection()
+        prepared_query = "SELECT round_name FROM rounds WHERE game_id = %s ORDER BY created_at DESC LIMIT 1;"
+        data = (f'{game_id}',)
+        cursor.execute(prepared_query, data)
+        result = cursor.fetchone()
+        stop_connection(conn, cursor)
+        return result
+
     def admin_permission_check(self, game_id, city_id):
         conn, cursor = start_connection()
         prepared_query = 'SELECT game_id, city_id FROM games WHERE game_id = %s and city_id = %s and score_published != 1'
@@ -503,18 +512,28 @@ class RoundsDB():
 
 
     def create_new_rounds(self, game_id, roundsCount):
+        last_round = self.get_last_round(game_id)
         conn, cursor = start_connection()
-        for i in range(1, roundsCount+1):
-            prepared_query = 'INSERT INTO rounds(round_id, round_name, game_id) VALUES (UUID(),%s,%s)'
-            data = (f'{i}', f'{game_id}')
-            cursor.execute(prepared_query, data)
-            conn.commit()
+        if(last_round):
+            startRound = int(last_round[0]) + 1
+            stopRound = (startRound + roundsCount)
+            for i in range(startRound, stopRound):
+                prepared_query = 'INSERT INTO rounds(round_id, round_name, game_id) VALUES (UUID(),%s,%s)'
+                data = (f'{i}', f'{game_id}')
+                cursor.execute(prepared_query, data)
+                conn.commit()
+        else:
+            for i in range(1, roundsCount+1):
+                prepared_query = 'INSERT INTO rounds(round_id, round_name, game_id) VALUES (UUID(),%s,%s)'
+                data = (f'{i}', f'{game_id}')
+                cursor.execute(prepared_query, data)
+                conn.commit()
         stop_connection(conn, cursor)
         return True
 
     def get_all_rounds(self, game_id):
         conn, cursor = start_connection()
-        prepared_query = 'SELECT r.round_id, r.round_name, r.game_id FROM rounds AS r LEFT JOIN games AS g ON g.game_id = r.game_id WHERE r.game_id = %s'
+        prepared_query = 'SELECT r.round_id, r.round_name, r.game_id FROM rounds AS r LEFT JOIN games AS g ON g.game_id = r.game_id WHERE r.game_id = %s ORDER BY r.round_name'
         data = (f'{game_id}',)
         cursor.execute(prepared_query, data)
         result = cursor.fetchall()
@@ -908,67 +927,3 @@ class CatalogDB():
         conn.commit()
         stop_connection(conn, cursor)
         return True
-
-# def tests():
-#     game_id = '23874458-43ea-11'
-#     teamsInGame = TeamsInGame()
-#     scoresModel = ScoresDB()
-#     roundsModel = RoundsDB()
-#     scoresDictionary = {}
-#     teams = teamsInGame.get_all_teams_in_game(game_id, active=True)
-#     allscores = scoresModel.get_scores_by_game_id(game_id=game_id)
-#     rounds = roundsModel.get_all_rounds(game_id=game_id)
-#     for round in rounds:
-#         for score in allscores:
-#             if(score[5] not in scoresDictionary.keys()):
-#                 scoresDictionary[score[5]] = []
-#             if(round[0] == score[0]):
-#                 scoresDictionary[score[5]].append(score)
-
-def sorting():
-    scoresDictionary = {'CyberAdmins': {'total': 28, 'items': [['cf9b7f83-4a23-11', '1', '4e52ee75-4963-11', 1, 'CyberAdmins'], ['cf9bb866-4a23-11', '2', '4e52ee75-4963-11', 2, 'CyberAdmins'], ['cf9bf0db-4a23-11', '3', '4e52ee75-4963-11', 3, 'CyberAdmins'], ['cf9c242c-4a23-11', '4', '4e52ee75-4963-11', 4, 'CyberAdmins'], ['cf9c5218-4a23-11', '5', '4e52ee75-4963-11', 5, 'CyberAdmins'], ['cf9cc150-4a23-11', '6', '4e52ee75-4963-11', 6, 'CyberAdmins'], ['cf9cf756-4a23-11', '7', '4e52ee75-4963-11', 7, 'CyberAdmins']]}, 'Admins': {'total': 25, 'items': [['cf9b7f83-4a23-11', '1', '5a0a8d17-4963-11', 1, 'Admins'], ['cf9bb866-4a23-11', '2', '5a0a8d17-4963-11', 3, 'Admins'], ['cf9bf0db-4a23-11', '3', '5a0a8d17-4963-11', 1, 'Admins'], ['cf9c242c-4a23-11', '4', '5a0a8d17-4963-11', 5, 'Admins'], ['cf9c5218-4a23-11', '5', '5a0a8d17-4963-11', 5, 'Admins'], ['cf9cc150-4a23-11', '6', '5a0a8d17-4963-11', 5, 'Admins'], ['cf9cf756-4a23-11', '7', '5a0a8d17-4963-11', 5, 'Admins']]}, 'CyberArms': {'total': 25, 'items': [['cf9b7f83-4a23-11', '1', 'd1805cfd-43ef-11', 1, 'CyberArms'], ['cf9bb866-4a23-11', '2', 'd1805cfd-43ef-11', 1, 'CyberArms'], ['cf9bf0db-4a23-11', '3', 'd1805cfd-43ef-11', 3, 'CyberArms'], ['cf9c242c-4a23-11', '4', 'd1805cfd-43ef-11', 5, 'CyberArms'], ['cf9c5218-4a23-11', '5', 'd1805cfd-43ef-11', 5, 'CyberArms'], ['cf9cc150-4a23-11', '6', 'd1805cfd-43ef-11', 5, 'CyberArms'], ['cf9cf756-4a23-11', '7', 'd1805cfd-43ef-11', 5, 'CyberArms']]}}
-
-    sortedDict = dict(sorted(scoresDictionary.items(), key=lambda x:x[1]['total'], reverse=True))
-
-    submitDict = {}
-    temp = {
-        'max': 0,
-        'key': '',
-    }
-    for key, value in sortedDict.items():
-        if(key not in submitDict.keys()):
-            if(value['total'] == temp['max']):
-                length = len(value['items']) - 1
-                secondLength = len(sortedDict[key]['items']) - 1
-                while length != -1:
-                    if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
-                        res = dict()
-                        for secondKey in submitDict.keys():
-                            if(secondKey == temp['key']):
-                                res[key] = {
-                                    'total': value['total'],
-                                    'items': value['items']
-                                }
-
-                            res[secondKey] = submitDict[secondKey]
-                        submitDict = res
-                        length = -1
-                    elif(value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
-                        length -= 1
-                        secondLength -= 1
-                        continue
-                    elif(value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
-                        submitDict[key] = {
-                            'total': value['total'],
-                            'items': value['items']
-                        }
-                        length = -1
-            else:
-                temp['max'] = value['total']
-                temp['key'] = key
-                submitDict[key] = {
-                    'total': value['total'],
-                    'items': value['items']
-                }
-
-sorting()
