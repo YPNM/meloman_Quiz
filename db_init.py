@@ -665,7 +665,7 @@ class ScoresDB():
                 prepared_query = 'INSERT INTO scores(team_id, round_id, score) VALUES (%s,%s,%s) ON DUPLICATE KEY UPDATE score = %s'
                 data = (f'{team_id}', f'{round_id}', value, value)
                 cursor.execute(prepared_query, data)
-        conn.commit()
+                conn.commit()
         stop_connection(conn, cursor)
         return True
 

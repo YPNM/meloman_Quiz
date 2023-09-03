@@ -72,7 +72,7 @@ app = create_app()
 @app.before_request
 def session_handler():
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=1)
+    app.permanent_session_lifetime = timedelta(minutes=3600)
 
 
 @app.route("/admin/", methods=("GET", "POST"), strict_slashes=False)
@@ -775,6 +775,7 @@ def admin_tables_show(game_id):
                         scoresDictionary[score[4]]['total'] += score[3]
                         scoresDictionary[score[4]]['items'].append(score)
 
+            maxRounds = 0
             # find empty rounds
             for key, value in scoresDictionary.items():
                 if (len(value['items']) < len(rounds)):
@@ -785,51 +786,63 @@ def admin_tables_show(game_id):
                         team_id = item[2]
                     for round in rounds:
                         if (round[0] not in existRounds):
-                            value['items'].append([round[0], round[1], team_id, '', key])
+                            value['items'].append([round[0], round[1], team_id, 0, key])
+                    maxRounds = len(existRounds)
 
             # sorting by ascending order
             sortedDict = dict(sorted(scoresDictionary.items(), key=lambda x: x[1]['total'], reverse=True))
 
-            submitDict = {}
-            temp = {
-                'max': 0,
-                'key': '',
-            }
-            for key, value in sortedDict.items():
-                if (key not in submitDict.keys()):
-                    if (value['total'] == temp['max']):
-                        length = len(value['items']) - 1
-                        secondLength = len(sortedDict[key]['items']) - 1
-                        while length != -1:
-                            if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
-                                res = dict()
-                                for secondKey in submitDict.keys():
-                                    if (secondKey == temp['key']):
-                                        res[key] = {
+            if(maxRounds > 3):
+                submitDict = {}
+                temp = {
+                    'max': 0,
+                    'key': '',
+                }
+                for key, value in sortedDict.items():
+                    if (key not in submitDict.keys()):
+                        if(value['total'] == temp['max']):
+                            length = len(value['items']) - 1
+                            secondLength = len(sortedDict[key]['items']) - 1
+                            while length != -1:
+                                if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
+                                    res = dict()
+                                    for secondKey in submitDict.keys():
+                                        if (secondKey == temp['key']):
+                                            res[key] = {
+                                                'total': value['total'],
+                                                'items': value['items']
+                                            }
+
+                                        res[secondKey] = submitDict[secondKey]
+                                    submitDict = res
+                                    length = -1
+                                elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
+                                    if(length == 0 and secondLength == 0):
+                                        submitDict[key] = {
                                             'total': value['total'],
                                             'items': value['items']
                                         }
+                                        length = -1
+                                    else:
+                                        length -= 1
+                                        secondLength -= 1
+                                    continue
+                                elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
+                                    submitDict[key] = {
+                                        'total': value['total'],
+                                        'items': value['items']
+                                    }
+                                    length = -1
+                        else:
+                            temp['max'] = value['total']
+                            temp['key'] = key
+                            submitDict[key] = {
+                                'total': value['total'],
+                                'items': value['items']
+                            }
+            else:
+                submitDict = sortedDict
 
-                                    res[secondKey] = submitDict[secondKey]
-                                submitDict = res
-                                length = -1
-                            elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
-                                length -= 1
-                                secondLength -= 1
-                                continue
-                            elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
-                                submitDict[key] = {
-                                    'total': value['total'],
-                                    'items': value['items']
-                                }
-                                length = -1
-                    else:
-                        temp['max'] = value['total']
-                        temp['key'] = key
-                        submitDict[key] = {
-                            'total': value['total'],
-                            'items': value['items']
-                        }
             # add new teams without scores
             for team in teams:
                 if (team[3] not in submitDict.keys()):
@@ -837,7 +850,6 @@ def admin_tables_show(game_id):
                         'total': None,
                         'id': team[1]
                     }
-
             return render_template("admin/pages/tables/show.html", title="Таблица", rounds=rounds,
                                    scoresDictionary=submitDict, teams=teams, game_id=game_id)
         if request.method == "POST":
@@ -1439,6 +1451,7 @@ def sorting_table(game_id):
                 scoresDictionary[score[4]]['total'] += score[3]
                 scoresDictionary[score[4]]['items'].append(score)
 
+    maxRounds = 0
     # find empty rounds
     for key, value in scoresDictionary.items():
         if (len(value['items']) < len(rounds)):
@@ -1449,51 +1462,62 @@ def sorting_table(game_id):
                 team_id = item[2]
             for round in rounds:
                 if (round[0] not in existRounds):
-                    value['items'].append([round[0], round[1], team_id, '', key])
+                    value['items'].append([round[0], round[1], team_id, 0, key])
+            maxRounds = len(existRounds)
 
     # sorting by ascending order
     sortedDict = dict(sorted(scoresDictionary.items(), key=lambda x: x[1]['total'], reverse=True))
 
-    submitDict = {}
-    temp = {
-        'max': 0,
-        'key': '',
-    }
-    for key, value in sortedDict.items():
-        if (key not in submitDict.keys()):
-            if (value['total'] == temp['max']):
-                length = len(value['items']) - 1
-                secondLength = len(sortedDict[key]['items']) - 1
-                while length != -1:
-                    if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
-                        res = dict()
-                        for secondKey in submitDict.keys():
-                            if (secondKey == temp['key']):
-                                res[key] = {
+    if (maxRounds > 3):
+        submitDict = {}
+        temp = {
+            'max': 0,
+            'key': '',
+        }
+        for key, value in sortedDict.items():
+            if (key not in submitDict.keys()):
+                if (value['total'] == temp['max']):
+                    length = len(value['items']) - 1
+                    secondLength = len(sortedDict[key]['items']) - 1
+                    while length != -1:
+                        if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
+                            res = dict()
+                            for secondKey in submitDict.keys():
+                                if (secondKey == temp['key']):
+                                    res[key] = {
+                                        'total': value['total'],
+                                        'items': value['items']
+                                    }
+
+                                res[secondKey] = submitDict[secondKey]
+                            submitDict = res
+                            length = -1
+                        elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
+                            if (length == 0 and secondLength == 0):
+                                submitDict[key] = {
                                     'total': value['total'],
                                     'items': value['items']
                                 }
-
-                            res[secondKey] = submitDict[secondKey]
-                        submitDict = res
-                        length = -1
-                    elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
-                        length -= 1
-                        secondLength -= 1
-                        continue
-                    elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
-                        submitDict[key] = {
-                            'total': value['total'],
-                            'items': value['items']
-                        }
-                        length = -1
-            else:
-                temp['max'] = value['total']
-                temp['key'] = key
-                submitDict[key] = {
-                    'total': value['total'],
-                    'items': value['items']
-                }
+                                length = -1
+                            else:
+                                length -= 1
+                                secondLength -= 1
+                            continue
+                        elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
+                            submitDict[key] = {
+                                'total': value['total'],
+                                'items': value['items']
+                            }
+                            length = -1
+                else:
+                    temp['max'] = value['total']
+                    temp['key'] = key
+                    submitDict[key] = {
+                        'total': value['total'],
+                        'items': value['items']
+                    }
+    else:
+        submitDict = sortedDict
     # add new teams without scores
     for team in teams:
         if (team[3] not in submitDict.keys()):
@@ -1542,9 +1566,9 @@ def table():
 
             # Получаю результаты за выбранную игру
             if selected_game is not None:
-                game_result = sorting_table(games_names_id.get(selected_game))
+                game_result = sorting_table(games_names_id.get(list(games_names_id.keys())[len(games_names_id.keys()) - 1]))
                 return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
-                                       game_result=game_result, selected_game=selected_game, game_names=games_names_id,
+                                       game_result=game_result, selected_game=list(games_names_id.keys())[len(games_names_id.keys()) - 1], game_names=games_names_id,
                                        round_counter=len(list(game_result.values())[0].get('items')), cityNames=list(cities.keys()))
             else:
                 game_result = sorting_table(
@@ -1581,4 +1605,4 @@ def contacts():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=443, ssl_context= context)

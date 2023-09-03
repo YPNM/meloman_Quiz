@@ -27,7 +27,7 @@ def create_app():
     app = Flask(__name__)
     app.secret_key = 'a6iBwEkmJ370'
     app.config[
-        'SQLALCHEMY_DATABASE_URI'] = f"mysql+mysqlconnector://{config.DB_USER}:{config.DB_PASS}@{config.DB_HOST}/{config.DB_DATABASE}"
+        'SQLALCHEMY_DATABASE_URI'] = f"mysql://{config.DB_USER}:{config.DB_PASS}@{config.DB_HOST}/{config.DB_DATABASE}"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
     login_manager.init_app(app)
