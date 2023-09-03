@@ -193,10 +193,10 @@
           <tr class="team-row">
             <td>{{ loop.index }}</td>
             <td class="team-name">{{ key }}</td>
-              {% for round in game_result.get(key) %}
+              {% for round in game_result.get(key).get('items') %}
                 <td>{{ round[3] }}</td>
               {% endfor %}
-            <td>{{ game_result.get(key)[0][4]|int }}</td>
+            <td>{{ game_result.get(key).get('total')|int }}</td>
           </tr>
         {% endfor %}
         </tbody>
