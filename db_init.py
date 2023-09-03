@@ -116,7 +116,7 @@ def init_db(force=False):
                                 FOREIGN KEY (game_id) REFERENCES games(game_id),
                                 team_id BINARY(36) NOT NULL,
                                 FOREIGN KEY (team_id) REFERENCES teams(team_id),
-                                status BOOLEAN NOT NULL,
+                                team_status BOOLEAN NOT NULL,
                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                 PRIMARY KEY(game_id, team_id)
                                 ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
@@ -538,22 +538,23 @@ class TeamsInGame():
     def add_team(self, values):
         conn, cursor = start_connection()
         for value in values:
-            prepared_query = 'INSERT INTO teams_in_game(game_id, team_id, status) VALUES (%s,%s,%s) ON DUPLICATE KEY UPDATE status = %s'
+            prepared_query = 'INSERT INTO teams_in_game(game_id, team_id, team_status) VALUES (%s,%s,%s) ON DUPLICATE KEY UPDATE team_status = %s'
             data = (f'{value[0]}', f'{value[1]}', value[2], value[2])
             cursor.execute(prepared_query, data)
         conn.commit()
         stop_connection(conn, cursor)
         return True
 
-    def get_all_teams_in_game(self, gameId):
+    def get_all_teams_in_game(self, gameId, active=False):
         conn, cursor = start_connection()
-        prepared_query = 'SELECT game_id, team_id, status FROM teams_in_game WHERE game_id = %s'
+        prepared_query = 'SELECT tg.game_id, tg.team_id, tg.team_status, t.team_name FROM teams_in_game AS tg JOIN teams AS t ON t.team_id = tg.team_id WHERE game_id = %s'
+        if (active):
+            prepared_query += ' AND team_status = 1;'
         data = (f'{gameId}',)
         cursor.execute(prepared_query, data)
         results = cursor.fetchall()
         stop_connection(conn, cursor)
         return convert_bytes_to_string(results)
-
 
 class TeamsDB():
 
@@ -650,12 +651,12 @@ class ScoresDB():
 
     def get_scores_by_game_id(self, game_id):
         conn, cursor = start_connection()
-        prepared_query = 'SELECT r.round_id, r.round_name, s.team_id, s.score, (SELECT SUM(score) FROM scores WHERE t.team_id = team_id GROUP BY team_id) AS total, t.team_name FROM rounds AS r LEFT JOIN games AS g ON r.game_id = g.game_id LEFT JOIN scores AS s ON s.round_id = r.round_id LEFT JOIN teams AS t ON s.team_id = t.team_id WHERE g.game_id = %s ORDER BY total DESC, s.team_id, r.round_name;'
+        prepared_query = 'SELECT r.round_id, r.round_name, s.team_id, s.score, (SELECT team_name FROM teams WHERE team_id = s.team_id) AS team_name FROM rounds AS r LEFT JOIN games AS g ON r.game_id = g.game_id LEFT JOIN scores AS s ON s.round_id = r.round_id WHERE g.game_id = %s AND (SELECT team_status FROM teams_in_game WHERE team_id = s.team_id AND game_id=g.game_id) = 1 ORDER BY s.team_id, r.round_name;'
         data = (f'{game_id}',)
         cursor.execute(prepared_query, data)
         results = cursor.fetchall()
         stop_connection(conn, cursor)
-        return results
+        return convert_bytes_to_string(results)
 
 
 
@@ -908,19 +909,66 @@ class CatalogDB():
         stop_connection(conn, cursor)
         return True
 
-def tests():
-    game_id = '3b1f2f3d-48ad-11'
-    teamsInGame = TeamsInGame()
-    scoresModel = ScoresDB()
-    roundsModel = RoundsDB()
-    scoresDictionary = {
-        'teams_id': [],
-        'items': []
-    }
-    teams = teamsInGame.get_all_teams_in_game(game_id)
-    allscores = scoresModel.get_scores_by_game_id(game_id=game_id)
-    rounds = roundsModel.get_all_rounds(game_id=game_id)
-    for team in teams:
-        print(team)
+# def tests():
+#     game_id = '23874458-43ea-11'
+#     teamsInGame = TeamsInGame()
+#     scoresModel = ScoresDB()
+#     roundsModel = RoundsDB()
+#     scoresDictionary = {}
+#     teams = teamsInGame.get_all_teams_in_game(game_id, active=True)
+#     allscores = scoresModel.get_scores_by_game_id(game_id=game_id)
+#     rounds = roundsModel.get_all_rounds(game_id=game_id)
+#     for round in rounds:
+#         for score in allscores:
+#             if(score[5] not in scoresDictionary.keys()):
+#                 scoresDictionary[score[5]] = []
+#             if(round[0] == score[0]):
+#                 scoresDictionary[score[5]].append(score)
 
-tests()
+def sorting():
+    scoresDictionary = {'CyberAdmins': {'total': 28, 'items': [['cf9b7f83-4a23-11', '1', '4e52ee75-4963-11', 1, 'CyberAdmins'], ['cf9bb866-4a23-11', '2', '4e52ee75-4963-11', 2, 'CyberAdmins'], ['cf9bf0db-4a23-11', '3', '4e52ee75-4963-11', 3, 'CyberAdmins'], ['cf9c242c-4a23-11', '4', '4e52ee75-4963-11', 4, 'CyberAdmins'], ['cf9c5218-4a23-11', '5', '4e52ee75-4963-11', 5, 'CyberAdmins'], ['cf9cc150-4a23-11', '6', '4e52ee75-4963-11', 6, 'CyberAdmins'], ['cf9cf756-4a23-11', '7', '4e52ee75-4963-11', 7, 'CyberAdmins']]}, 'Admins': {'total': 25, 'items': [['cf9b7f83-4a23-11', '1', '5a0a8d17-4963-11', 1, 'Admins'], ['cf9bb866-4a23-11', '2', '5a0a8d17-4963-11', 3, 'Admins'], ['cf9bf0db-4a23-11', '3', '5a0a8d17-4963-11', 1, 'Admins'], ['cf9c242c-4a23-11', '4', '5a0a8d17-4963-11', 5, 'Admins'], ['cf9c5218-4a23-11', '5', '5a0a8d17-4963-11', 5, 'Admins'], ['cf9cc150-4a23-11', '6', '5a0a8d17-4963-11', 5, 'Admins'], ['cf9cf756-4a23-11', '7', '5a0a8d17-4963-11', 5, 'Admins']]}, 'CyberArms': {'total': 25, 'items': [['cf9b7f83-4a23-11', '1', 'd1805cfd-43ef-11', 1, 'CyberArms'], ['cf9bb866-4a23-11', '2', 'd1805cfd-43ef-11', 1, 'CyberArms'], ['cf9bf0db-4a23-11', '3', 'd1805cfd-43ef-11', 3, 'CyberArms'], ['cf9c242c-4a23-11', '4', 'd1805cfd-43ef-11', 5, 'CyberArms'], ['cf9c5218-4a23-11', '5', 'd1805cfd-43ef-11', 5, 'CyberArms'], ['cf9cc150-4a23-11', '6', 'd1805cfd-43ef-11', 5, 'CyberArms'], ['cf9cf756-4a23-11', '7', 'd1805cfd-43ef-11', 5, 'CyberArms']]}}
+
+    sortedDict = dict(sorted(scoresDictionary.items(), key=lambda x:x[1]['total'], reverse=True))
+
+    submitDict = {}
+    temp = {
+        'max': 0,
+        'key': '',
+    }
+    for key, value in sortedDict.items():
+        if(key not in submitDict.keys()):
+            if(value['total'] == temp['max']):
+                length = len(value['items']) - 1
+                secondLength = len(sortedDict[key]['items']) - 1
+                while length != -1:
+                    if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
+                        res = dict()
+                        for secondKey in submitDict.keys():
+                            if(secondKey == temp['key']):
+                                res[key] = {
+                                    'total': value['total'],
+                                    'items': value['items']
+                                }
+
+                            res[secondKey] = submitDict[secondKey]
+                        submitDict = res
+                        length = -1
+                    elif(value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
+                        length -= 1
+                        secondLength -= 1
+                        continue
+                    elif(value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
+                        submitDict[key] = {
+                            'total': value['total'],
+                            'items': value['items']
+                        }
+                        length = -1
+            else:
+                temp['max'] = value['total']
+                temp['key'] = key
+                submitDict[key] = {
+                    'total': value['total'],
+                    'items': value['items']
+                }
+
+sorting()

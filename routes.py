@@ -749,12 +749,86 @@ def admin_tables_show(game_id):
             teamsInGame = db_init.TeamsInGame()
             scoresModel = db_init.ScoresDB()
             roundsModel = db_init.RoundsDB()
-            #game_id = '3b1f2f3d-48ad-11'
-            teams = teamsInGame.get_all_teams_in_game(game_id)
-            scoresDictionary = scoresModel.get_scores_by_game_id(game_id=game_id)
+            scoresDictionary = {}
+
+            teams = teamsInGame.get_all_teams_in_game(game_id, active=True)
+            allscores = scoresModel.get_scores_by_game_id(game_id=game_id)
             rounds = roundsModel.get_all_rounds(game_id=game_id)
+
+            # template
+            for round in rounds:
+                for score in allscores:
+                    if(score[4] not in scoresDictionary.keys()):
+                        scoresDictionary[score[4]] = {'total': 0, 'items': []}
+                    if(round[0] == score[0]):
+                        scoresDictionary[score[4]]['total'] += score[3]
+                        scoresDictionary[score[4]]['items'].append(score)
+
+            # find empty rounds
+            for key, value in scoresDictionary.items():
+                if(len(value['items']) < len(rounds)):
+                    existRounds = []
+                    team_id = ''
+                    for item in value['items']:
+                        existRounds.append(item[0])
+                        team_id = item[2]
+                    for round in rounds:
+                        if(round[0] not in existRounds):
+                            value['items'].append([round[0], round[1], team_id, '', key])
+
+            # sorting by ascending order
+            sortedDict = dict(sorted(scoresDictionary.items(), key=lambda x: x[1]['total'], reverse=True))
+
+            submitDict = {}
+            temp = {
+                'max': 0,
+                'key': '',
+            }
+            for key, value in sortedDict.items():
+                if (key not in submitDict.keys()):
+                    if (value['total'] == temp['max']):
+                        length = len(value['items']) - 1
+                        secondLength = len(sortedDict[key]['items']) - 1
+                        while length != -1:
+                            if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
+                                res = dict()
+                                for secondKey in submitDict.keys():
+                                    if (secondKey == temp['key']):
+                                        res[key] = {
+                                            'total': value['total'],
+                                            'items': value['items']
+                                        }
+
+                                    res[secondKey] = submitDict[secondKey]
+                                submitDict = res
+                                length = -1
+                            elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
+                                length -= 1
+                                secondLength -= 1
+                                continue
+                            elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
+                                submitDict[key] = {
+                                    'total': value['total'],
+                                    'items': value['items']
+                                }
+                                length = -1
+                    else:
+                        temp['max'] = value['total']
+                        temp['key'] = key
+                        submitDict[key] = {
+                            'total': value['total'],
+                            'items': value['items']
+                        }
+            #add new teams without scores
+            for team in teams:
+                if(team[3] not in submitDict.keys()):
+                    submitDict[team[3]] = {
+                        'total': None,
+                        'id': team[1]
+                    }
+
             return render_template("admin/pages/tables/show.html", title="Таблица", rounds=rounds,
-                                   scoresDictionary=scoresDictionary, teams=teams, game_id=game_id)
+                                   scoresDictionary=submitDict, teams=teams, game_id=game_id)
         if request.method == "POST":
             scoresModel = db_init.ScoresDB()
             dictionary = request.form.to_dict()

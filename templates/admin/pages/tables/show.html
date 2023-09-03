@@ -51,7 +51,7 @@ input[type=number]::-webkit-outer-spin-button {
                                 {% if rounds %}
                                   {% for round in rounds %}
                                       <th>
-                                        {{ round[1] }}
+                                        Раунд {{ round[1] }}
                                       </th>
                                   {% endfor %}
                                       <th>
@@ -65,58 +65,85 @@ input[type=number]::-webkit-outer-spin-button {
                               </tr>
                             </thead>
                             <tbody>
-                            {% if scoresDictionary != None %}
-                              {% if teams %}
-                                  {% for key, value in scoresDictionary.items() %}
-                                    <tr>
-                                      <td>
-                                        {{ key }}
-                                      </td>
-                                      {% for item in value %}
+                            {% for key, value in scoresDictionary.items() %}
+                                <tr>
+                                    <td>
+                                    {{ key }}
+                                    </td>
+                                    {% if value['total'] != None %}
+                                        {% for round in rounds %}
+                                            {% for item in value['items'] %}
+                                                {% if round[0] == item[0] %}
+                                                    <td>
+                                                      <input style="border: none;" min="0" max="100" type="number" name="{{ round[0] }}/{{ item[2] }}" value="{{ item[3] }}">
+                                                    </td>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
                                         <td>
-                                          <input style="border: none;" min="0" max="100" type="number" name="{{ item[0] }}/{{ item[2] }}" value="{{ item[3] }}">
+                                            {{ value['total'] }}
                                         </td>
-                                      {% endfor %}
-                                      <td>
-                                          {{ value[0][4] }}
-                                      </td>
-                                    </tr>
-                                  {% endfor %}
-                                 {% for team in teams %}
-                                  {% if team[1] not in scoresDictionary.keys() %}
-                                    <tr>
-                                      <td>
-                                        {{ team[1] }}
-                                      </td>
-                                      {% for round in rounds %}
-                                      <td>
-                                        <input style="border: none;" min="0" max="100" type="number" name="{{ round[0] }}/{{ team[0] }}">
-                                      </td>
-                                      {% endfor %}
-                                    </tr>
-                                  {% endif %}
-                                {% endfor %}
-                              {% else %}
-                                <tr>
-                                  <td>
-                                    Нет команд
-                                  </td>
+                                    {% else %}
+                                        {% for round in rounds %}
+                                            <td>
+                                              <input style="border: none;" min="0" max="100" type="number" name="{{ round[0] }}/{{ value['id'] }}" value="">
+                                            </td>
+                                        {% endfor %}
+                                    {% endif %}
                                 </tr>
-                              {% endif %}
-                            {% else %}
-                              {% for team in teams %}
-                                <tr>
-                                  <td>
-                                    {{team[1]}}
-                                  </td>
-                                  {% for round in rounds %}
-                                      <td>
-                                        <input style="border: none;" min="0" max="100" type="number" name="{{ round[0] }}/{{ team[0] }}">
-                                      </td>
-                                  {% endfor %}
-                                </tr>
-                              {% endfor %}
-                            {% endif %}
+                            {% endfor %}
+{#                            {% if scoresDictionary != None %}#}
+{#                              {% if teams %}#}
+{#                                  {% for key, value in scoresDictionary.items() %}#}
+{#                                    <tr>#}
+{#                                      <td>#}
+{#                                        {{ key }}#}
+{#                                      </td>#}
+{#                                      {% for item in value %}#}
+{#                                        <td>#}
+{#                                          <input style="border: none;" min="0" max="100" type="number" name="{{ item[0] }}/{{ item[2] }}" value="{{ item[3] }}">#}
+{#                                        </td>#}
+{#                                      {% endfor %}#}
+{#                                      <td>#}
+{#                                          {{ value[0][4] }}#}
+{#                                      </td>#}
+{#                                    </tr>#}
+{#                                  {% endfor %}#}
+{#                                 {% for team in teams %}#}
+{#                                  {% if team[1] not in scoresDictionary.keys() %}#}
+{#                                    <tr>#}
+{#                                      <td>#}
+{#                                        {{ team[1] }}#}
+{#                                      </td>#}
+{#                                      {% for round in rounds %}#}
+{#                                      <td>#}
+{#                                        <input style="border: none;" min="0" max="100" type="number" name="{{ round[0] }}/{{ team[0] }}">#}
+{#                                      </td>#}
+{#                                      {% endfor %}#}
+{#                                    </tr>#}
+{#                                  {% endif %}#}
+{#                                {% endfor %}#}
+{#                              {% else %}#}
+{#                                <tr>#}
+{#                                  <td>#}
+{#                                    Нет команд#}
+{#                                  </td>#}
+{#                                </tr>#}
+{#                              {% endif %}#}
+{#                            {% else %}#}
+{#                              {% for team in teams %}#}
+{#                                <tr>#}
+{#                                  <td>#}
+{#                                    {{team[1]}}#}
+{#                                  </td>#}
+{#                                  {% for round in rounds %}#}
+{#                                      <td>#}
+{#                                        <input style="border: none;" min="0" max="100" type="number" name="{{ round[0] }}/{{ team[0] }}">#}
+{#                                      </td>#}
+{#                                  {% endfor %}#}
+{#                                </tr>#}
+{#                              {% endfor %}#}
+{#                            {% endif %}#}
                             </tbody>
                           </table>
                       </div>
