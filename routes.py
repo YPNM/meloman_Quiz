@@ -1327,6 +1327,7 @@ def table():
         # Получаю результаты за выбранную игру
             if selected_game is not None:
                 game_result = scoreModel.get_scores_by_game_id(games_names_id.get(selected_game))
+                print(game_result)
                 return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
                                    game_result=game_result, selected_game=selected_game, game_names=games_names_id,
                                    round_counter=len(list(game_result.values())[0]), cityNames=list(cities.keys()))
@@ -1342,7 +1343,9 @@ def table():
         except IndexError:
             return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),
                                    game_names={}, round_counter=0, game_result={})
-
+        except AttributeError:
+            return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),
+                                   game_names={}, round_counter=0, game_result={})
         # game_counter - {"Название команды": Количество посещённых игр}
         # Comands_score - {"Название команды": int(Количество набранных очков за все игры)}
     return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),

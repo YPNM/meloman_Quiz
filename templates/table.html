@@ -9,6 +9,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/front/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/front/table.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/front/preloader.css') }}">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +19,10 @@
   </head>
 
   <body>
+
+    <div class="preloader">
+        <img src="{{ url_for('static', filename="images/front/music_record.png") }}" class="preloader__image">
+    </div>
 
     <div class="intro">
       <header class="header">
@@ -225,6 +230,15 @@
             $(document).ready(function(){
             $('#ComandCarousel').carousel();
             });
+    </script>
+  <script>
+    window.onload = function () {
+        document.body.classList.add('loaded_hiding');
+        window.setTimeout(function () {
+            document.body.classList.add('loaded');
+            document.body.classList.remove('loaded_hiding');
+        }, 500);
+    }
     </script>
     </body>
 </html>

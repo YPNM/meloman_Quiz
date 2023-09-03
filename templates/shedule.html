@@ -9,6 +9,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/front/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/front/shedule.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/front/preloader.css') }}">
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +20,9 @@
   </head>
 
   <body>
+    <div class="preloader">
+        <img src="{{ url_for('static', filename="images/front/music_record.png") }}" class="preloader__image">
+    </div>
 
     <div class="intro">
       <header class="header">
@@ -164,7 +168,15 @@
     <!-- Подключение вашего JavaScript файла -->
     <script src="{{ url_for('static', filename='/js/city-selector.js') }}"></script>
     <script src="{{ url_for('static', filename='/js/filters.js') }}"></script>
-
+    <script>
+    window.onload = function () {
+        document.body.classList.add('loaded_hiding');
+        window.setTimeout(function () {
+            document.body.classList.add('loaded');
+            document.body.classList.remove('loaded_hiding');
+        }, 500);
+    }
+    </script>
   </body>
 
 </html>
