@@ -606,15 +606,45 @@ def admin_teamsingame_show(game_id):
             teamsInGame = db_init.TeamsInGame().get_all_teams_in_game(gameId=game_id)
             returnTeams = []
             for team in teams:
+                founded = False
                 for teamInGame in teamsInGame:
                     if(team[0] == teamInGame[1]):
                         returnTeams.append([team[0], team[1], teamInGame[2]])
+                        founded = True
+                        break
+                if(founded == False):
+                    returnTeams.append([team[0], team[1], 0])
+
             return render_template("admin/pages/teamsInGame/show.html", title="Команды в игре",
                                    teams=returnTeams, game_id=game_id)
         if(request.method == "POST"):
             teamsInGameModel = db_init.TeamsInGame()
-            dictionary = request.form.to_dict()
-            status = teamsInGameModel.add_team(dictionary=dictionary)
+            dictionary = request.form.to_dict().keys()
+            teams = db_init.TeamsDB().get_all_teams()
+            teamsInGame = db_init.TeamsInGame().get_all_teams_in_game(gameId=game_id)
+            returnTeams = []
+            for team in teams:
+                founded = False
+                for teamInGame in teamsInGame:
+                    if (team[0] == teamInGame[1]):
+                        returnTeams.append([team[0], team[1], teamInGame[2]])
+                        founded = True
+                        break
+                if (founded == False):
+                    returnTeams.append([team[0], team[1], 0])
+            submitData = []
+            checkedItems = []
+            for item in dictionary:
+                item = item.split('/')[1]
+                checkedItems.append(item)
+
+            for item in returnTeams:
+                if(item[0] not in checkedItems and item[2] != 0):
+                    submitData.append([game_id, item[0], 0])
+                elif(item[0] in checkedItems and item[2] != 1):
+                    submitData.append([game_id, item[0], 1])
+
+            status = teamsInGameModel.add_team(values=submitData)
             if (status == True):
                 flash("Данные обновлены", "success")
                 return redirect(url_for('admin_teamsingame_show', game_id=game_id))
@@ -716,11 +746,11 @@ def admin_tables():
 def admin_tables_show(game_id):
     if (current_user.superadmin or db_init.RoundsDB().admin_permission_check(game_id, current_user.city_id.decode())):
         if request.method == "GET":
-            teamsModel = db_init.TeamsDB()
+            teamsInGame = db_init.TeamsInGame()
             scoresModel = db_init.ScoresDB()
             roundsModel = db_init.RoundsDB()
-
-            teams = teamsModel.get_all_teams()
+            #game_id = '3b1f2f3d-48ad-11'
+            teams = teamsInGame.get_all_teams_in_game(game_id)
             scoresDictionary = scoresModel.get_scores_by_game_id(game_id=game_id)
             rounds = roundsModel.get_all_rounds(game_id=game_id)
             return render_template("admin/pages/tables/show.html", title="Таблица", rounds=rounds,
