@@ -1,7 +1,7 @@
 import mysql.connector as connection
 from mysql.connector import Error, IntegrityError, Warning
 import config
-
+import time
 
 # Create a decorator that connects to the DB and closes the connection once the function is done
 def start_connection():
@@ -528,6 +528,7 @@ class RoundsDB():
                 data = (f'{i}', f'{game_id}')
                 cursor.execute(prepared_query, data)
                 conn.commit()
+                time.sleep(0.02)
         stop_connection(conn, cursor)
         return True
 
