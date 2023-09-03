@@ -494,7 +494,8 @@ def admin_games_edit(game_id):
                 status = gamesModel.edit_game_by_id(game_id=game_id, gameName=gameName, gameDescription=gameDescription,
                                                     gameTypeId=gameType, gameDate=gameDate, location=gameLocation,
                                                     city_id=gameCity, season_id=gameSeason, bookingLink=reserveLink,
-                                                    published=gamePublished, scorePublished=gameScorePublished, price=gamePrice)
+                                                    published=gamePublished, scorePublished=gameScorePublished,
+                                                    price=gamePrice)
             if (status == True):
                 flash("Игра успешно обновлена", "success")
                 return redirect(url_for('admin_games'))
@@ -584,7 +585,8 @@ def admin_rounds_delete(round_id, game_id):
     else:
         abort(403)
 
-#TeamsInGame Route
+
+# TeamsInGame Route
 @app.route("/admin/teamsingame", methods=["GET"], strict_slashes=False)
 @login_required
 def admin_teamsingame():
@@ -597,27 +599,28 @@ def admin_teamsingame():
     else:
         abort(403)
 
+
 @app.route("/admin/teamsingame/show/<string:game_id>", methods=["GET", "POST"], strict_slashes=False)
 @login_required
 def admin_teamsingame_show(game_id):
     if (current_user.superadmin or current_user.city_superadmin):
-        if(request.method == "GET"):
+        if (request.method == "GET"):
             teams = db_init.TeamsDB().get_all_teams()
             teamsInGame = db_init.TeamsInGame().get_all_teams_in_game(gameId=game_id)
             returnTeams = []
             for team in teams:
                 founded = False
                 for teamInGame in teamsInGame:
-                    if(team[0] == teamInGame[1]):
+                    if (team[0] == teamInGame[1]):
                         returnTeams.append([team[0], team[1], teamInGame[2]])
                         founded = True
                         break
-                if(founded == False):
+                if (founded == False):
                     returnTeams.append([team[0], team[1], 0])
 
             return render_template("admin/pages/teamsInGame/show.html", title="Команды в игре",
                                    teams=returnTeams, game_id=game_id)
-        if(request.method == "POST"):
+        if (request.method == "POST"):
             teamsInGameModel = db_init.TeamsInGame()
             dictionary = request.form.to_dict().keys()
             teams = db_init.TeamsDB().get_all_teams()
@@ -639,9 +642,9 @@ def admin_teamsingame_show(game_id):
                 checkedItems.append(item)
 
             for item in returnTeams:
-                if(item[0] not in checkedItems and item[2] != 0):
+                if (item[0] not in checkedItems and item[2] != 0):
                     submitData.append([game_id, item[0], 0])
-                elif(item[0] in checkedItems and item[2] != 1):
+                elif (item[0] in checkedItems and item[2] != 1):
                     submitData.append([game_id, item[0], 1])
 
             status = teamsInGameModel.add_team(values=submitData)
@@ -653,6 +656,7 @@ def admin_teamsingame_show(game_id):
                 return redirect(url_for('admin_teamsingame_show', game_id=game_id))
     else:
         abort(403)
+
 
 # Teams Route
 @app.route("/admin/teams", methods=["GET"], strict_slashes=False)
@@ -758,22 +762,22 @@ def admin_tables_show(game_id):
             # template
             for round in rounds:
                 for score in allscores:
-                    if(score[4] not in scoresDictionary.keys()):
+                    if (score[4] not in scoresDictionary.keys()):
                         scoresDictionary[score[4]] = {'total': 0, 'items': []}
-                    if(round[0] == score[0]):
+                    if (round[0] == score[0]):
                         scoresDictionary[score[4]]['total'] += score[3]
                         scoresDictionary[score[4]]['items'].append(score)
 
             # find empty rounds
             for key, value in scoresDictionary.items():
-                if(len(value['items']) < len(rounds)):
+                if (len(value['items']) < len(rounds)):
                     existRounds = []
                     team_id = ''
                     for item in value['items']:
                         existRounds.append(item[0])
                         team_id = item[2]
                     for round in rounds:
-                        if(round[0] not in existRounds):
+                        if (round[0] not in existRounds):
                             value['items'].append([round[0], round[1], team_id, '', key])
 
             # sorting by ascending order
@@ -819,9 +823,9 @@ def admin_tables_show(game_id):
                             'total': value['total'],
                             'items': value['items']
                         }
-            #add new teams without scores
+            # add new teams without scores
             for team in teams:
-                if(team[3] not in submitDict.keys()):
+                if (team[3] not in submitDict.keys()):
                     submitDict[team[3]] = {
                         'total': None,
                         'id': team[1]
@@ -1338,7 +1342,8 @@ def shedule():
     if selected_city is not None:
         try:
             all_games = gamesModel.get_all_published_games(cities.get(selected_city),
-                                                           seasonsModel.get_last_season(cities.get(selected_city))[0][0])
+                                                           seasonsModel.get_last_season(cities.get(selected_city))[0][
+                                                               0])
             for i in range(len(all_games)):
                 if all_games[i][4] > datetime.datetime.now():
                     del (all_games[0:i])
@@ -1413,7 +1418,8 @@ def table():
             comands_score = {}
             all_results = []
             all_games = gamesModel.get_all_games_with_score(cities.get(selected_city),
-                                                        seasonsModel.get_last_season(cities.get(selected_city))[0][0])
+                                                            seasonsModel.get_last_season(cities.get(selected_city))[0][
+                                                                0])
             games_names_id = {}
             for i in range(len(all_games)):
                 games_names_id[all_games[i][1]] = all_games[i][0]
@@ -1421,29 +1427,29 @@ def table():
             game_counter = Counter()
             for d in all_results:
                 game_counter.update(d.keys())
-        # Считаю результаты за последний сезон
+            # Считаю результаты за последний сезон
             for i in range(len(all_results)):
                 for keys, values in all_results[i].items():
                     if comands_score.get(keys, 0) == 0:
                         comands_score[keys] = int(values[0][4])
                     else:
                         comands_score[keys] += int(values[0][4])
-        # Получаю результаты за выбранную игру
+            # Получаю результаты за выбранную игру
             if selected_game is not None:
                 game_result = scoreModel.get_scores_by_game_id(games_names_id.get(selected_game))
                 print(game_result)
                 return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
-                                   game_result=game_result, selected_game=selected_game, game_names=games_names_id,
-                                   round_counter=len(list(game_result.values())[0]), cityNames=list(cities.keys()))
+                                       game_result=game_result, selected_game=selected_game, game_names=games_names_id,
+                                       round_counter=len(list(game_result.values())[0]), cityNames=list(cities.keys()))
             else:
                 game_result = scoreModel.get_scores_by_game_id(
                     games_names_id.get(collections.deque(games_names_id, maxlen=1)[0]))
                 round_counter = len(list(game_result.values())[0])
                 return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
-                                   game_result=game_result,
-                                   selected_game=collections.deque(games_names_id, maxlen=1)[0],
-                                   game_names=games_names_id, round_counter=round_counter,
-                                   cityNames=list(cities.keys()))
+                                       game_result=game_result,
+                                       selected_game=collections.deque(games_names_id, maxlen=1)[0],
+                                       game_names=games_names_id, round_counter=round_counter,
+                                       cityNames=list(cities.keys()))
         except IndexError:
             return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),
                                    game_names={}, round_counter=0, game_result={})

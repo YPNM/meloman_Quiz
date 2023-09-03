@@ -391,8 +391,9 @@ p.state {
   }
 
   .galochka img {
-    height: 75px;
-    padding-right: 35px;
+        width: 75px;
+        max-height: 90px;
+        margin-right: 35px;
   }
 
   .text-rules-container {
