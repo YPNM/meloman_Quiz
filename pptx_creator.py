@@ -86,6 +86,3 @@ def create_powerpoint_with_table(game_id):
     # Сохраняем презентацию
     prs.save("Таблица.pptx")
 
-
-# Используем функцию для создания презентации
-create_powerpoint_with_table("05eba41b-4925-11ee-8a2c-6c2408aface6")
