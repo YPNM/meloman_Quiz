@@ -1309,7 +1309,6 @@ def logout():
 
 @app.route("/")
 @app.route("/index", methods=['GET'])
-@app.route("/index.html", methods=['GET'])
 def index():
     # Получаем город от пользователя, если None, то город не выбран
     selected_city = None
@@ -1582,4 +1581,4 @@ def contacts():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)

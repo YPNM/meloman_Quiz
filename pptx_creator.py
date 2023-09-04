@@ -34,6 +34,8 @@ def create_powerpoint_with_table(folder, game_id):
                 scoresDictionary[score[4]]['items'].append(score)
 
     # find empty rounds
+    maxRounds = 0
+    # find empty rounds
     for key, value in scoresDictionary.items():
         if (len(value['items']) < len(rounds)):
             existRounds = []
@@ -43,51 +45,62 @@ def create_powerpoint_with_table(folder, game_id):
                 team_id = item[2]
             for round in rounds:
                 if (round[0] not in existRounds):
-                    value['items'].append([round[0], round[1], team_id, '', key])
+                    value['items'].append([round[0], round[1], team_id, 0, key])
+            maxRounds = len(existRounds)
 
     # sorting by ascending order
     sortedDict = dict(sorted(scoresDictionary.items(), key=lambda x: x[1]['total'], reverse=True))
 
-    submitDict = {}
-    temp = {
-        'max': 0,
-        'key': '',
-    }
-    for key, value in sortedDict.items():
-        if (key not in submitDict.keys()):
-            if (value['total'] == temp['max']):
-                length = len(value['items']) - 1
-                secondLength = len(sortedDict[key]['items']) - 1
-                while length != -1:
-                    if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
-                        res = dict()
-                        for secondKey in submitDict.keys():
-                            if (secondKey == temp['key']):
-                                res[key] = {
+    if (maxRounds > 3):
+        submitDict = {}
+        temp = {
+            'max': 0,
+            'key': '',
+        }
+        for key, value in sortedDict.items():
+            if (key not in submitDict.keys()):
+                if (value['total'] == temp['max']):
+                    length = len(value['items']) - 1
+                    secondLength = len(sortedDict[key]['items']) - 1
+                    while length != -1:
+                        if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
+                            res = dict()
+                            for secondKey in submitDict.keys():
+                                if (secondKey == temp['key']):
+                                    res[key] = {
+                                        'total': value['total'],
+                                        'items': value['items']
+                                    }
+
+                                res[secondKey] = submitDict[secondKey]
+                            submitDict = res
+                            length = -1
+                        elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
+                            if (length == 0 and secondLength == 0):
+                                submitDict[key] = {
                                     'total': value['total'],
                                     'items': value['items']
                                 }
-
-                            res[secondKey] = submitDict[secondKey]
-                        submitDict = res
-                        length = -1
-                    elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
-                        length -= 1
-                        secondLength -= 1
-                        continue
-                    elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
-                        submitDict[key] = {
-                            'total': value['total'],
-                            'items': value['items']
-                        }
-                        length = -1
-            else:
-                temp['max'] = value['total']
-                temp['key'] = key
-                submitDict[key] = {
-                    'total': value['total'],
-                    'items': value['items']
-                }
+                                length = -1
+                            else:
+                                length -= 1
+                                secondLength -= 1
+                            continue
+                        elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
+                            submitDict[key] = {
+                                'total': value['total'],
+                                'items': value['items']
+                            }
+                            length = -1
+                else:
+                    temp['max'] = value['total']
+                    temp['key'] = key
+                    submitDict[key] = {
+                        'total': value['total'],
+                        'items': value['items']
+                    }
+    else:
+        submitDict = sortedDict
     # add new teams without scores
     for team in teams:
         if (team[3] not in submitDict.keys()):
@@ -105,7 +118,7 @@ def create_powerpoint_with_table(folder, game_id):
             arr = value['items'][i]
             arr.append(value['total'])
             game_result[key].append(arr)
-    print(game_result)
+
 
     rows = len(game_result.keys()) + 1
     cols = len(game_result.get(next(iter(game_result.keys())))) + 3
