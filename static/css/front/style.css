@@ -144,24 +144,21 @@ h2 {
 }
 
 .next-game-block {
-    display: inline-block;
-    position: relative;
+    width: 343px;
+    height: auto;
     margin: 31px;
     transition: transform 0.2s, box-shadow 0.2s;
     border-radius: 25px; /* Закругленные края блока */
     overflow: hidden;
+    border: 2px solid #170325;
+    background: linear-gradient(to right, #170325, #3b0042, #170325);
   }
   
   .next-game-block:hover {
     transform: scale(1.1);
     box-shadow: 0 0 30px rgba(62, 42, 69, 0.4); /* Свечение вокруг блока */
   }
-  
-  
-  .next-game-block img {
-    max-width: 100%;
-    height: auto;
-  }
+
   
   .next-game-block p {
     margin-top: 10px;
@@ -169,23 +166,23 @@ h2 {
   }
 
 h1.game_name {
-    position: absolute;
-    color: rgba(218, 178, 253, 0.7);
     font-family: 'Apparat';
+    position: relative;
+    text-align: center;
+    color: rgba(218, 178, 253, 0.7);
     font-weight: 200;
     font-size: 25px;
     display: block;
-    left: 0;
     padding-top: 19px;
+    margin-bottom: 20px;
     width: 100%;
     left: 5px;
 }
 
 .date {
-    position: absolute;
+    margin-bottom: 20px;
     display: flex;
     width: 100%;
-    padding-top: 58px;
     padding-left: 26px; 
 }
 
@@ -203,11 +200,10 @@ h1.game_name {
 }
 
 .location {
-    position: absolute;
     display: flex;
     width: 100%;
-    padding-top: 115px;
-    padding-left: 26px; 
+    padding-left: 26px;
+    margin-bottom: 30px;
 }
 
 .location img {
@@ -224,11 +220,9 @@ h1.game_name {
 }
 
 .entry {
-    position: absolute;
     display: flex;
     width: 100%;
-    padding-top: 172px;
-    padding-bottom: 24px;
+    margin-bottom: 20px;
     padding-left: 73px;
 }
 
@@ -261,109 +255,51 @@ p.state {
 }
 
 .details-container {
-    justify-content: center;
+    display: grid;
+    justify-items: center;
     align-items: center;
+    justify-content: center;
 }
 
-.center-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-  
-  .frame {
-    margin-top: 35px;
-    position: relative;
-    display: inline-block;
-  }
-  
-  .frame img {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    border-radius: 40px;
-    box-shadow: 0 0 40px rgba(255, 255, 255, 0.7);
-  }
-  
-  .video-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 99%; /* Здесь вы можете настроить ширину видео относительно рамки */
-    height: 97%;
-    border-radius: 40px; /* Закругленные края видео */
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Тень вокруг видео */
-  }
-  
-  .video-container iframe {
-    width: 100%;
-    height: 100%;
-  }
+.video-container {
+    z-index: 5;
+    margin-top: 40px;
+    width: 65vw;
+    height: 380px;
+}
 
-  .details-text-container {
-    position: relative;
+
+.video-container iframe {
     display: flex;
-    justify-content: center; /* Центрируем по горизонтали */
-    align-items: center; /* Выравниваем по вертикали */
-    margin-bottom: 60px;
-  }
+    border-radius: 40px; /* Закругленные края видео */
+    border: solid 4px #6B3472;
+    width: inherit;
+    height: inherit;
+}
   
-  .content-container {
+
+
+.details-text-container {
     display: flex;
     align-items: center;
-    max-width: 100%;
-  }
-  
-  .image-container {
-    flex: 1;
-    position: relative;
-    display: flex;
-    max-width: 765px;
-  }
-  
-  .image-container img {
-    width: 100%;
-  }
+    justify-content: center;
+    background: linear-gradient(to bottom, #4D0956, #1F0434, #4D0956);
+    margin-bottom: 60px;
+    width: 50vw;
+    border-radius: 0 0 40px 40px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
   
   .text-container {
     padding: 30px 45px;
-    position: absolute;
   }
   
   .text-container h4 {
     font-family: 'Apparat';
     color: #dab2fd;
-    font-weight: bold;
     text-align: left;
     font-size: 20px;
     margin: 0;
-  }
-
-  .rules-btn {
-    position: absolute;
-    background: linear-gradient(to bottom, #ead673, #c9a44b);
-    background-color: #dec364;
-    color: #000;
-    border-radius: 20px;
-    border: 0px;
-    padding: 10px 25px;
-    padding-bottom: 5px;
-    font-size: 25px;
-    font-family: 'Apparat';
-    font-weight: 400;
-    margin-top: 165px;
-    margin-left: 60px;
-    transition: all 0.5s;
-  }
-
-  .rules-btn:hover {
-    background-color: #fff;
-    background: #fff;
-    transform: scale(1.1);
-    box-shadow: 0px 0px 15px #fff;
   }
 
   .rules {
@@ -596,32 +532,22 @@ a {
         margin-top: 260px;
     }
 
-    .frame img {
-        border-radius: 45px 45px 0px 0px;
-    }
 
     .video-container {
+        width: 95vw;
+        height: 300px;
+    }
+
+    .video-container iframe {
+        border: solid 1px #6B3472;
+        position: relative;
         border-radius: 45px 45px 0px 0px;
-    }
 
-    .rules-btn {
-        margin-left: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 20px;
-    }
+  }
 
-    .rules-btn:hover {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 20px;
-      }
+    .details-text-container {
+        width: 95vw;
+    }
 
     .rules img {
         width: 50%

@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='/images/front/diskOption1.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/front/diskOption1.png') }}">
     <title>Meloman Quiz</title>
   </head>
 
@@ -25,7 +25,7 @@
     <div class="intro">
       <header class="header">
         <div class="city-selector" type="button" data-bs-toggle="modal" data-bs-target="#cityModal">
-          <img src="{{ url_for('static', filename='/images/front/location.png') }}">
+          <img src="{{ url_for('static', filename='images/front/location.png') }}">
           <h2 id="cityHeader">Город</h2>
           <div class="modal fade" id="cityModal" tabindex="-1" aria-labelledby="cityModalLabel" aria-hidden="true">
             <input type="hidden" id="currentPage" value="index">
@@ -50,7 +50,7 @@
         </div>
           <nav class="navbar navbar-expand-lg navbar-dark">
                 <a class="navbar-brand" href="index.html">
-                  <img src="{{ url_for('static', filename='/images/front/logo-2.png') }}" alt="" class="logo-header">
+                  <img src="{{ url_for('static', filename='images/front/logo-2.png') }}" alt="" class="logo-header">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
@@ -93,7 +93,7 @@
           {% endif %}
       </div>
       <div class="music_record">
-        <img src="{{ url_for('static', filename='/images/front/music_record.png') }}" draggable="false">
+        <img src="{{ url_for('static', filename='images/front/music_record.png') }}" draggable="false">
       </div>
     </div>
     <div class="container">
@@ -103,18 +103,17 @@
         <div class="next-game-block">
           <h1 class="game_name">{{ next_games[i][0] }}</h1>
           <div class="date">
-            <img src="{{ url_for('static', filename='/images/front/calendar.png') }}">
+            <img src="{{ url_for('static', filename='images/front/calendar.png') }}">
             <p>ДАТА :  {{ next_games[i][1].strftime('%d.%m.%Y %H:%M') }}</p>
           </div>
           <div class="location">
-            <img src="{{ url_for('static', filename='/images/front/home.png') }}">
+            <img src="{{ url_for('static', filename='images/front/home.png') }}">
             <p>МЕСТО : {{ next_games[i][2] }}</p>
           </div>
           <div class="entry">
             <p>ЗАПИСЬ:</p>
             <a href="http://wa.me/{{ next_games[i][3] }}?text=Здравствуйте, я хотел бы записаться на игру {{ next_games[i][0] }}, которая будет проходить {{ next_games[i][1].strftime('%d.%m.%Y %H:%M') }}. Количество человек: "><p class="state">ОТКРЫТА</p></a>
           </div>
-          <img src="{{ url_for('static', filename='/images/front/rectangle_next_game.png') }}">
         </div>
         {% endfor %}
       </div>
@@ -124,61 +123,49 @@
       <a href="shedule.html"><button type="button" class="btn btn-outline-light shedule-btn">РАСПИСАНИЕ ИГР</button></a>
     </div>
 
+    <h2>ДЕТАЛИ ПРОВЕДЕНИЯ ИГР</h2>
     <div class="details-container">
-        <h2>ДЕТАЛИ ПРОВЕДЕНИЯ ИГР</h2>
-        <div class="center-container">
-          <div class="frame">
-            <img src="{{ url_for('static', filename='/images/front/video_bg.png') }}" alt="Рамка">
-            <div class="video-container">
-              <iframe src="https://www.youtube.com/embed/xpIgD6HIgv4" frameborder="0" allowfullscreen></iframe>
-            </div>
-          </div>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/xpIgD6HIgv4" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="details-text-container">
+        <div class="text-container">
+            <h4>Meloman Quiz - это грандиозное путешествие в мир музыки, где ваше музыкальное знание подвергнется настоящему испытанию. Этот интеллектуальный музыкальный квиз - это не просто игра, это настоящий концерт музыкальных знаний, в котором каждый участник становится звездой собственного шоу.</h4>
         </div>
     </div>
-    <div class="details-text-container">
-      <div class="content-container">
-        <div class="combined-container">
-          <div class="image-container">
-            <img src="{{ url_for('static', filename='/images/front/rectangle-under-video.png') }}" id="dynamic-image">
-            <div class="text-container">
-              <h4>Meloman Quiz - это грандиозное путешествие в мир музыки, где ваше музыкальное знание подвергнется настоящему испытанию. Этот интеллектуальный музыкальный квиз - это не просто игра, это настоящий концерт музыкальных знаний, в котором каждый участник становится звездой собственного шоу.</h4>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="rules">
-      <img src="{{ url_for('static', filename='/images/front/rule-1.png') }}">
-      <img src="{{ url_for('static', filename='/images/front/rule-2.png') }}">
-      <img src="{{ url_for('static', filename='/images/front/rule-3.png') }}">
+      <img src="{{ url_for('static', filename='images/front/rule-1.png') }}">
+      <img src="{{ url_for('static', filename='images/front/rule-2.png') }}">
+      <img src="{{ url_for('static', filename='images/front/rule-3.png') }}">
     </div>
 
 
     <div class="text-rules">
       <div class="galochka">
-          <img src="{{ url_for('static', filename='/images/front/icon4.png') }}">
+          <img src="{{ url_for('static', filename='images/front/icon4.png') }}">
           <div class="text-rules-container">
             <h3>Мировой хит-парад</h3>
             <p>Погрузитесь в удивительный мир музыки, исследуя самые разнообразные жанры и эпохи. Meloman Quiz предлагает вам уникальную возможность узнать о музыке больше, чем вы могли себе представить.</p>
           </div>
         </div>
       <div class="galochka">
-        <img src="{{ url_for('static', filename='/images/front/icon3.png') }}">
+        <img src="{{ url_for('static', filename='images/front/icon3.png') }}">
         <div class="text-rules-container">
           <h3>Интеллектуальные баттлы</h3>
           <p>Соревнуйтесь с друзьями и другими меломанами в увлекательных музыкальных баттлах. Кто быстрее угадает исполнителя или название песни? Пусть ваше музыкальное чутье покажет ваше превосходство.</p>
         </div>
       </div>
         <div class="galochka">
-        <img src="{{ url_for('static', filename='/images/front/icon2.png') }}">
+        <img src="{{ url_for('static', filename='images/front/icon2.png') }}">
         <div class="text-rules-container">
           <h3>Подарки и награды</h3>
           <p>За каждый правильный ответ вы получаете баллы и награды. Стремитесь к вершине рейтинга и станьте королем Meloman Quiz!</p>
         </div>
       </div>
         <div class="galochka">
-        <img src="{{ url_for('static', filename='/images/front/icon1.png') }}">
+        <img src="{{ url_for('static', filename='images/front/icon1.png') }}">
         <div class="text-rules-container">
           <h3>Персональная адаптация</h3>
           <p>Meloman Quiz адаптируется под ваш вкус и уровень знаний, так что и новички, и опытные меломаны найдут в этой игре вызов.</p>
@@ -211,7 +198,7 @@
           <a href="https://wa.me/77755603383?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%AF%20%D0%B1%D1%8B%20%D1%85%D0%BE%D1%82%D0%B5%D0%BB%20%D0%BA%D1%83%D0%BF%D0%B8%D1%82%D1%8C%20%D1%84%D1%80%D0%B0%D0%BD%D1%88%D0%B8%D0%B7%D1%83%20Meloman%20Quiz!"><button class="order-btn">ЗАКАЗАТЬ ФРАНШИЗУ</button></a>
         </div>
         <div class="music-key">
-          <img src="{{ url_for('static', filename='/images/front/music-key.png') }}">
+          <img src="{{ url_for('static', filename='images/front/music-key.png') }}">
         </div>
       </div>
     </div>
@@ -219,12 +206,12 @@
     <footer id="nav-footer" class="page-footer">
       <div class="container footer-container">
         <div class="logo-footer">
-          <a href="#"><img src="{{ url_for('static', filename='/images/front/logo-footer.png') }}" class="logo-footer"></a>
+          <a href="#"><img src="{{ url_for('static', filename='images/front/logo-footer.png') }}" class="logo-footer"></a>
         </div>
         <div class="socials">
-          <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="{{ url_for('static', filename='/images/front/Instagram.png') }}" class="instagram-footer"></a>
-          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="{{ url_for('static', filename='/images/front/tik-tok.png') }}" class="tik-tok-footer"></a>
-          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="{{ url_for('static', filename='/images/front/youtube.png') }}" class="youtube-footer"></a>
+          <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="{{ url_for('static', filename='images/front/Instagram.png') }}" class="instagram-footer"></a>
+          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="{{ url_for('static', filename='images/front/tik-tok.png') }}" class="tik-tok-footer"></a>
+          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="{{ url_for('static', filename='images/front/youtube.png') }}" class="youtube-footer"></a>
         </div>
         <div class="numbers">
           <a href="tel:+7 775 560 3383"><h5>+7 775 560 3383</h5></a>
@@ -236,7 +223,7 @@
     <!-- Вариант 1: Bootstrap в связке с Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <!-- Подключение вашего JavaScript файла -->
-    <script src="{{ url_for('static', filename='/js/city-selector.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/city-selector.js') }}"></script>
     <script>
     window.onload = function () {
         document.body.classList.add('loaded_hiding');
