@@ -154,7 +154,12 @@ def create_powerpoint_with_table(folder, game_id):
     # Определяем размеры слайда 16:9
     # slide_width = Inches(16)  # 10 дюймов
     # slide_height = Inches(9)  # 5.67 дюйма
-
+    if rows <= 15:
+        font_size = Pt(22)
+    elif rows <= 18:
+        font_size = Pt(18)
+    else:
+        font_size = Pt(14)
     if 7.5 / rows < 0.5:
         row_height = 7.5 / rows
     else:
@@ -200,7 +205,7 @@ def create_powerpoint_with_table(folder, game_id):
                 else:
                     cell.text = str(game_result.get(commands[i - 1])[j - 2][3])
                 cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(255, 255, 255)
-            cell.text_frame.paragraphs[0].font.size = Pt(22)
+            cell.text_frame.paragraphs[0].font.size = font_size
             cell.text_frame.paragraphs[0].font.bold = True
 
     for i in range(cols):
@@ -250,7 +255,7 @@ def create_powerpoint_with_table(folder, game_id):
                     else:
                         cell.text = str(game_result.get(commands[i - 1])[j + 4 - 2][3])
                     cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(255, 255, 255)
-                cell.text_frame.paragraphs[0].font.size = Pt(22)
+                cell.text_frame.paragraphs[0].font.size = font_size
                 cell.text_frame.paragraphs[0].font.bold = True
 
         for cell in iter_cells(table_2.table):

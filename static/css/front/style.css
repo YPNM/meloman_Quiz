@@ -262,20 +262,17 @@ p.state {
 }
 
 .video-container {
+    display: flex;
     z-index: 5;
     margin-top: 40px;
-    width: 65vw;
-}
-
-.video-container {
-    display: flex;
+    width: 100vw;
     justify-content: center;
 }
 
 .video-container lite-youtube {
     border-radius: 40px; /* Закругленные края видео */
     border: solid 4px #6B3472;
-    width: inherit;
+    width: 100vw;
 }
   
 
@@ -286,7 +283,7 @@ p.state {
     justify-content: center;
     background: linear-gradient(to bottom, #4D0956, #1F0434, #4D0956);
     margin-bottom: 60px;
-    width: 50vw;
+    width: 600px;
     border-radius: 0 0 40px 40px;
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
 }
