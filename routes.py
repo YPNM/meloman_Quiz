@@ -4,7 +4,7 @@ import locale
 import time
 import ssl
 
-context = ('ssl/certificate.crt','ssl/private.key')
+context = ('ssl/certificate.crt', 'ssl/private.key')
 from collections import Counter
 
 locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
@@ -853,11 +853,12 @@ def admin_tables_show(game_id):
     else:
         abort(403)
 
+
 @app.route("/admin/tables/export/<string:game_id>", methods=["GET"], strict_slashes=False)
 @login_required
 def admin_pptx_export(game_id):
     if (current_user.superadmin or db_init.RoundsDB().admin_permission_check(game_id, current_user.city_id.decode())):
-        if(request.method == 'GET'):
+        if (request.method == 'GET'):
             try:
                 dir = tempfile.mkdtemp()
                 path = pptx_creator.create_powerpoint_with_table(dir, game_id)
@@ -867,6 +868,7 @@ def admin_pptx_export(game_id):
                 abort(404)
     else:
         abort(403)
+
 
 # Games routing
 @app.route("/admin/events", methods=["GET"], strict_slashes=False)
@@ -1309,6 +1311,7 @@ def logout():
 
 @app.route("/")
 @app.route("/index", methods=['GET'])
+@app.route("/index.html", methods=['GET'])
 def index():
     # Получаем город от пользователя, если None, то город не выбран
     selected_city = None
@@ -1386,6 +1389,7 @@ def shedule():
 
 
 @app.route("/photos")
+@app.route("/photos.html")
 def photos():
     selected_city = request.args.get("selectedCity")
     cityModel = db_init.CitiesDB()
@@ -1503,7 +1507,9 @@ def sorting_table(game_id):
             }
     return submitDict
 
+
 @app.route("/table", methods=['GET'])
+@app.route("/table.html", methods=['GET'])
 def table():
     selected_city = request.args.get("selectedCity")
     selected_game = request.args.get("selectedGame")
@@ -1545,10 +1551,11 @@ def table():
                 game_result = sorting_table(games_names_id.get(selected_game))
                 return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
                                        game_result=game_result, selected_game=selected_game, game_names=games_names_id,
-                                       round_counter=len(list(game_result.values())[0].get('items')), cityNames=list(cities.keys()))
+                                       round_counter=len(list(game_result.values())[0].get('items')),
+                                       cityNames=list(cities.keys()))
             else:
                 game_result = sorting_table(
-                        games_names_id.get(collections.deque(games_names_id, maxlen=1)[0]))
+                    games_names_id.get(collections.deque(games_names_id, maxlen=1)[0]))
                 round_counter = len(list(game_result.values())[0].get('items'))
                 return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
                                        game_result=game_result,
@@ -1568,6 +1575,7 @@ def table():
 
 
 @app.route("/shop")
+@app.route("/shop.html")
 def shop():
     catalogModel = db_init.CatalogDB()
     all_catalog = catalogModel.get_all_catalog()
