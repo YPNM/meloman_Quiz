@@ -265,16 +265,17 @@ p.state {
     z-index: 5;
     margin-top: 40px;
     width: 65vw;
-    height: 380px;
 }
 
+.video-container {
+    display: flex;
+    justify-content: center;
+}
 
 .video-container lite-youtube {
-    display: flex;
     border-radius: 40px; /* Закругленные края видео */
     border: solid 4px #6B3472;
     width: inherit;
-    height: inherit;
 }
   
 
@@ -535,7 +536,6 @@ a {
 
     .video-container {
         width: 95vw;
-        height: 300px;
     }
 
     .video-container lite-youtube {
