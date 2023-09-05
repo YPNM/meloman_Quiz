@@ -16,18 +16,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <title>Meloman Quiz</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/front/diskOption1.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/front/diskOption1.webp') }}">
   </head>
 
   <body>
     <div class="preloader">
-        <img src="{{ url_for('static', filename="images/front/music_record.png") }}" class="preloader__image">
+        <img src="{{ url_for('static', filename="images/front/music_record.webp") }}" class="preloader__image">
     </div>
 
     <div class="intro">
       <header class="header">
         <div class="city-selector" type="button" data-bs-toggle="modal" data-bs-target="#cityModal">
-          <img src="{{ url_for('static', filename='images/front/location.png') }}">
+          <img src="{{ url_for('static', filename='images/front/location.webp') }}">
           <h2 id="cityHeader">Город</h2>
           <div class="modal fade" id="cityModal" tabindex="-1" aria-labelledby="cityModalLabel" aria-hidden="true">
               <input type="hidden" id="currentPage" value="shedule">
@@ -51,7 +51,7 @@
         </div>
         <nav class="navbar navbar-expand-lg navbar-dark">
           <a class="navbar-brand" href="index.html">
-            <img src="{{ url_for('static', filename='images/front/logo-2.png') }}" alt="" class="logo-header">
+            <img src="{{ url_for('static', filename='images/front/logo-2.webp') }}" alt="" class="logo-header">
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -126,13 +126,13 @@
                         </div>
                         <h4>{{ selected_games[i][1] }}</h4>
                         <div class="loc">
-                            <img src="{{ url_for('static', filename='images/front/home.png') }}">
+                            <img src="{{ url_for('static', filename='images/front/home.webp') }}">
                             <div class="txt-container">
                                 <h5>{{ selected_games[i][6] }}</h5>
                             </div>
                         </div>
                         <div class="time">
-                            <img src="{{ url_for('static', filename='images/front/calendar.png') }}">
+                            <img src="{{ url_for('static', filename='images/front/calendar.webp') }}">
                             <div class="txt-container">
                                 <p>{{ selected_games[i][4].strftime('%H:%M') }}</p>
                             </div>
@@ -150,12 +150,12 @@
     <footer id="nav-footer" class="page-footer">
       <div class="container footer-container">
         <div class="logo-footer">
-          <a href="#"><img src="{{ url_for('static', filename='images/front/logo-footer.png') }}" class="logo-footer"></a>
+          <a href="#"><img src="{{ url_for('static', filename='images/front/logo-footer.webp') }}" class="logo-footer"></a>
         </div>
         <div class="socials">
-          <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="{{ url_for('static', filename='images/front/Instagram.png') }}" class="instagram-footer"></a>
-          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="{{ url_for('static', filename='images/front/tik-tok.png') }}" class="tik-tok-footer"></a>
-          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="{{ url_for('static', filename='images/front/youtube.png') }}" class="youtube-footer"></a>
+          <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="{{ url_for('static', filename='images/front/Instagram.webp') }}" class="instagram-footer"></a>
+          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="{{ url_for('static', filename='images/front/tik-tok.webp') }}" class="tik-tok-footer"></a>
+          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="{{ url_for('static', filename='images/front/youtube.webp') }}" class="youtube-footer"></a>
         </div>
         <div class="numbers">
           <a href="tel:+7 775 560 3383"><h5>+7 775 560 3383</h5></a>
