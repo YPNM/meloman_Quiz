@@ -15,19 +15,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <title>Meloman Quiz</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/front/diskOption1.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/front/diskOption1.webp') }}">
   </head>
 
   <body>
 
     <div class="preloader">
-        <img src="{{ url_for('static', filename="images/front/music_record.png") }}" class="preloader__image">
+        <img src="{{ url_for('static', filename="images/front/music_record.webp") }}" class="preloader__image">
     </div>
 
     <div class="intro">
       <header class="header">
         <div class="city-selector" type="button" data-bs-toggle="modal" data-bs-target="#cityModal">
-          <img src="{{ url_for('static', filename='images/front/location.png') }}">
+          <img src="{{ url_for('static', filename='images/front/location.webp') }}">
           <h2 id="cityHeader">Город</h2>
           <div class="modal fade" id="cityModal" tabindex="-1" aria-labelledby="cityModalLabel" aria-hidden="true">
             <input type="hidden" id="currentPage" value="table">
@@ -52,7 +52,7 @@
         </div>
         <nav class="navbar navbar-expand-lg navbar-dark">
           <a class="navbar-brand" href="index.html">
-            <img src="{{ url_for('static', filename='images/front/logo-2.png') }}" alt="" class="logo-header">
+            <img src="{{ url_for('static', filename='images/front/logo-2.webp') }}" alt="" class="logo-header">
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -104,7 +104,7 @@
                 <div class="name-place-container">
                     <h5>{{ key }}</h5>
                     <div class="place">
-                        <img src="{{ url_for('static', filename='images/front/record.png') }}">
+                        <img src="{{ url_for('static', filename='images/front/record.webp') }}">
                         <h4>{{ loop.index }}</h4>
                     </div>
                 </div>
