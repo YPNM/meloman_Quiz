@@ -9,7 +9,9 @@
     <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/front/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/front/preloader.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/front/lite-yt-embed.css') }}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="{{ url_for('static', filename='js/lite-yt-embed.js') }}"></script>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -126,7 +128,8 @@
     <h2>ДЕТАЛИ ПРОВЕДЕНИЯ ИГР</h2>
     <div class="details-container">
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/xpIgD6HIgv4" frameborder="0" allowfullscreen></iframe>
+            <lite-youtube videoid="xpIgD6HIgv4" playlabel="Play: Keynote (Google I/O '18)"></lite-youtube>
+
         </div>
         <div class="details-text-container">
         <div class="text-container">

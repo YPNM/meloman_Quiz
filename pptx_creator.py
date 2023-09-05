@@ -109,7 +109,7 @@ def create_powerpoint_with_table(folder, game_id):
                 'id': team[1]
             }
 
-    prs = Presentation()
+    prs = Presentation('table_preset.pptx')
     game_result = {}
 
     for key, value in submitDict.items():
@@ -135,12 +135,17 @@ def create_powerpoint_with_table(folder, game_id):
     slide_width = Inches(16)  # 10 дюймов
     slide_height = Inches(9)  # 5.67 дюйма
 
+    if 9 / rows < 0.5:
+        row_height = 9 / rows
+    else:
+        row_height = 0.5
+
     # Устанавливаем размеры слайда
     prs.slide_width = slide_width
     prs.slide_height = slide_height
-    table = slide.shapes.add_table(rows=rows, cols=cols, left=Inches(16 / 2) - table_length / 2, top=Inches((9 / 2) - (rows * 0.5 / 2)),
+    table = slide.shapes.add_table(rows=rows, cols=cols, left=Inches(16 / 2) - table_length / 2, top=Inches((9 / 2) - (rows * row_height / 2)),
                                    width=Inches(9),
-                                   height=Inches(0.5) * rows)
+                                   height=Inches(row_height) * rows)
 
     for cell in iter_cells(table.table):
         fill = cell.fill

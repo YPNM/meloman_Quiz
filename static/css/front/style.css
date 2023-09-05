@@ -269,7 +269,7 @@ p.state {
 }
 
 
-.video-container iframe {
+.video-container lite-youtube {
     display: flex;
     border-radius: 40px; /* Закругленные края видео */
     border: solid 4px #6B3472;
@@ -538,12 +538,12 @@ a {
         height: 300px;
     }
 
-    .video-container iframe {
+    .video-container lite-youtube {
         border: solid 1px #6B3472;
         position: relative;
         border-radius: 45px 45px 0px 0px;
 
-  }
+    }
 
     .details-text-container {
         width: 95vw;
