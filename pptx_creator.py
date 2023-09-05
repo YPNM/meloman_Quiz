@@ -218,49 +218,51 @@ def create_powerpoint_with_table(folder, game_id):
     fill.solid()
     fill.fore_color.rgb = RGBColor(0, 0, 0)  # Черный цвет фона
 
-    table_2_length = Inches(4) + 4 * Inches(0.7)
+    if len(game_result.get(commands[0])) >= 7:
 
-    table_2 = slide_2.shapes.add_table(rows=rows, cols=5, left=Inches(13.3 / 2) - table_2_length / 2, top=Inches((7.5 / 2) - (rows * row_height / 2)),
-                                        width=Inches(9),
-                                        height=Inches(row_height) * rows)
+        table_2_length = Inches(4) + 4 * Inches(0.7)
+
+        table_2 = slide_2.shapes.add_table(rows=rows, cols=5, left=Inches(13.3 / 2) - table_2_length / 2, top=Inches((7.5 / 2) - (rows * row_height / 2)),
+                                            width=Inches(9),
+                                            height=Inches(row_height) * rows)
 
 
-    counter = 5
-    for i in range(rows):
-        for j in range(5):
-            cell = table_2.table.cell(i, j)
-            if i == 0:
-                if j == 0:
-                    cell.text = "№"
-                elif j == 1:
-                    cell.text = "Название команды"
+        counter = 5
+        for i in range(rows):
+            for j in range(5):
+                cell = table_2.table.cell(i, j)
+                if i == 0:
+                    if j == 0:
+                        cell.text = "№"
+                    elif j == 1:
+                        cell.text = "Название команды"
+                    else:
+                        cell.text = str(counter)
+                        counter += 1
                 else:
-                    cell.text = str(counter)
-                    counter += 1
+                    for paragraph in cell.text_frame.paragraphs:
+                        for run in paragraph.runs:
+                            run.font.color.rgb = RGBColor(255, 255, 255)  # Белый цвет текста
+                    if j == 0:
+                        cell.text = str(i)
+                    elif j == 1:
+                        cell.text = str(commands[i - 1])
+                    else:
+                        cell.text = str(game_result.get(commands[i - 1])[j + 4 - 2][3])
+                    cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(255, 255, 255)
+                cell.text_frame.paragraphs[0].font.size = Pt(22)
+                cell.text_frame.paragraphs[0].font.bold = True
+
+        for cell in iter_cells(table_2.table):
+            fill = cell.fill
+            fill.solid()
+            fill.fore_color.rgb = RGBColor(0, 0, 0)
+
+        for i in range(5):
+            if i == 1:
+                table_2.table.columns[i].width = Inches(4)
             else:
-                for paragraph in cell.text_frame.paragraphs:
-                    for run in paragraph.runs:
-                        run.font.color.rgb = RGBColor(255, 255, 255)  # Белый цвет текста
-                if j == 0:
-                    cell.text = str(i)
-                elif j == 1:
-                    cell.text = str(commands[i - 1])
-                else:
-                    cell.text = str(game_result.get(commands[i - 1])[j + 4 - 2][3])
-                cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(255, 255, 255)
-            cell.text_frame.paragraphs[0].font.size = Pt(22)
-            cell.text_frame.paragraphs[0].font.bold = True
-
-    for cell in iter_cells(table_2.table):
-        fill = cell.fill
-        fill.solid()
-        fill.fore_color.rgb = RGBColor(0, 0, 0)
-
-    for i in range(5):
-        if i == 1:
-            table_2.table.columns[i].width = Inches(4)
-        else:
-            table_2.table.columns[i].width = Inches(0.7)
+                table_2.table.columns[i].width = Inches(0.7)
 
     path = f'{folder}/table.pptx'
     # Сохраняем презентацию
