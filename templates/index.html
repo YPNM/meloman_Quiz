@@ -58,25 +58,25 @@
                 <div class="collapse navbar-collapse ms-auto" id="navbarNav">
                   <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="index">Главная</a>
+                      <a class="nav-link active" aria-current="page" href="index{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Главная</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="shedule">Расписание</a>
+                      <a class="nav-link" href="shedule{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Расписание</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="photos">Фотоотчёты</a>
+                      <a class="nav-link" href="photos{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Фотоотчёты</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="events">Мероприятия</a>
+                      <a class="nav-link" href="events{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Мероприятия</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="table">Таблица</a>
+                      <a class="nav-link" href="table{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Таблица</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="shop">Каталог</a>
+                      <a class="nav-link" href="shop{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Каталог</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="contacts">Контакты </a>
+                      <a class="nav-link" href="contacts{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Контакты </a>
                     </li>
                   </ul>
                 </div>
@@ -120,7 +120,7 @@
     </div>
 
     <div class="shedule-btn">
-      <a href="shedule.html"><button type="button" class="btn btn-outline-light shedule-btn">РАСПИСАНИЕ ИГР</button></a>
+      <a href="shedule{% if selected_city != '' %}?selectedCity={{ selected_city }}{% endif %}"><button type="button" class="btn btn-outline-light shedule-btn">РАСПИСАНИЕ ИГР</button></a>
     </div>
 
     <h2>ДЕТАЛИ ПРОВЕДЕНИЯ ИГР</h2>

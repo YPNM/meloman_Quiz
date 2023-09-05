@@ -1341,10 +1341,10 @@ def index():
                 del (last_photos[3:len(last_photos)])
                 last_photos.reverse()
             return render_template('index.html', cityNames=list(cities.keys()), next_games=next_games,
-                                   last_photos=last_photos)
+                                   last_photos=last_photos, selected_city=selected_city)
         except IndexError:
             pass
-    return render_template('index.html', cityNames=list(cities.keys()))
+    return render_template('index.html', cityNames=list(cities.keys()), selected_city='')
 
 
 @app.route("/shedule", methods=['GET'])
@@ -1374,18 +1374,18 @@ def shedule():
                     break
             if selected_game_type == "all" or selected_game_type is None:
                 return render_template('shedule.html', cityNames=list(cities.keys()), game_types=game_types,
-                                       selected_games=all_games)
+                                       selected_games=all_games, selected_city=selected_city)
             elif selected_game_type != "all":
                 selected_games = []
                 for i in range(len(all_games)):
                     if all_games[i][3] == selected_game_type:
                         selected_games.append(all_games[i])
                 return render_template('shedule.html', cityNames=list(cities.keys()), game_types=game_types,
-                                       selected_games=selected_games)
+                                       selected_games=selected_games, selected_city=selected_city)
         except IndexError:
-            return render_template('shedule.html', game_types=game_types, cityNames=list(cities.keys()))
+            return render_template('shedule.html', game_types=game_types, cityNames=list(cities.keys()), selected_city=selected_city)
 
-    return render_template('shedule.html', game_types=game_types, cityNames=list(cities.keys()))
+    return render_template('shedule.html', game_types=game_types, cityNames=list(cities.keys()), selected_city='')
 
 
 @app.route("/photos")
@@ -1403,8 +1403,8 @@ def photos():
     if selected_city is not None:
         all_photos = photosModel.get_all_photos(cities.get(selected_city))
         all_photos.reverse()
-        return render_template('photos.html', cityNames=list(cities.keys()), all_photos=all_photos)
-    return render_template('photos.html', cityNames=list(cities.keys()))
+        return render_template('photos.html', cityNames=list(cities.keys()), all_photos=all_photos, selected_city=selected_city)
+    return render_template('photos.html', cityNames=list(cities.keys()), selected_city='')
 
 
 @app.route("/events")
@@ -1420,8 +1420,8 @@ def events():
 
     if selected_city is not None:
         all_events = eventsModel.get_all_events(cities.get(selected_city))
-        return render_template('events.html', cityNames=list(cities.keys()), all_events=all_events)
-    return render_template('events.html', cityNames=list(cities.keys()))
+        return render_template('events.html', cityNames=list(cities.keys()), all_events=all_events, selected_city=selected_city)
+    return render_template('events.html', cityNames=list(cities.keys()), selected_city='')
 
 
 def sorting_table(game_id):
@@ -1552,7 +1552,7 @@ def table():
                 return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
                                        game_result=game_result, selected_game=selected_game, game_names=games_names_id,
                                        round_counter=len(list(game_result.values())[0].get('items')),
-                                       cityNames=list(cities.keys()))
+                                       cityNames=list(cities.keys()), selected_city=selected_city)
             else:
                 game_result = sorting_table(
                     games_names_id.get(collections.deque(games_names_id, maxlen=1)[0]))
@@ -1561,17 +1561,17 @@ def table():
                                        game_result=game_result,
                                        selected_game=collections.deque(games_names_id, maxlen=1)[0],
                                        game_names=games_names_id, round_counter=round_counter,
-                                       cityNames=list(cities.keys()))
+                                       cityNames=list(cities.keys()), selected_city=selected_city)
         except IndexError:
             return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),
-                                   game_names={}, round_counter=0, game_result={})
+                                   game_names={}, round_counter=0, game_result={}, selected_city=selected_city)
         except AttributeError:
             return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),
-                                   game_names={}, round_counter=0, game_result={})
+                                   game_names={}, round_counter=0, game_result={}, selected_city=selected_city)
         # game_counter - {"Название команды": Количество посещённых игр}
         # Comands_score - {"Название команды": int(Количество набранных очков за все игры)}
     return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),
-                           game_names={}, round_counter=0, game_result={})
+                           game_names={}, round_counter=0, game_result={}, selected_city='')
 
 
 @app.route("/shop")
@@ -1579,13 +1579,13 @@ def table():
 def shop():
     catalogModel = db_init.CatalogDB()
     all_catalog = catalogModel.get_all_catalog()
-    return render_template('shop.html', all_catalog=all_catalog)
+    return render_template('shop.html', all_catalog=all_catalog, selected_city='')
 
 
 @app.route("/contacts")
 @app.route("/contacts.html")
 def contacts():
-    return render_template('contacts.html')
+    return render_template('contacts.html', selected_city='')
 
 
 if __name__ == "__main__":

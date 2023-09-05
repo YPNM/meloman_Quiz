@@ -39,8 +39,9 @@
                 <div class="modal-body">
                   <!-- Здесь вы можете добавить форму или список городов для выбора -->
                   <ul>
-                    <li><a href="#" onclick="selectCity('Астана')">Астана</a></li>
-                    <li><a href="#" onclick="selectCity('Петропавловск')">Петропавловск</a></li>
+                    {% for i in range(cityNames|length) %}
+                                <li><a href="#" onclick="selectCity('{{ cityNames[i] }}')">{{ cityNames[i] }}</a></li>
+                            {% endfor %}
                     <!-- Добавьте свои города здесь -->
                   </ul>
                 </div>
@@ -58,25 +59,25 @@
           <div class="collapse navbar-collapse ms-auto" id="navbarNav">
             <ul class="navbar-nav ml-auto">
               <li class="nav-item">
-                <a class="nav-link"  href="index">Главная</a>
+                <a class="nav-link"  href="index{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Главная</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="shedule">Расписание</a>
+                <a class="nav-link" href="shedule{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Расписание</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="photos">Фотоотчёты</a>
+                <a class="nav-link" href="photos{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Фотоотчёты</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="events">Мероприятия</a>
+                <a class="nav-link" href="events{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Мероприятия</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="table">Таблица</a>
+                <a class="nav-link" href="table{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Таблица</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="shop">Каталог</a>
+                <a class="nav-link" href="shop{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Каталог</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="contacts">Контакты </a>
+                <a class="nav-link active" aria-current="page" href="contacts{% if selected_city != '' %}?selectedCity={{ selected_city }} {% endif %}">Контакты </a>
               </li>
             </ul>
           </div>
