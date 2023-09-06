@@ -1546,7 +1546,7 @@ def table():
                     else:
                         commands_score[keys] += int(values['total'])
 
-            commands_score = dict(sorted(commands_score.items(), key=lambda item: item[1]))
+            commands_score = dict(sorted(commands_score.items(), key=lambda item: item[1], reverse=True))
 
             # Получаю результаты за выбранную игру
             if selected_game is not None:
