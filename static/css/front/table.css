@@ -393,7 +393,11 @@ td {
     }
 
     .dropdown {
-        left: -180px;
+        display: flex;
+        justify-content: flex-end;
+        bottom: 0;
+        margin-bottom: 20px;
+        margin-right: 5px;
     }
     .show-buttons {
         margin-left: 0;
