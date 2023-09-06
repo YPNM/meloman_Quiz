@@ -1525,7 +1525,7 @@ def table():
     if selected_city is not None:
         try:
 
-            comands_score = {}
+            commands_score = {}
             all_results = []
             all_games = gamesModel.get_all_games_with_score(cities.get(selected_city),
                                                             seasonsModel.get_last_season(cities.get(selected_city))[0][
@@ -1541,15 +1541,17 @@ def table():
             # Считаю результаты за последний сезон
             for i in range(len(all_results)):
                 for keys, values in all_results[i].items():
-                    if comands_score.get(keys, 0) == 0:
-                        comands_score[keys] = int(values['total'])
+                    if commands_score.get(keys, 0) == 0:
+                        commands_score[keys] = int(values['total'])
                     else:
-                        comands_score[keys] += int(values['total'])
+                        commands_score[keys] += int(values['total'])
+
+            commands_score = dict(sorted(commands_score.items(), key=lambda item: item[1]))
 
             # Получаю результаты за выбранную игру
             if selected_game is not None:
                 game_result = sorting_table(games_names_id.get(selected_game))
-                return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
+                return render_template('table.html', game_counter=dict(game_counter), comands_score=commands_score,
                                        game_result=game_result, selected_game=selected_game, game_names=games_names_id,
                                        round_counter=len(list(game_result.values())[0].get('items')),
                                        cityNames=list(cities.keys()), selected_city=selected_city)
@@ -1557,7 +1559,7 @@ def table():
                 game_result = sorting_table(
                     games_names_id.get(collections.deque(games_names_id, maxlen=1)[0]))
                 round_counter = len(list(game_result.values())[0].get('items'))
-                return render_template('table.html', game_counter=dict(game_counter), comands_score=comands_score,
+                return render_template('table.html', game_counter=dict(game_counter), comands_score=commands_score,
                                        game_result=game_result,
                                        selected_game=collections.deque(games_names_id, maxlen=1)[0],
                                        game_names=games_names_id, round_counter=round_counter,
