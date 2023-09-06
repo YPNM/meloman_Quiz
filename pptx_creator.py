@@ -1,9 +1,8 @@
 from pptx import Presentation
 from pptx.dml.color import RGBColor
 from pptx.util import Inches, Pt
-from pptx.enum.dml import MSO_THEME_COLOR_INDEX
-from pptx.enum.text import PP_PARAGRAPH_ALIGNMENT
 import db_init
+from random import shuffle
 
 
 def iter_cells(table):
@@ -49,6 +48,7 @@ def create_powerpoint_with_table(folder, game_id):
             maxRounds = len(existRounds)
 
     # sorting by ascending order
+    # ------------------------------------------------------------------------------------------------------------------
     sortedDict = dict(sorted(scoresDictionary.items(), key=lambda x: x[1]['total'], reverse=True))
 
     if (maxRounds > 3):
@@ -119,7 +119,6 @@ def create_powerpoint_with_table(folder, game_id):
             arr.append(value['total'])
             game_result[key].append(arr)
 
-
     rows = len(game_result.keys()) + 1
     cols = len(game_result.get(next(iter(game_result.keys())))) + 3
     table_length = Inches(4) + Inches(1) + (cols - 2) * Inches(0.7)
@@ -143,17 +142,15 @@ def create_powerpoint_with_table(folder, game_id):
             except AttributeError:
                 pass
 
+    # Заканчиваю сортировку -------------------------------------------------------------------------------------------
 
-        # Добавляем слайд с таблицей
+    # Добавляем первый слайд с общей слайд с таблицей
     slide_layout = prs.slide_layouts[5]  # 5 - это слайд с черным фоном
     slide = prs.slides.add_slide(slide_layout)
     background = slide.background
     fill = background.fill
     fill.solid()
     fill.fore_color.rgb = RGBColor(0, 0, 0)  # Черный цвет фона
-    # Определяем размеры слайда 16:9
-    # slide_width = Inches(16)  # 10 дюймов
-    # slide_height = Inches(9)  # 5.67 дюйма
     if rows <= 15:
         font_size = Pt(22)
     elif rows <= 18:
@@ -165,10 +162,8 @@ def create_powerpoint_with_table(folder, game_id):
     else:
         row_height = 0.5
 
-    # Устанавливаем размеры слайда
-    # prs.slide_width = slide_width
-    # prs.slide_height = slide_height
-    table = slide.shapes.add_table(rows=rows, cols=cols, left=Inches(13.3 / 2) - table_length / 2, top=Inches((7.5 / 2) - (rows * row_height / 2)),
+    table = slide.shapes.add_table(rows=rows, cols=cols, left=Inches(13.3 / 2) - table_length / 2,
+                                   top=Inches((7.5 / 2) - (rows * row_height / 2)),
                                    width=Inches(9),
                                    height=Inches(row_height) * rows)
 
@@ -216,6 +211,10 @@ def create_powerpoint_with_table(folder, game_id):
         else:
             table.table.columns[i].width = Inches(0.7)
 
+    # Создаю второй слайд с промежуточной таблицей ---------------------------------------------------------------------
+
+    shuffled_list = list(range(len(game_result.keys())))
+    shuffle(shuffled_list)
     slide_layout = prs.slide_layouts[5]  # 5 - это слайд с черным фоном
     slide_2 = prs.slides.add_slide(slide_layout)
     background = slide_2.background
@@ -227,10 +226,10 @@ def create_powerpoint_with_table(folder, game_id):
 
         table_2_length = Inches(4) + 4 * Inches(0.7)
 
-        table_2 = slide_2.shapes.add_table(rows=rows, cols=5, left=Inches(13.3 / 2) - table_2_length / 2, top=Inches((7.5 / 2) - (rows * row_height / 2)),
-                                            width=Inches(9),
-                                            height=Inches(row_height) * rows)
-
+        table_2 = slide_2.shapes.add_table(rows=rows, cols=5, left=Inches(13.3 / 2) - table_2_length / 2,
+                                           top=Inches((7.5 / 2) - (rows * row_height / 2)),
+                                           width=Inches(9),
+                                           height=Inches(row_height) * rows)
 
         counter = 5
         for i in range(rows):
@@ -251,9 +250,9 @@ def create_powerpoint_with_table(folder, game_id):
                     if j == 0:
                         cell.text = str(i)
                     elif j == 1:
-                        cell.text = str(commands[i - 1])
+                        cell.text = str(commands[shuffled_list[i - 1]])
                     else:
-                        cell.text = str(game_result.get(commands[i - 1])[j + 4 - 2][3])
+                        cell.text = str(game_result.get(commands[shuffled_list[i - 1]])[j + 4 - 2][3])
                     cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(255, 255, 255)
                 cell.text_frame.paragraphs[0].font.size = font_size
                 cell.text_frame.paragraphs[0].font.bold = True
@@ -273,6 +272,5 @@ def create_powerpoint_with_table(folder, game_id):
     # Сохраняем презентацию
     prs.save(path)
     return path
-
 
 # create_powerpoint_with_table('E:/Programming/WEB/meloman_Quiz', 'b8bfea64-4a3e-11ee-8a2c-6c2408aface6')
