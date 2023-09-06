@@ -224,8 +224,9 @@ input[type="radio"]:checked + .season-btn {
   
   /* The container <div> - needed to position the dropdown content */
   .dropdown {
-    left: -200px;
-    bottom: -5px;
+      margin-bottom: -50px;
+      margin-left: 20vw;
+    bottom: 60px;
     position: relative;
     display: inline-block;
   }
@@ -370,15 +371,10 @@ td {
         width: 65vw;
     }
 
-    .show-buttons {
-        margin-left: 20vw;
-        display: flex;
-        justify-content: center;
-    }
 
     table {
         width: 100vw;
-        border: 0px;
+        border: 0;
         margin-left: 0;
     }
 
@@ -399,5 +395,8 @@ td {
     .dropdown {
         left: -180px;
     }
-
+    .show-buttons {
+        margin-left: 0;
+        margin-right: 0;
+    }
 }
