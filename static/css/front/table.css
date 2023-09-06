@@ -389,6 +389,7 @@ td {
     }
 
     .dropdown-content {
+        margin-top: 40px;
         min-width: 100px;
     }
 
