@@ -2,7 +2,6 @@ import mysql.connector as connection
 from mysql.connector import Error, IntegrityError, Warning
 import config
 import time
-
 # Create a decorator that connects to the DB and closes the connection once the function is done
 def start_connection():
     # For server use:
@@ -245,11 +244,11 @@ class CitiesDB():
     def get_all_cities(self, city_id=None):
         conn, cursor = start_connection()
         if(city_id):
-            prepared_query = 'SELECT city_id, city_name FROM cities WHERE city_id = %s'
+            prepared_query = 'SELECT city_id, city_name FROM cities WHERE city_id = %s ORDER BY city_name'
             data = (f'{city_id}',)
             cursor.execute(prepared_query, data)
         else:
-            prepared_query = 'SELECT city_id, city_name FROM cities'
+            prepared_query = 'SELECT city_id, city_name FROM cities ORDER BY city_name'
             cursor.execute(prepared_query)
         results = cursor.fetchall()
         stop_connection(conn, cursor)
@@ -924,6 +923,56 @@ class CatalogDB():
         conn, cursor = start_connection()
         prepared_query = 'DELETE FROM item_catalog WHERE item_id = %s'
         data = (f'{itemId}',)
+        cursor.execute(prepared_query, data)
+        conn.commit()
+        stop_connection(conn, cursor)
+        return True
+
+class UsersDB():
+    def create_new_user(self, username, password, city_id, city_superadmin):
+        conn, cursor = start_connection()
+        prepared_query = 'INSERT INTO user(username, pwd, city_id, city_superadmin, superadmin) VALUES (%s,%s,%s,%s,%s)'
+        data = (f'{username}', f'{password}', f'{city_id}', city_superadmin, 0)
+        cursor.execute(prepared_query, data)
+        conn.commit()
+        stop_connection(conn, cursor)
+        return True
+
+    def edit_user_by_id(self, userid,username, city_id, city_superadmin):
+        try:
+            conn, cursor = start_connection()
+            prepared_query = 'UPDATE user SET username = %s, city_id=%s, city_superadmin=%s WHERE id = %s'
+            data = (f'{username}', f'{city_id}', city_superadmin, userid)
+            cursor.execute(prepared_query, data)
+            conn.commit()
+            stop_connection(conn, cursor)
+            return True
+        except Exception as err:
+            print(err)
+            return 3
+
+    def get_all_users(self, current_user):
+        conn, cursor = start_connection()
+        prepared_query = 'SELECT u.id, u.username, u.superadmin, u.city_id, c.city_name, u.city_superadmin FROM user AS u LEFT JOIN cities AS c ON c.city_id = u.city_id WHERE u.id != %s'
+        data = (current_user, )
+        cursor.execute(prepared_query, data)
+        result = cursor.fetchall()
+        stop_connection(conn, cursor)
+        return convert_bytes_to_string(result)
+
+    def get_user_by_id(self, user_id, current_user):
+        conn, cursor = start_connection()
+        prepared_query = 'SELECT u.id, u.username, u.superadmin, u.city_id, c.city_name, u.city_superadmin FROM user AS u LEFT JOIN cities AS c ON c.city_id = u.city_id WHERE u.id != %s AND u.id = %s'
+        data = (current_user, user_id)
+        cursor.execute(prepared_query, data)
+        result = cursor.fetchone()
+        stop_connection(conn, cursor)
+        return convert_bytes_to_string(result, fetchone=True)
+
+    def delete_user_by_id(self, id, currentUserId):
+        conn, cursor = start_connection()
+        prepared_query = 'DELETE FROM user WHERE id = %s AND id != %s'
+        data = (id, currentUserId)
         cursor.execute(prepared_query, data)
         conn.commit()
         stop_connection(conn, cursor)

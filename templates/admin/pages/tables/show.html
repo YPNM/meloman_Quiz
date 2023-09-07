@@ -27,7 +27,16 @@ input[type=number]::-webkit-outer-spin-button {
               <div class="card">
                 <form action="{{ url_for('admin_tables_show', game_id=game_id) }}" method="POST">
                 <div class="card-header" style="text-align: right;">
-                    <a class="btn btn-success" href="{{ url_for('admin_pptx_export', game_id=game_id) }}">Экспортировать в pptx</a>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col input-group rounded">
+                                  <input type="search" class="form-control rounded search-input" placeholder="Поиск команды" aria-label="Search" aria-describedby="search-addon" />
+                            </div>
+                            <div class="col-3">
+                                <a class="btn btn-success" href="{{ url_for('admin_pptx_export', game_id=game_id) }}">Экспортировать в pptx</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                   <div class="card-body">
                     <h4 class="card-title">Таблица игры</h4>
@@ -69,8 +78,8 @@ input[type=number]::-webkit-outer-spin-button {
                             </thead>
                             <tbody>
                             {% for key, value in scoresDictionary.items() %}
-                                <tr>
-                                    <td>
+                                <tr class="team-row">
+                                    <td class="team-name">
                                     {{ key }}
                                     </td>
                                     {% if value['total'] != None %}
@@ -120,5 +129,23 @@ input[type=number]::-webkit-outer-spin-button {
     <!-- page-body-wrapper ends -->
   </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.querySelector(".search-input");
+    const teams = document.querySelectorAll(".team-row"); // Добавьте класс "team-row" к строкам таблицы с командами
 
+    searchInput.addEventListener("input", function() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+
+            teams.forEach(function(team) {
+                const teamName = team.querySelector(".team-name").textContent.toLowerCase();
+                if (teamName.includes(searchTerm)) {
+                    team.style.display = "table-row";
+                } else {
+                    team.style.display = "none";
+                }
+            });
+        });
+    });
+</script>
 </html>

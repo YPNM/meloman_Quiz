@@ -2,7 +2,15 @@
 <html lang="en">
 
 {% include "admin/partials/header.html" %}
-
+<script>
+    function toggle(source) {
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i] != source)
+                checkboxes[i].checked = source.checked;
+        }
+    }
+</script>
 <body>
   <div class="container-scroller">
     <!-- partial:../../partials/_navbar.html -->
@@ -20,11 +28,19 @@
           <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
+                <div class="card-header">
+                    <div class="input-group rounded">
+                      <input type="search" class="form-control rounded search-input" placeholder="Поиск команды" aria-label="Search" aria-describedby="search-addon" />
+                      <span class="input-group-text border-0" id="search-addon">
+                        <i class="icon-search"></i>
+                      </span>
+                    </div>
+                </div>
                 <form action="{{ url_for('admin_teamsingame_show', game_id=game_id) }}" method="POST">
                   <div class="card-body">
                   <h4 class="card-title">Команды в игре</h4>
                   <p class="card-description">
-                    Выберите команду и нажмите на сохранить</code></a>
+                    Выберите команду и нажмите на сохранить
                   </p>
                   {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
@@ -44,14 +60,14 @@
                             Название команды
                           </th>
                           <th>
-                            Статус
+                            Статус <input type="checkbox" style="margin-left: 5px;border: none;" onclick="toggle(this);"></input>
                           </th>
                         </tr>
                       </thead>
                       <tbody>
                       {% for team in teams %}
-                          <tr>
-                            <td>
+                          <tr class="team-row">
+                            <td class="team-name">
                                 {{ team[1] }}
                             </td>
                             <td>
@@ -86,5 +102,23 @@
     <!-- page-body-wrapper ends -->
   </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.querySelector(".search-input");
+    const teams = document.querySelectorAll(".team-row"); // Добавьте класс "team-row" к строкам таблицы с командами
 
+    searchInput.addEventListener("input", function() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+
+            teams.forEach(function(team) {
+                const teamName = team.querySelector(".team-name").textContent.toLowerCase();
+                if (teamName.includes(searchTerm)) {
+                    team.style.display = "table-row";
+                } else {
+                    team.style.display = "none";
+                }
+            });
+        });
+    });
+</script>
 </html>

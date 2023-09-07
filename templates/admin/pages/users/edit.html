@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "admin/partials/header.html" %}
+<style>
+  input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}</style>
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include "admin/partials/_navbar.html" %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      {% include "admin/partials/_settings-panel.html" %}
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+      {% include "admin/partials/_sidebar.html" %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  {% if current_user.superadmin %}
+                    <h4 class="card-title">Изменение пользователя {{ user[1] }}</h4>
+                    <p class="card-description">
+                      Заполните форму и нажмите на изменить
+                    </p>
+                    {% if user %}
+                    <form class="forms-sample" action="{{ url_for('admin_users_edit', admin_id=user[0]) }}" method="POST" enctype="multipart/form-data">
+                      <div class="form-group">
+                        <label for="itemName">Имя пользователя<code>*</code></label>
+                        <input type="text" class="form-control" name="username" id="username" placeholder="Username" value="{{ user[1] }}"required>
+                      </div>
+                        <div class="form-group">
+                      <label for="userCity">Город<code>*</code></label><br>
+                        <select class="form-select" id="userCity" name="userCity" required>
+                          {% if cities %}
+                          <option value="not">Выберите город</option>
+                              <option value="{{ user[3] }}" selected>{{ user[4] }}</option>
+                            {% for city in cities %}
+                                {% if city[0] != user[3] %}
+                                 <option value="{{ city[0] }}">{{ city[1] }}</option>
+                                {% endif %}
+                            {% endfor %}
+                          {% else %}
+                          <option value="notfound" selected>Города не найдены</option>
+                          {% endif %}
+                        </select>
+                    </div>
+                      <div class="form-group">
+                        <label for="citySuperadmin">Суперадмин города<code>*</code></label><br>
+                          {% if user[5] == 0 %}
+                            <input type="checkbox" class="form-check-input" name="citySuperadmin" id="citySuperadmin" required>
+                              {% else %}
+                              <input type="checkbox" class="form-check-input" name="citySuperadmin" id="citySuperadmin" checked required>
+                              {% endif %}
+                      </div>
+                      <button type="submit" class="btn btn-primary me-2">Изменить</button>
+                      <a class="btn btn-light" href="{{ url_for('admin_users') }}">Назад</a>
+                    </form>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        {% include "admin/partials/_footer.html" %}
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+</html>
