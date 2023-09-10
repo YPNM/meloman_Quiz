@@ -142,7 +142,8 @@
       <input type="radio" id="season" checked="checked" name="table-status">
       <span class="season-btn"></span>
 
-      <div class="dropdown">
+    </div>
+    <div class="dropdown">
         <button class="dropbtn" id="game-selector">{{ selected_game }}</button>
           <div class="dropdown-content">
               {% for key in game_names.keys() %}
@@ -150,8 +151,6 @@
               {% endfor %}
           </div>
       </div>
-
-    </div>
 
     <div class="table table-responsive">
       <table class="season-table">
