@@ -54,11 +54,11 @@ input[type=number]::-webkit-outer-spin-button {
                         </select>
                     </div>
                       <div class="form-group">
-                        <label for="citySuperadmin">Суперадмин города<code>*</code></label><br>
+                        <label for="citySuperadmin">Суперадмин города</label><br>
                           {% if user[5] == 0 %}
-                            <input type="checkbox" class="form-check-input" name="citySuperadmin" id="citySuperadmin" required>
+                            <input type="checkbox" class="form-check-input" name="citySuperadmin" id="citySuperadmin">
                               {% else %}
-                              <input type="checkbox" class="form-check-input" name="citySuperadmin" id="citySuperadmin" checked required>
+                              <input type="checkbox" class="form-check-input" name="citySuperadmin" id="citySuperadmin" checked>
                               {% endif %}
                       </div>
                       <button type="submit" class="btn btn-primary me-2">Изменить</button>

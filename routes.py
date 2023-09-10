@@ -1249,12 +1249,16 @@ def admin_users_create():
         if(request.method == "POST"):
             username = request.form.get('username')
             password = request.form.get('password')
+            pwd = bcrypt.generate_password_hash(password)
             cityId = request.form.get('userCity')
             citySuperadmin = request.form.get('citySuperadmin') != None
             if(username != '' and password != '' and cityId != '' and citySuperadmin != None):
-                addUser = db_init.UsersDB().create_new_user(username=username, password=bcrypt.generate_password_hash(password), city_id=cityId, city_superadmin=citySuperadmin)
+                addUser = db_init.UsersDB().create_new_user(username=username, password=pwd.decode(), city_id=cityId, city_superadmin=citySuperadmin)
                 if(addUser == True):
                     flash("Пользователь добавлен", "success")
+                    return redirect(url_for('admin_users'))
+                elif(addUser == 2):
+                    flash("Пользователь с таким именем уже существует", "danger")
                     return redirect(url_for('admin_users'))
             else:
                 flash("Заполните все поля", "danger")

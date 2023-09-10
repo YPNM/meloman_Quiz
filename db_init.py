@@ -929,14 +929,34 @@ class CatalogDB():
         return True
 
 class UsersDB():
+
+    def is_exists(self, username):
+        try:
+            conn, cursor = start_connection()
+            prepared_query = 'SELECT username FROM user WHERE username = %s'
+            data = (f'{username}',)
+            cursor.execute(prepared_query, data)
+            cursor.fetchall()
+            stop_connection(conn, cursor)
+            if (cursor.rowcount < 1):
+                return True
+            elif (cursor.rowcount >= 1):
+                return 2
+        except Exception as err:
+            print(err)
+            return 3
     def create_new_user(self, username, password, city_id, city_superadmin):
-        conn, cursor = start_connection()
-        prepared_query = 'INSERT INTO user(username, pwd, city_id, city_superadmin, superadmin) VALUES (%s,%s,%s,%s,%s)'
-        data = (f'{username}', f'{password}', f'{city_id}', city_superadmin, 0)
-        cursor.execute(prepared_query, data)
-        conn.commit()
-        stop_connection(conn, cursor)
-        return True
+        is_exists = self.is_exists(username)
+        if(is_exists):
+            conn, cursor = start_connection()
+            prepared_query = 'INSERT INTO user(username, pwd, city_id, city_superadmin, superadmin) VALUES (%s,%s,%s,%s,%s)'
+            data = (f'{username}', f'{password}', f'{city_id}', city_superadmin, 0)
+            cursor.execute(prepared_query, data)
+            conn.commit()
+            stop_connection(conn, cursor)
+            return True
+        else:
+            return is_exists
 
     def edit_user_by_id(self, userid,username, city_id, city_superadmin):
         try:
