@@ -72,7 +72,7 @@ app = create_app()
 @app.before_request
 def session_handler():
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=1)
+    app.permanent_session_lifetime = timedelta(minutes=7200)
 
 
 @app.route("/admin/", methods=("GET", "POST"), strict_slashes=False)
@@ -102,49 +102,49 @@ def login():
 
 
 # Register route
-@app.route("/register/", methods=("GET", "POST"), strict_slashes=False)
-def register():
-    form = register_form()
-    if form.validate_on_submit():
-        try:
-            pwd = form.pwd.data
-            username = form.username.data
-
-            newuser = User(
-                username=username,
-                pwd=bcrypt.generate_password_hash(pwd),
-                superadmin=1
-            )
-
-            db.session.add(newuser)
-            db.session.commit()
-            flash(f"Account Succesfully created", "success")
-            return redirect(url_for("login"))
-
-        except InvalidRequestError:
-            db.session.rollback()
-            flash(f"Something went wrong!", "danger")
-        except IntegrityError:
-            db.session.rollback()
-            flash(f"User already exists!.", "warning")
-        except DataError:
-            db.session.rollback()
-            flash(f"Invalid Entry", "warning")
-        except InterfaceError:
-            db.session.rollback()
-            flash(f"Error connecting to the database", "danger")
-        except DatabaseError:
-            db.session.rollback()
-            flash(f"Error connecting to the database", "danger")
-        except BuildError:
-            db.session.rollback()
-            flash(f"An error occured !", "danger")
-    return render_template("admin/auth.html",
-                           form=form,
-                           text="Create account",
-                           title="Register",
-                           btn_action="Register account"
-                           )
+# @app.route("/register/", methods=("GET", "POST"), strict_slashes=False)
+# def register():
+#     form = register_form()
+#     if form.validate_on_submit():
+#         try:
+#             pwd = form.pwd.data
+#             username = form.username.data
+#
+#             newuser = User(
+#                 username=username,
+#                 pwd=bcrypt.generate_password_hash(pwd),
+#                 superadmin=1
+#             )
+#
+#             db.session.add(newuser)
+#             db.session.commit()
+#             flash(f"Account Succesfully created", "success")
+#             return redirect(url_for("login"))
+#
+#         except InvalidRequestError:
+#             db.session.rollback()
+#             flash(f"Something went wrong!", "danger")
+#         except IntegrityError:
+#             db.session.rollback()
+#             flash(f"User already exists!.", "warning")
+#         except DataError:
+#             db.session.rollback()
+#             flash(f"Invalid Entry", "warning")
+#         except InterfaceError:
+#             db.session.rollback()
+#             flash(f"Error connecting to the database", "danger")
+#         except DatabaseError:
+#             db.session.rollback()
+#             flash(f"Error connecting to the database", "danger")
+#         except BuildError:
+#             db.session.rollback()
+#             flash(f"An error occured !", "danger")
+#     return render_template("admin/auth.html",
+#                            form=form,
+#                            text="Create account",
+#                            title="Register",
+#                            btn_action="Register account"
+#                            )
 
 
 @app.route("/admin/dashboard", methods=["GET"], strict_slashes=False)
@@ -758,85 +758,11 @@ def admin_tables_show(game_id):
     if (current_user.superadmin or db_init.RoundsDB().admin_permission_check(game_id, current_user.city_id.decode())):
         if request.method == "GET":
             teamsInGame = db_init.TeamsInGame()
-            scoresModel = db_init.ScoresDB()
             roundsModel = db_init.RoundsDB()
-            scoresDictionary = {}
 
             teams = teamsInGame.get_all_teams_in_game(game_id, active=True)
-            allscores = scoresModel.get_scores_by_game_id(game_id=game_id)
             rounds = roundsModel.get_all_rounds(game_id=game_id)
-
-            # template
-            for round in rounds:
-                for score in allscores:
-                    if (score[4] not in scoresDictionary.keys()):
-                        scoresDictionary[score[4]] = {'total': 0, 'items': []}
-                    if (round[0] == score[0]):
-                        scoresDictionary[score[4]]['total'] += score[3]
-                        scoresDictionary[score[4]]['items'].append(score)
-
-            # find empty rounds
-            for key, value in scoresDictionary.items():
-                if (len(value['items']) < len(rounds)):
-                    existRounds = []
-                    team_id = ''
-                    for item in value['items']:
-                        existRounds.append(item[0])
-                        team_id = item[2]
-                    for round in rounds:
-                        if (round[0] not in existRounds):
-                            value['items'].append([round[0], round[1], team_id, '', key])
-
-            # sorting by ascending order
-            sortedDict = dict(sorted(scoresDictionary.items(), key=lambda x: x[1]['total'], reverse=True))
-
-            submitDict = {}
-            temp = {
-                'max': 0,
-                'key': '',
-            }
-            for key, value in sortedDict.items():
-                if (key not in submitDict.keys()):
-                    if (value['total'] == temp['max']):
-                        length = len(value['items']) - 1
-                        secondLength = len(sortedDict[key]['items']) - 1
-                        while length != -1:
-                            if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
-                                res = dict()
-                                for secondKey in submitDict.keys():
-                                    if (secondKey == temp['key']):
-                                        res[key] = {
-                                            'total': value['total'],
-                                            'items': value['items']
-                                        }
-
-                                    res[secondKey] = submitDict[secondKey]
-                                submitDict = res
-                                length = -1
-                            elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
-                                length -= 1
-                                secondLength -= 1
-                                continue
-                            elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
-                                submitDict[key] = {
-                                    'total': value['total'],
-                                    'items': value['items']
-                                }
-                                length = -1
-                    else:
-                        temp['max'] = value['total']
-                        temp['key'] = key
-                        submitDict[key] = {
-                            'total': value['total'],
-                            'items': value['items']
-                        }
-            # add new teams without scores
-            for team in teams:
-                if (team[3] not in submitDict.keys()):
-                    submitDict[team[3]] = {
-                        'total': None,
-                        'id': team[1]
-                    }
+            submitDict = sorting_table(game_id)
 
             return render_template("admin/pages/tables/show.html", title="Таблица", rounds=rounds,
                                    scoresDictionary=submitDict, teams=teams, game_id=game_id)
@@ -1301,6 +1227,79 @@ def admin_catalog_delete(item_id):
     else:
         abort(403)
 
+@app.route("/admin/users", methods=["GET"], strict_slashes=False)
+@login_required
+def admin_users():
+    if (current_user.superadmin):
+        requestedUserId = current_user.id
+        users = db_init.UsersDB().get_all_users(current_user=requestedUserId)
+        return render_template("admin/pages/users/index.html", title="Пользователи",
+                               users=users)
+    else:
+        abort(403)
+
+@app.route("/admin/users/create", methods=["GET", "POST"], strict_slashes=False)
+@login_required
+def admin_users_create():
+    if (current_user.superadmin):
+        if(request.method == "GET"):
+            cities = db_init.CitiesDB().get_all_cities()
+            return render_template("admin/pages/users/create.html", title="Создание нового пользователя",
+                                   cities=cities)
+        if(request.method == "POST"):
+            username = request.form.get('username')
+            password = request.form.get('password')
+            cityId = request.form.get('userCity')
+            citySuperadmin = request.form.get('citySuperadmin') != None
+            if(username != '' and password != '' and cityId != '' and citySuperadmin != None):
+                addUser = db_init.UsersDB().create_new_user(username=username, password=bcrypt.generate_password_hash(password), city_id=cityId, city_superadmin=citySuperadmin)
+                if(addUser == True):
+                    flash("Пользователь добавлен", "success")
+                    return redirect(url_for('admin_users'))
+            else:
+                flash("Заполните все поля", "danger")
+                return redirect(url_for('admin_users'))
+    else:
+        abort(403)
+
+@app.route("/admin/users/edit/<int:admin_id>", methods=["GET", "POST"], strict_slashes=False)
+@login_required
+def admin_users_edit(admin_id):
+    if (current_user.superadmin):
+        if(request.method == "GET"):
+            requestedUserId = current_user.id
+            user = db_init.UsersDB().get_user_by_id(user_id=admin_id, current_user=requestedUserId)
+            cities = db_init.CitiesDB().get_all_cities()
+            return render_template("admin/pages/users/edit.html", title="Пользователи",
+                                   user=user, cities=cities)
+        if(request.method == "POST"):
+            username = request.form.get('username')
+            cityId = request.form.get('userCity')
+            citySuperadmin = request.form.get('citySuperadmin') != None
+            user = db_init.UsersDB().edit_user_by_id(userid=admin_id, username=username, city_id=cityId, city_superadmin=citySuperadmin)
+            if(user):
+                flash("Данные обновлены", "success")
+                return redirect(url_for('admin_users'))
+            elif(user == 3):
+                flash("Произошла ошибка", "danger")
+                return redirect(url_for('admin_users'))
+    else:
+        abort(403)
+
+@app.route("/admin/users/delete/<int:admin_id>", methods=["GET"], strict_slashes=False)
+@login_required
+def admin_users_delete(admin_id):
+    if (current_user.superadmin):
+        if(request.method == "GET"):
+            user = db_init.UsersDB().delete_user_by_id(id=admin_id,currentUserId=current_user.id)
+            if (user):
+                flash("Данные обновлены", "success")
+                return redirect(url_for('admin_users'))
+            elif (user == 3):
+                flash("Произошла ошибка", "danger")
+                return redirect(url_for('admin_users'))
+    else:
+        abort(403)
 
 @app.route("/logout")
 @login_required
@@ -1443,6 +1442,7 @@ def sorting_table(game_id):
                 scoresDictionary[score[4]]['total'] += score[3]
                 scoresDictionary[score[4]]['items'].append(score)
 
+    maxRounds = 0
     # find empty rounds
     for key, value in scoresDictionary.items():
         if (len(value['items']) < len(rounds)):
@@ -1453,51 +1453,65 @@ def sorting_table(game_id):
                 team_id = item[2]
             for round in rounds:
                 if (round[0] not in existRounds):
-                    value['items'].append([round[0], round[1], team_id, '', key])
+                    value['items'].append([round[0], round[1], team_id, 0, key])
+            maxRounds = len(existRounds)
+    if(maxRounds == 0):
+        maxRounds = len(rounds)
+
 
     # sorting by ascending order
     sortedDict = dict(sorted(scoresDictionary.items(), key=lambda x: x[1]['total'], reverse=True))
 
-    submitDict = {}
-    temp = {
-        'max': 0,
-        'key': '',
-    }
-    for key, value in sortedDict.items():
-        if (key not in submitDict.keys()):
-            if (value['total'] == temp['max']):
-                length = len(value['items']) - 1
-                secondLength = len(sortedDict[key]['items']) - 1
-                while length != -1:
-                    if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
-                        res = dict()
-                        for secondKey in submitDict.keys():
-                            if (secondKey == temp['key']):
-                                res[key] = {
+    if (maxRounds > 3):
+        submitDict = {}
+        temp = {
+            'max': 0,
+            'key': '',
+        }
+        for key, value in sortedDict.items():
+            if (key not in submitDict.keys()):
+                if (value['total'] == temp['max']):
+                    length = len(value['items']) - 1
+                    secondLength = len(sortedDict[key]['items']) - 1
+                    while length != -1:
+                        if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
+                            res = dict()
+                            for secondKey in submitDict.keys():
+                                if (secondKey == temp['key']):
+                                    res[key] = {
+                                        'total': value['total'],
+                                        'items': value['items']
+                                    }
+
+                                res[secondKey] = submitDict[secondKey]
+                            submitDict = res
+                            length = -1
+                        elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
+                            if (length == 0 and secondLength == 0):
+                                submitDict[key] = {
                                     'total': value['total'],
                                     'items': value['items']
                                 }
-
-                            res[secondKey] = submitDict[secondKey]
-                        submitDict = res
-                        length = -1
-                    elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
-                        length -= 1
-                        secondLength -= 1
-                        continue
-                    elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
-                        submitDict[key] = {
-                            'total': value['total'],
-                            'items': value['items']
-                        }
-                        length = -1
-            else:
-                temp['max'] = value['total']
-                temp['key'] = key
-                submitDict[key] = {
-                    'total': value['total'],
-                    'items': value['items']
-                }
+                                length = -1
+                            else:
+                                length -= 1
+                                secondLength -= 1
+                            continue
+                        elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
+                            submitDict[key] = {
+                                'total': value['total'],
+                                'items': value['items']
+                            }
+                            length = -1
+                else:
+                    temp['max'] = value['total']
+                    temp['key'] = key
+                    submitDict[key] = {
+                        'total': value['total'],
+                        'items': value['items']
+                    }
+    else:
+        submitDict = sortedDict
     # add new teams without scores
     for team in teams:
         if (team[3] not in submitDict.keys()):
@@ -1591,4 +1605,9 @@ def contacts():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=443)
+
+    #local
+    # app.run(debug=True, host="0.0.0.0", port=5005)
+
+    #Server
+    app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)

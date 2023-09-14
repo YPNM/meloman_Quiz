@@ -54,8 +54,8 @@ input[type=number]::-webkit-outer-spin-button {
                         </select>
                     </div>
                       <div class="form-group">
-                        <label for="citySuperadmin">Суперадмин города</label><br>
-                        <input type="checkbox" class="form-check-input" name="citySuperadmin" id="citySuperadmin">
+                        <label for="citySuperadmin">Суперадмин города<code>*</code></label><br>
+                        <input type="checkbox" class="form-check-input" name="citySuperadmin" id="citySuperadmin" required>
                       </div>
                       <button type="submit" class="btn btn-primary me-2">Добавить</button>
                       <a class="btn btn-light" href="{{ url_for('admin_users') }}">Назад</a>
