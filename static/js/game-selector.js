@@ -1,5 +1,3 @@
-
-
 function selectGame(game) {
     localStorage.setItem("selectedGame", game);
     localStorage.setItem("selectedTableType", "game"); // Добавляем это для сохранения состояния
@@ -34,7 +32,7 @@ function updateQueryStringParameter(uri, key, value) {
     if (uri.match(re)) {
         return uri.replace(re, "$1" + key + "=" + encodeURIComponent(value) + "$2");
     } else {
-        return uri + separator + key + "=" + value;
+        return uri + separator + key + "=" + encodeURIComponent(value);
     }
 }
 
