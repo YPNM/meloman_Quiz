@@ -137,6 +137,10 @@ input[type="radio"]:checked + .checkbox-custom {
     margin-bottom: 5px;
 }
 
+.game-description {
+    color: #dab2fd;
+}
+
 .description {
     padding: 15px;
 }

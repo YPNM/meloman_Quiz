@@ -929,7 +929,6 @@ class CatalogDB():
         return True
 
 class UsersDB():
-
     def is_exists(self, username):
         try:
             conn, cursor = start_connection()
@@ -945,9 +944,10 @@ class UsersDB():
         except Exception as err:
             print(err)
             return 3
+
     def create_new_user(self, username, password, city_id, city_superadmin):
         is_exists = self.is_exists(username)
-        if(is_exists):
+        if (is_exists):
             conn, cursor = start_connection()
             prepared_query = 'INSERT INTO user(username, pwd, city_id, city_superadmin, superadmin) VALUES (%s,%s,%s,%s,%s)'
             data = (f'{username}', f'{password}', f'{city_id}', city_superadmin, 0)

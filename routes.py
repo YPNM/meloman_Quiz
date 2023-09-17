@@ -1611,7 +1611,7 @@ def contacts():
 if __name__ == "__main__":
 
     #local
-    app.run(debug=True, host="0.0.0.0", port=5005)
+    # app.run(debug=True, host="0.0.0.0", port=5005)
 
     #Server
-    # app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)
+    app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)
