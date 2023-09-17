@@ -1252,7 +1252,7 @@ def admin_users_create():
             cityId = request.form.get('userCity')
             citySuperadmin = request.form.get('citySuperadmin') != None
             if(username != '' and password != '' and cityId != '' and citySuperadmin != None):
-                addUser = db_init.UsersDB().create_new_user(username=username, password=bcrypt.generate_password_hash(password), city_id=cityId, city_superadmin=citySuperadmin)
+                addUser = db_init.UsersDB().create_new_user(username=username, password=bcrypt.generate_password_hash(password).decode('utf-8'), city_id=cityId, city_superadmin=citySuperadmin)
                 if(addUser == True):
                     flash("Пользователь добавлен", "success")
                     return redirect(url_for('admin_users'))
@@ -1607,7 +1607,7 @@ def contacts():
 if __name__ == "__main__":
 
     #local
-    # app.run(debug=True, host="0.0.0.0", port=5005)
+    app.run(debug=True, host="0.0.0.0", port=5000)
 
     #Server
-    app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)
+    # app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)

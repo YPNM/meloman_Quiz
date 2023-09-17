@@ -129,7 +129,7 @@
         <h1>MELOMAN QUIZ</h1>
       </div>
       <div class="reg_btn">
-          {%  if next_games is defined %}
+          {%  if next_games is defined and next_games|length > 0 %}
             <a href="https://wa.me/{{ next_games[0][3] }}?text=Здравствуйте! Я хотел бы записаться на ближайшую игру."><button type="button" class="btn btn-outline-light">Зарегистрироваться на игру</button></a>
           {% else %}
             <a href="https://wa.me/77755603383?text=Здравствуйте! Я хотел бы записаться на ближайшую игру в Астане"><button type="button" class="btn btn-outline-light">Зарегистрироваться на игру</button></a>
