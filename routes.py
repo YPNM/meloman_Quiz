@@ -313,9 +313,11 @@ def admin_seasons_edit(season_id):
             if (seasonCity == 'not'):
                 flash("Выберите город", "danger")
                 return redirect(url_for('admin_seasons'))
-            elif (seasonCity != current_user.city_superadmin.decode()):
-                flash("Вы не можете управлять данным городом", "danger")
-                return redirect(url_for('admin_seasons'))
+
+            if(current_user.superadmin != True):
+                if (seasonCity != current_user.city_id.decode()):
+                    flash("Вы не можете управлять данным городом", "danger")
+                    return redirect(url_for('admin_seasons'))
 
             if file.filename != '':
                 if file and allowed_file(file.filename):
