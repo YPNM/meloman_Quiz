@@ -10,10 +10,7 @@ def iter_cells(table):
         for cell in row.cells:
             yield cell
 
-
-def create_powerpoint_with_table(folder, game_id):
-    # Создаем новую презентацию
-
+def sorting_table(game_id):
     teamsInGame = db_init.TeamsInGame()
     scoresModel = db_init.ScoresDB()
     roundsModel = db_init.RoundsDB()
@@ -32,7 +29,6 @@ def create_powerpoint_with_table(folder, game_id):
                 scoresDictionary[score[4]]['total'] += score[3]
                 scoresDictionary[score[4]]['items'].append(score)
 
-    # find empty rounds
     maxRounds = 0
     # find empty rounds
     for key, value in scoresDictionary.items():
@@ -46,9 +42,11 @@ def create_powerpoint_with_table(folder, game_id):
                 if (round[0] not in existRounds):
                     value['items'].append([round[0], round[1], team_id, 0, key])
             maxRounds = len(existRounds)
+    if(maxRounds == 0):
+        maxRounds = len(rounds)
+
 
     # sorting by ascending order
-    # ------------------------------------------------------------------------------------------------------------------
     sortedDict = dict(sorted(scoresDictionary.items(), key=lambda x: x[1]['total'], reverse=True))
 
     if (maxRounds > 3):
@@ -108,6 +106,12 @@ def create_powerpoint_with_table(folder, game_id):
                 'total': None,
                 'id': team[1]
             }
+    return submitDict
+
+def create_powerpoint_with_table(folder, game_id):
+    # Создаем новую презентацию
+
+    submitDict = sorting_table(game_id)
 
     prs = Presentation('table_preset.pptx')
     game_result = {}

@@ -313,9 +313,11 @@ def admin_seasons_edit(season_id):
             if (seasonCity == 'not'):
                 flash("Выберите город", "danger")
                 return redirect(url_for('admin_seasons'))
-            elif (seasonCity != current_user.city_superadmin.decode()):
-                flash("Вы не можете управлять данным городом", "danger")
-                return redirect(url_for('admin_seasons'))
+
+            if(current_user.superadmin != True):
+                if (seasonCity != current_user.city_id.decode()):
+                    flash("Вы не можете управлять данным городом", "danger")
+                    return redirect(url_for('admin_seasons'))
 
             if file.filename != '':
                 if file and allowed_file(file.filename):
@@ -1249,12 +1251,16 @@ def admin_users_create():
         if(request.method == "POST"):
             username = request.form.get('username')
             password = request.form.get('password')
+            pwd = bcrypt.generate_password_hash(password)
             cityId = request.form.get('userCity')
             citySuperadmin = request.form.get('citySuperadmin') != None
             if(username != '' and password != '' and cityId != '' and citySuperadmin != None):
-                addUser = db_init.UsersDB().create_new_user(username=username, password=bcrypt.generate_password_hash(password).decode('utf-8'), city_id=cityId, city_superadmin=citySuperadmin)
+                addUser = db_init.UsersDB().create_new_user(username=username, password=pwd.decode(), city_id=cityId, city_superadmin=citySuperadmin)
                 if(addUser == True):
                     flash("Пользователь добавлен", "success")
+                    return redirect(url_for('admin_users'))
+                elif(addUser == 2):
+                    flash("Пользователь с таким именем уже существует", "danger")
                     return redirect(url_for('admin_users'))
             else:
                 flash("Заполните все поля", "danger")
@@ -1607,7 +1613,7 @@ def contacts():
 if __name__ == "__main__":
 
     #local
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    # app.run(debug=True, host="0.0.0.0", port=5005)
 
     #Server
-    # app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)
+    app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)
