@@ -1,14 +1,6 @@
 <!doctype html>
 <html lang="ru">
   <head>
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-9TJ8F41HRV"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'G-9TJ8F41HRV');
-        </script>
         <!-- Обязательные метатеги -->
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,8 +19,9 @@
       <script src="{{ url_for('static', filename='js/lite-yt-embed.js') }}" async></script>
     <!-- Fonts -->
 
-      <link rel="shortcut icon" href="{{ url_for('static', filename='images/front/diskOption1.ico') }}">
-      <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/front/diskOption1.ico') }}">
+      <link rel="shortcut icon" href="{{ url_for('static', filename='images/front/favicon.ico') }}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/front/favicon.ico') }}">
+      <link rel="icon" href="{{ url_for('static', filename='images/front/favicon.ico') }}" type="image/x-icon">
       <title>Meloman Quiz</title>
 
       <style type="text/css">
@@ -71,30 +64,16 @@
               display: none;
             }
       </style>
-            <!-- Yandex.Metrika counter -->
-    <script type="text/javascript" >
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-        ym(94822469, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true
-        });
-        </script>
   </head>
 
   <body>
     <div class="preloader">
-        <img src="{{ url_for('static', filename="images/front/music_record.webp") }}" class="preloader__image">
+        <img src="{{ url_for('static', filename="images/front/music_record.webp") }}" alt="" class="preloader__image">
     </div>
     <div class="intro">
       <header class="header">
         <div class="city-selector" type="button" data-bs-toggle="modal" data-bs-target="#cityModal">
-          <img src="{{ url_for('static', filename='images/front/location.webp') }}">
+          <img src="{{ url_for('static', filename='images/front/location.webp') }}" alt="" width="20" height="29">
           <h2 id="cityHeader">Город</h2>
           <div class="modal fade" id="cityModal" tabindex="-1" aria-labelledby="cityModalLabel" aria-hidden="true">
             <input type="hidden" id="currentPage" value="index">
@@ -119,7 +98,7 @@
         </div>
           <nav class="navbar navbar-expand-lg navbar-dark">
                 <a class="navbar-brand" href="index.html">
-                  <img src="{{ url_for('static', filename='images/front/logo-2.webp') }}" alt="" class="logo-header">
+                  <img src="{{ url_for('static', filename='images/front/logo-2.webp') }}" alt="" class="logo-header" width="200" height="141">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
@@ -162,7 +141,7 @@
           {% endif %}
       </div>
       <div class="music_record">
-        <img src="{{ url_for('static', filename='images/front/music_record.webp') }}" draggable="false">
+        <img src="{{ url_for('static', filename='images/front/music_record.webp') }}" alt="" draggable="false" loading="eager" width="683" height="683">
       </div>
     </div>
     <div class="container">
@@ -172,11 +151,11 @@
         <div class="next-game-block">
           <h1 class="game_name">{{ next_games[i][0] }}</h1>
           <div class="date">
-            <img src="{{ url_for('static', filename='images/front/calendar.webp') }}">
+            <img src="{{ url_for('static', filename='images/front/calendar.webp') }}" alt="Время" loading="lazy" width="30" height="30">
             <p>ДАТА :  {{ next_games[i][1].strftime('%d.%m.%Y %H:%M') }}</p>
           </div>
           <div class="location">
-            <img src="{{ url_for('static', filename='images/front/home.webp') }}">
+            <img src="{{ url_for('static', filename='images/front/home.webp') }}" alt="Место" loading="lazy" width="30" height="30">
             <p>МЕСТО : {{ next_games[i][2] }}</p>
           </div>
           <div class="entry">
@@ -205,36 +184,36 @@
     </div>
 
     <div class="rules">
-      <img src="{{ url_for('static', filename='images/front/rule-1.webp') }}">
-      <img src="{{ url_for('static', filename='images/front/rule-2.webp') }}">
-      <img src="{{ url_for('static', filename='images/front/rule-3.webp') }}">
+      <img src="{{ url_for('static', filename='images/front/rule-1.webp') }}" alt="7 Раундов" width="370" height="325">
+      <img src="{{ url_for('static', filename='images/front/rule-2.webp') }}" alt="2+ Часа" width="370" height="325">
+      <img src="{{ url_for('static', filename='images/front/rule-3.webp') }}" alt="2-12 Человек в команде" width="370" height="325">
     </div>
 
 
     <div class="text-rules">
       <div class="galochka">
-          <img src="{{ url_for('static', filename='images/front/icon4.webp') }}">
+          <img src="{{ url_for('static', filename='images/front/icon4.webp') }}" alt="" loading="lazy" width="100" height="100">
           <div class="text-rules-container">
             <h3>Мировой хит-парад</h3>
             <p>Погрузитесь в удивительный мир музыки, исследуя самые разнообразные жанры и эпохи. Meloman Quiz предлагает вам уникальную возможность узнать о музыке больше, чем вы могли себе представить.</p>
           </div>
         </div>
       <div class="galochka">
-        <img src="{{ url_for('static', filename='images/front/icon3.webp') }}">
+        <img src="{{ url_for('static', filename='images/front/icon3.webp') }}" alt="" loading="lazy" width="100" height="100">
         <div class="text-rules-container">
-          <h3>Интеллектуальные баттлы</h3>
+          <h3>Интеллектуальные батлы</h3>
           <p>Соревнуйтесь с друзьями и другими меломанами в увлекательных музыкальных баттлах. Кто быстрее угадает исполнителя или название песни? Пусть ваше музыкальное чутье покажет ваше превосходство.</p>
         </div>
       </div>
-        <div class="galochka">
-        <img src="{{ url_for('static', filename='images/front/icon2.webp') }}">
+        <div class="galochka ebanutaya-galochka">
+        <img src="{{ url_for('static', filename='images/front/icon2.webp') }}" alt="" loading="lazy" width="100" height="100">
         <div class="text-rules-container">
           <h3>Подарки и награды</h3>
           <p>За каждый правильный ответ вы получаете баллы и награды. Стремитесь к вершине рейтинга и станьте королем Meloman Quiz!</p>
         </div>
       </div>
         <div class="galochka">
-        <img src="{{ url_for('static', filename='images/front/icon1.webp') }}">
+        <img src="{{ url_for('static', filename='images/front/icon1.webp') }}" alt="" loading="lazy" width="100" height="100">
         <div class="text-rules-container">
           <h3>Персональная адаптация</h3>
           <p>Meloman Quiz адаптируется под ваш вкус и уровень знаний, так что и новички, и опытные меломаны найдут в этой игре вызов.</p>
@@ -247,7 +226,7 @@
       <div class="last-photos">
           {% for i in range(last_photos|length) %}
             <div class="card" style="width: 18rem;">
-              <img src="data:image/jpeg;base64,{{ last_photos[i][3] | safe }}" class="card-img-top" alt="...">
+              <img src="data:image/jpeg;base64,{{ last_photos[i][3] | safe }}" class="card-img-top" alt="" loading="lazy" width="288" height="192">
               <div class="card-body">
                 <h5 class="card-title">{{ last_photos[i][1] }}</h5>
                 <p class="card-text">ДАТА: {{ last_photos[i][4].strftime('%d.%m.%Y') }}</p>
@@ -267,7 +246,7 @@
           <a href="https://wa.me/77755603383?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%AF%20%D0%B1%D1%8B%20%D1%85%D0%BE%D1%82%D0%B5%D0%BB%20%D0%BA%D1%83%D0%BF%D0%B8%D1%82%D1%8C%20%D1%84%D1%80%D0%B0%D0%BD%D1%88%D0%B8%D0%B7%D1%83%20Meloman%20Quiz!"><button class="order-btn">ЗАКАЗАТЬ ФРАНШИЗУ</button></a>
         </div>
         <div class="music-key">
-          <img src="{{ url_for('static', filename='images/front/music-key.webp') }}">
+          <img src="{{ url_for('static', filename='images/front/music-key.webp') }}" alt="" loading="lazy" width="233" height="246">
         </div>
       </div>
     </div>
@@ -275,13 +254,13 @@
     <footer id="nav-footer" class="page-footer">
       <div class="container footer-container">
         <div class="logo-footer">
-          <a href="#"><img src="{{ url_for('static', filename='images/front/logo-footer.webp') }}" class="logo-footer"></a>
+          <a href="#"><img src="{{ url_for('static', filename='images/front/logo-footer.webp') }}" class="logo-footer" alt="logo" width="128" height="65"></a>
         </div>
         <div class="socials">
-          <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="{{ url_for('static', filename='images/front/Instagram.webp') }}" class="instagram-footer"></a>
-          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="{{ url_for('static', filename='images/front/tik-tok.webp') }}" class="tik-tok-footer"></a>
-          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="{{ url_for('static', filename='images/front/youtube.webp') }}" class="youtube-footer"></a>
-            <a href="https://t.me/melomanquizastana"><img src="{{ url_for('static', filename='images/front/telegram.webp') }}"> </a>
+          <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="{{ url_for('static', filename='images/front/Instagram.webp') }}" class="instagram-footer" alt="Instagram" loading="lazy"></a>
+          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="{{ url_for('static', filename='images/front/tik-tok.webp') }}" class="tik-tok-footer" alt="Tik-Tok" loading="lazy"></a>
+          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="{{ url_for('static', filename='images/front/youtube.webp') }}" class="youtube-footer" alt="Youtube" loading="lazy"></a>
+            <a href="https://t.me/melomanquizastana"><img src="{{ url_for('static', filename='images/front/telegram.webp') }}" alt="Telegram" loading="lazy"> </a>
         </div>
         <div class="numbers">
           <a href="tel:+7 775 560 3383"><h5>+7 775 560 3383</h5></a>
@@ -303,5 +282,30 @@
         }, 500);
     }
     </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9TJ8F41HRV"></script>
+        <script async>
+            setTimeout(() => {
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+
+                gtag('config', 'G-9TJ8F41HRV');
+            }, 3000)
+
+        </script>
+   <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" async>
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(94822469, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true
+        });
+        </script>
   </body>
 </html>

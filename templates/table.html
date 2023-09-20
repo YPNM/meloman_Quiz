@@ -197,7 +197,7 @@
             <td>{{ loop.index }}</td>
             <td class="team-name">{{ key }}</td>
             <td>{{ game_counter.get(key) }}</td>
-            <td>{{ value / game_counter.get(key) }}</td>
+            <td>{{ '%0.2f' | format(value / game_counter.get(key)| float) }}</td>
             <td>{{ value }}</td>
           </tr>
         {%  endfor  %}

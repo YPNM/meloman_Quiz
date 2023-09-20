@@ -21,6 +21,7 @@ from flask import (
     abort,
     send_file
 )
+from flask_compress import Compress
 
 from datetime import timedelta
 from sqlalchemy.exc import (
@@ -67,7 +68,7 @@ def load_user(user_id):
 
 
 app = create_app()
-
+compress = Compress(app)
 
 @app.before_request
 def session_handler():
@@ -1319,7 +1320,6 @@ def logout():
 @app.route("/index.html", methods=['GET'])
 def index():
     # Получаем город от пользователя, если None, то город не выбран
-    selected_city = None
     selected_city = request.args.get("selectedCity")
     # Получаем все города из бд и отправляем их на сайт
     cityModel = db_init.CitiesDB()
@@ -1344,7 +1344,6 @@ def index():
 
             if len(last_photos) > 3:
                 del (last_photos[3:len(last_photos)])
-                last_photos.reverse()
             return render_template('index.html', cityNames=list(cities.keys()), next_games=next_games,
                                    last_photos=last_photos, selected_city=selected_city)
         except IndexError:
@@ -1612,8 +1611,8 @@ def contacts():
 
 if __name__ == "__main__":
 
-    #local
-    # app.run(debug=True, host="0.0.0.0", port=5005)
+    # local
+    app.run(debug=True, host="0.0.0.0", port=5005)
 
-    #Server
-    app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)
+    # Server
+    # app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)
