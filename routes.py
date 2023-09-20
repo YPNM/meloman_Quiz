@@ -3,6 +3,7 @@ import datetime
 import locale
 import time
 import ssl
+import os
 
 context = ('ssl/certificate.crt', 'ssl/private.key')
 from collections import Counter
@@ -19,7 +20,8 @@ from flask import (
     url_for,
     session,
     abort,
-    send_file
+    send_file,
+    send_from_directory
 )
 from flask_compress import Compress
 
@@ -74,6 +76,12 @@ compress = Compress(app)
 def session_handler():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=7200)
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static/images/front'), 'favicon-120x120.ico', mimetype='image/vnd.microsoft.icon')
+    pass
 
 
 @app.route("/admin/", methods=("GET", "POST"), strict_slashes=False)
@@ -1342,6 +1350,7 @@ def index():
             if len(next_games) > 3:
                 del (next_games[3:len(next_games)])
 
+            last_photos.reverse()
             if len(last_photos) > 3:
                 del (last_photos[3:len(last_photos)])
             return render_template('index.html', cityNames=list(cities.keys()), next_games=next_games,
@@ -1613,6 +1622,5 @@ if __name__ == "__main__":
 
     # local
     app.run(debug=True, host="0.0.0.0", port=5005)
-
     # Server
     # app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)
