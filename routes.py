@@ -81,7 +81,16 @@ def session_handler():
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static/images/front'), 'favicon-120x120.ico', mimetype='image/vnd.microsoft.icon')
-    pass
+
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory(os.path.join(app.root_path, 'static/sitemap'), 'sitemap.xml', mimetype='text/xml')
+
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory(os.path.join(app.root_path, 'static/sitemap'), 'robots.txt', mimetype='text/plain')
 
 
 @app.route("/admin/", methods=("GET", "POST"), strict_slashes=False)
