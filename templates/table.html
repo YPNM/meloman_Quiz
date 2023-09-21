@@ -1,9 +1,21 @@
 <!doctype html>
 <html lang="ru">
   <head>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-9TJ8F41HRV"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-9TJ8F41HRV');
+        </script>
     <!-- Обязательные метатеги -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta name="robots" content="index, contacts, events, photos, shedule, shop, table" />
+      <meta name="keywords" content="Первый Музыкальный Квиз, Казахстан, Франшиза Meloman Quiz, интеллектуальная игра, музыкальные знания, квиз в Астане, Караганде, Петропавловске, фотоотчеты, таблица, квизы" />
+      <meta name="description" content="Meloman Quiz - первый музыкальный квиз, созданный в Казахстане. Соревнуйтесь в команде от 2 до 12 человек, что-бы побороться за главный приз - 100.000 тенге!" />
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- CSS -->
@@ -16,6 +28,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <title>Meloman Quiz</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/front/diskOption1.webp') }}">
+      <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(94822469, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true
+        });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/94822469" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
   </head>
 
   <body>
@@ -169,7 +197,7 @@
             <td>{{ loop.index }}</td>
             <td class="team-name">{{ key }}</td>
             <td>{{ game_counter.get(key) }}</td>
-            <td>{{ value / game_counter.get(key) }}</td>
+            <td>{{ '%0.2f' | format(value / game_counter.get(key)| float) }}</td>
             <td>{{ value }}</td>
           </tr>
         {%  endfor  %}

@@ -768,11 +768,11 @@ class PhotosDB():
     def get_all_photos(self, city_id=None):
         conn, cursor = start_connection()
         if(city_id):
-            prepared_query = 'SELECT g.game_id,g.game_name, p.photo_link, p.preview_photo, g.game_time, g.location FROM photos AS p LEFT JOIN games AS g ON p.game_id = g.game_id WHERE g.city_id=%s ORDER BY g.created_at DESC'
+            prepared_query = 'SELECT g.game_id, g.game_name, p.photo_link, p.preview_photo, g.game_time, g.location FROM photos AS p LEFT JOIN games AS g ON p.game_id = g.game_id WHERE g.city_id=%s ORDER BY g.game_time ASC'
             data = (f'{city_id}',)
             cursor.execute(prepared_query, data)
         else:
-            prepared_query = 'SELECT g.game_id,g.game_name, p.photo_link, p.preview_photo, g.game_time, g.location FROM photos AS p LEFT JOIN games AS g ON p.game_id = g.game_id ORDER BY g.created_at DESC'
+            prepared_query = 'SELECT g.game_id,g.game_name, p.photo_link, p.preview_photo, g.game_time, g.location FROM photos AS p LEFT JOIN games AS g ON p.game_id = g.game_id ORDER BY g.game_time ASC'
             cursor.execute(prepared_query)
         result = cursor.fetchall()
         stop_connection(conn, cursor)

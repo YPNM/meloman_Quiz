@@ -3,6 +3,7 @@ import datetime
 import locale
 import time
 import ssl
+import os
 
 context = ('ssl/certificate.crt', 'ssl/private.key')
 from collections import Counter
@@ -19,8 +20,10 @@ from flask import (
     url_for,
     session,
     abort,
-    send_file
+    send_file,
+    send_from_directory
 )
+from flask_compress import Compress
 
 from datetime import timedelta
 from sqlalchemy.exc import (
@@ -67,12 +70,27 @@ def load_user(user_id):
 
 
 app = create_app()
-
+compress = Compress(app)
 
 @app.before_request
 def session_handler():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=7200)
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static/images/front'), 'favicon-120x120.ico', mimetype='image/vnd.microsoft.icon')
+
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory(os.path.join(app.root_path, 'static/sitemap'), 'sitemap.xml', mimetype='text/xml')
+
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory(os.path.join(app.root_path, 'static/sitemap'), 'robots.txt', mimetype='text/plain')
 
 
 @app.route("/admin/", methods=("GET", "POST"), strict_slashes=False)
@@ -1319,7 +1337,6 @@ def logout():
 @app.route("/index.html", methods=['GET'])
 def index():
     # Получаем город от пользователя, если None, то город не выбран
-    selected_city = None
     selected_city = request.args.get("selectedCity")
     # Получаем все города из бд и отправляем их на сайт
     cityModel = db_init.CitiesDB()
@@ -1342,9 +1359,9 @@ def index():
             if len(next_games) > 3:
                 del (next_games[3:len(next_games)])
 
+            last_photos.reverse()
             if len(last_photos) > 3:
                 del (last_photos[3:len(last_photos)])
-                last_photos.reverse()
             return render_template('index.html', cityNames=list(cities.keys()), next_games=next_games,
                                    last_photos=last_photos, selected_city=selected_city)
         except IndexError:
@@ -1620,8 +1637,7 @@ def contacts():
 
 if __name__ == "__main__":
 
-    #local
-    # app.run(debug=True, host="0.0.0.0", port=5005)
-
-    #Server
-    app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)
+    # local
+    app.run(debug=True, host="0.0.0.0", port=5005)
+    # Server
+    # app.run(debug=True, host="0.0.0.0", port=443, ssl_context=context)
