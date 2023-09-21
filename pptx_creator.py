@@ -55,48 +55,56 @@ def sorting_table(game_id):
             'max': 0,
             'key': '',
         }
-        for key, value in sortedDict.items():
-            if (key not in submitDict.keys()):
-                if (value['total'] == temp['max']):
-                    length = len(value['items']) - 1
-                    secondLength = len(sortedDict[key]['items']) - 1
-                    while length != -1:
-                        if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
-                            res = dict()
-                            for secondKey in submitDict.keys():
-                                if (secondKey == temp['key']):
-                                    res[key] = {
+        for i in range(0, 2):
+                if(i == 1):
+                    sortedDict = submitDict
+                    submitDict = {}
+                    temp = {
+                        'max': 0,
+                        'key': '',
+                    }
+                for key, value in sortedDict.items():
+                    if (key not in submitDict.keys()):
+                        if (value['total'] == temp['max']):
+                            length = len(value['items']) - 1
+                            secondLength = len(sortedDict[key]['items']) - 1
+                            while length != -1:
+                                if value['items'][length][3] > scoresDictionary[temp['key']]['items'][secondLength][3]:
+                                    res = dict()
+                                    for secondKey in submitDict.keys():
+                                        if (secondKey == temp['key']):
+                                            res[key] = {
+                                                'total': value['total'],
+                                                'items': value['items']
+                                            }
+
+                                        res[secondKey] = submitDict[secondKey]
+                                    submitDict = res
+                                    length = -1
+                                elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
+                                    if (length == 0 and secondLength == 0):
+                                        submitDict[key] = {
+                                            'total': value['total'],
+                                            'items': value['items']
+                                        }
+                                        length = -1
+                                    else:
+                                        length -= 1
+                                        secondLength -= 1
+                                    continue
+                                elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
+                                    submitDict[key] = {
                                         'total': value['total'],
                                         'items': value['items']
                                     }
-
-                                res[secondKey] = submitDict[secondKey]
-                            submitDict = res
-                            length = -1
-                        elif (value['items'][length][3] == scoresDictionary[temp['key']]['items'][secondLength][3]):
-                            if (length == 0 and secondLength == 0):
-                                submitDict[key] = {
-                                    'total': value['total'],
-                                    'items': value['items']
-                                }
-                                length = -1
-                            else:
-                                length -= 1
-                                secondLength -= 1
-                            continue
-                        elif (value['items'][length][3] < scoresDictionary[temp['key']]['items'][secondLength][3]):
+                                    length = -1
+                        else:
+                            temp['max'] = value['total']
+                            temp['key'] = key
                             submitDict[key] = {
                                 'total': value['total'],
                                 'items': value['items']
                             }
-                            length = -1
-                else:
-                    temp['max'] = value['total']
-                    temp['key'] = key
-                    submitDict[key] = {
-                        'total': value['total'],
-                        'items': value['items']
-                    }
     else:
         submitDict = sortedDict
     # add new teams without scores
