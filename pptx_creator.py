@@ -98,6 +98,8 @@ def sorting_table(game_id):
                                         'items': value['items']
                                     }
                                     length = -1
+                            temp['max'] = value['total']
+                            temp['key'] = key
                         else:
                             temp['max'] = value['total']
                             temp['key'] = key
