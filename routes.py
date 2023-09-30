@@ -23,7 +23,7 @@ from flask import (
     send_file,
     send_from_directory
 )
-from flask_compress import Compress
+#from flask_compress import Compress
 
 from datetime import timedelta
 from sqlalchemy.exc import (
@@ -70,7 +70,7 @@ def load_user(user_id):
 
 
 app = create_app()
-compress = Compress(app)
+#compress = Compress(app)
 
 @app.before_request
 def session_handler():
