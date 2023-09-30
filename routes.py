@@ -191,8 +191,11 @@ def admin_cities_create():
             return render_template("admin/pages/cities/create.html", title="Добавление города")
         if request.method == "POST":
             cityName = request.form.get("cityName")
+            phone = request.form.get("number")
+            insta_link = request.form.get("instagram")
+            print(cityName, phone, insta_link)
             citiesModel = db_init.CitiesDB()
-            status = citiesModel.create_new_city(cityName)
+            status = citiesModel.create_new_city(cityName, phone, insta_link)
             if (status == True):
                 flash("Город успешно добавлен", "success")
                 return redirect(url_for('admin_cities'))
@@ -216,8 +219,10 @@ def admin_cities_edit(city_id):
             return render_template("admin/pages/cities/edit.html", title="Изменение города", city=city)
         if request.method == "POST":
             cityName = request.form.get("cityName")
+            phone_number = request.form.get("phone")
+            insta = request.form.get("insta")
             cities_model = db_init.CitiesDB()
-            status = cities_model.edit_city_by_id(city_id=city_id, cityName=cityName)
+            status = cities_model.edit_city_by_id(city_id=city_id, cityName=cityName, phone=phone_number, insta=insta)
             if (status == True):
                 flash("Данные обновлены", "success")
                 return redirect(url_for('admin_cities'))
@@ -632,7 +637,10 @@ def admin_teamsingame():
 def admin_teamsingame_show(game_id):
     if (current_user.superadmin or current_user.city_superadmin):
         if (request.method == "GET"):
-            teams = db_init.TeamsDB().get_all_teams()
+            if current_user.superadmin:
+                teams = db_init.TeamsDB().get_all_teams()
+            elif current_user.city_superadmin:
+                teams = db_init.TeamsDB().get_all_teams(current_user.city_id.decode())
             teamsInGame = db_init.TeamsInGame().get_all_teams_in_game(gameId=game_id)
             returnTeams = []
             for team in teams:
@@ -691,7 +699,10 @@ def admin_teamsingame_show(game_id):
 def admin_teams():
     if (current_user.superadmin or current_user.city_superadmin):
         teamsModel = db_init.TeamsDB()
-        return render_template("admin/pages/teams/index.html", title="Команды", teams=teamsModel.get_all_teams())
+        if current_user.superadmin:
+            return render_template("admin/pages/teams/index.html", title="Команды", teams=teamsModel.get_all_teams())
+        elif current_user.city_superadmin:
+            return render_template("admin/pages/teams/index.html", title="Команды", teams=teamsModel.get_all_teams(current_user.city_id.decode()))
     else:
         abort(403)
 
@@ -701,11 +712,20 @@ def admin_teams():
 def admin_teams_create():
     if (current_user.superadmin or current_user.city_superadmin):
         if request.method == "GET":
-            return render_template("admin/pages/teams/create.html", title="Добавление команды")
+            if (current_user.superadmin):
+                cities = db_init.CitiesDB().get_all_cities()
+            else:
+                cities = db_init.CitiesDB().get_all_cities(current_user.city_id.decode())
+            return render_template("admin/pages/teams/create.html", title="Добавление команды", cities=cities)
         if request.method == "POST":
             teamName = request.form.get("teamName")
+            team_city = request.form.get("teamCity")
             teamModel = db_init.TeamsDB()
-            status = teamModel.create_new_team(teamName)
+            if (team_city == 'not'):
+                flash("Выберите город", "danger")
+                return redirect(url_for('admin_teams'))
+            status = teamModel.create_new_team(teamName, team_city)
+
             if (status == True):
                 flash("Команда успешно добавлена", "success")
                 return redirect(url_for('admin_teams'))
@@ -1534,6 +1554,8 @@ def sorting_table(game_id):
                                     'items': value['items']
                                 }
                                 length = -1
+                        temp['max'] = value['total']
+                        temp['key'] = key
                     else:
                         temp['max'] = value['total']
                         temp['key'] = key

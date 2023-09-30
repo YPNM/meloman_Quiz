@@ -32,6 +32,14 @@
                         <label for="city">Название города</label>
                           <input type="text" class="form-control" name="cityName" id="city" placeholder="Город" value="{{ city[1] }}">
                       </div>
+                      <div class="form-group">
+                        <label for="phone">Контактный номер телефона</label>
+                          <input type="text" class="form-control" name="phone" id="phone" placeholder="+77771234567" value="{{ city[2] }}">
+                      </div>
+                      <div class="form-group">
+                        <label for="insta">Ссылка на инстаграм</label>
+                          <input type="text" class="form-control" name="insta" id="insta" placeholder="https://www.instagram.com/meloman_quiz_astana/" value="{{ city[3] }}">
+                      </div>
                       <button type="submit" class="btn btn-primary me-2">Изменить</button>
                       <a class="btn btn-light" href="{{ url_for('admin_cities') }}">Назад</a>
                     </form>

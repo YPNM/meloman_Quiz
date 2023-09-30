@@ -210,13 +210,29 @@ class CitiesDB():
             print(err)
             return 3
 
+    def is_links_same(self, phone, insta, city_name):
+        try:
+            conn, cursor = start_connection()
+            prepared_query = 'SELECT phone_number, instagram_link FROM cities WHERE city_name = %s'
+            data = (f'{city_name}',)
+            cursor.execute(prepared_query, data)
+            result = cursor.fetchall()
+            stop_connection(conn, cursor)
+            if result[0][0] != phone or result[0][1] != insta:
+                return True
+            else:
+                return 2
+        except Exception as err:
+            print(err)
+            return 3
 
-    def create_new_city(self, cityName):
+
+    def create_new_city(self, cityName, phone_number, insta_link):
         is_exists = self.is_exists(cityName)
         if(is_exists == True):
             conn, cursor = start_connection()
-            prepared_query = 'INSERT INTO cities(city_id, city_name) VALUES (UUID(),%s)'
-            data = (f'{cityName}',)
+            prepared_query = 'INSERT INTO cities(city_id, city_name, phone_number, instagram_link) VALUES (UUID(),%s, %s, %s)'
+            data = (f'{cityName}', f'{phone_number}', f'{insta_link}')
             cursor.execute(prepared_query, data)
             conn.commit()
             stop_connection(conn, cursor)
@@ -226,17 +242,18 @@ class CitiesDB():
         else:
             return 3
 
-    def edit_city_by_id(self, city_id, cityName):
+    def edit_city_by_id(self, city_id, cityName, phone, insta):
         is_exists = self.is_exists(cityName)
-        if (is_exists == True):
+        is_links_same = self.is_links_same(phone, insta, cityName)
+        if is_exists is True or is_links_same is True:
             conn, cursor = start_connection()
-            prepared_query = 'UPDATE cities SET city_name = %s WHERE city_id = %s'
-            data = (f'{cityName}',f'{city_id}',)
+            prepared_query = 'UPDATE cities SET city_name = %s, phone_number = %s, instagram_link = %s WHERE city_id = %s'
+            data = (f'{cityName}', f'{phone}', f'{insta}', f'{city_id}')
             cursor.execute(prepared_query, data)
             conn.commit()
             stop_connection(conn, cursor)
             return True
-        elif (is_exists == 2):
+        elif is_exists == 2:
             return 2
         else:
             return 3
@@ -256,7 +273,7 @@ class CitiesDB():
 
     def get_city_by_id(self, cityId):
         conn, cursor = start_connection()
-        prepared_query = 'SELECT city_id, city_name FROM cities WHERE city_id = %s'
+        prepared_query = 'SELECT city_id, city_name, phone_number, instagram_link FROM cities WHERE city_id = %s'
         data = (f'{cityId}',)
         cursor.execute(prepared_query, data)
         result = cursor.fetchone()
@@ -576,7 +593,7 @@ class TeamsInGame():
         return convert_bytes_to_string(results)
 
 class TeamsDB():
-
+    # TODO: Добавить город к команде (по умолчанию должен завиваться город админа в идеале)
     def __init__(self):
         pass
 
@@ -597,12 +614,12 @@ class TeamsDB():
             return 3
 
 
-    def create_new_team(self, teamName):
+    def create_new_team(self, teamName, team_city):
         is_exists = self.is_exists(teamName)
         if(is_exists == True):
             conn, cursor = start_connection()
-            prepared_query = 'INSERT INTO teams(team_id, team_name) VALUES (UUID(),%s)'
-            data = (f'{teamName}',)
+            prepared_query = 'INSERT INTO teams(team_id, team_name, city_id) VALUES (UUID(),%s, %s)'
+            data = (f'{teamName}', f'{team_city}')
             cursor.execute(prepared_query, data)
             conn.commit()
             stop_connection(conn, cursor)
@@ -627,13 +644,22 @@ class TeamsDB():
         else:
             return 3
 
-    def get_all_teams(self):
+    def get_all_teams(self, city_id=None):
         conn, cursor = start_connection()
-        prepared_query = 'SELECT team_id, team_name FROM teams'
-        cursor.execute(prepared_query)
-        results = cursor.fetchall()
-        stop_connection(conn, cursor)
-        return convert_bytes_to_string(results)
+        if city_id:
+            prepared_query = 'SELECT team_id, team_name FROM teams WHERE city_id = %s'
+            data = (f'{city_id}', )
+            cursor.execute(prepared_query, data)
+            results = cursor.fetchall()
+            stop_connection(conn, cursor)
+            return convert_bytes_to_string(results)
+        else:
+            prepared_query = 'SELECT team_id, team_name FROM teams'
+            cursor.execute(prepared_query)
+            results = cursor.fetchall()
+            stop_connection(conn, cursor)
+            return convert_bytes_to_string(results)
+
 
     def get_team_by_id(self, teamId):
         conn, cursor = start_connection()

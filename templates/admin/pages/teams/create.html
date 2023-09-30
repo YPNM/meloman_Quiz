@@ -30,6 +30,20 @@
                       <label for="tean">Название команды</label>
                       <input type="text" class="form-control" name="teamName" id="team" placeholder="Команда">
                     </div>
+                    <div class="form-group">
+                      <label for="seasonCity">Город<code>*</code></label><br>
+
+                        <select class="form-select" id="teamCity" name="teamCity" required>
+                          {% if cities %}
+                          <option value="not" selected>Выберите город</option>
+                            {% for city in cities %}
+                              <option value="{{ city[0] }}">{{ city[1] }}</option>
+                            {% endfor %}
+                          {% else %}
+                          <option value="notfound" selected>Города не найдены</option>
+                          {% endif %}
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary me-2">Добавить</button>
                     <a class="btn btn-light" href="{{ url_for('admin_teams') }}">Назад</a>
                   </form>
