@@ -20,10 +20,6 @@ document.addEventListener("DOMContentLoaded", function() {
         seasonTable.style.display = 'block';
         gameButton.style.display = 'none';
     }
-    if (selectedGame) {
-        // Используйте значение selectedGame на странице, например, для заголовка
-        document.getElementById("game-selector").innerText = selectedGame;
-    }
 });
 
 function updateQueryStringParameter(uri, key, value) {

@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function selectCity(city) {
   var currentPage = document.getElementById("currentPage").value;
   localStorage.setItem("selectedCity", city);
+  localStorage.removeItem("selectedGame")
 
   var cityModal = bootstrap.Modal.getInstance(document.getElementById("cityModal"));
   cityModal.hide();
