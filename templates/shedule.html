@@ -176,16 +176,24 @@
     <footer id="nav-footer" class="page-footer">
       <div class="container footer-container">
         <div class="logo-footer">
-          <a href="#"><img src="{{ url_for('static', filename='images/front/logo-footer.webp') }}" class="logo-footer"></a>
+          <a href="#"><img src="{{ url_for('static', filename='images/front/logo-footer.webp') }}" class="logo-footer" alt="logo" width="128" height="65"></a>
         </div>
         <div class="socials">
-          <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="{{ url_for('static', filename='images/front/Instagram.webp') }}" class="instagram-footer"></a>
-          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="{{ url_for('static', filename='images/front/tik-tok.webp') }}" class="tik-tok-footer"></a>
-          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="{{ url_for('static', filename='images/front/youtube.webp') }}" class="youtube-footer"></a>
-            <a href="https://t.me/melomanquizastana"><img src="{{ url_for('static', filename='images/front/telegram.webp') }}"> </a>
+            {% if social_networks %}
+                <a href={{ social_networks[0] }}><img src="{{ url_for('static', filename='images/front/Instagram.webp') }}" class="instagram-footer" alt="Instagram" loading="lazy" width="50" height="50"></a>
+            {% else %}
+                <a href="https://instagram.com/meloman_quiz_astana?igshid=MWZjMTM2ODFkZg=="><img src="{{ url_for('static', filename='images/front/Instagram.webp') }}" class="instagram-footer" alt="Instagram" loading="lazy" width="50" height="50"></a>
+            {% endif %}
+          <a href="https://www.tiktok.com/@meloman_quiz_astana?_t=8fCOLRlSvwc&_r=1"><img src="{{ url_for('static', filename='images/front/tik-tok.webp') }}" class="tik-tok-footer" alt="Tik-Tok" loading="lazy" width="50" height="50"></a>
+          <a href="https://youtube.com/@meloman_quiz_astana?si=Ep-C_JwnjjTW7qB1"><img src="{{ url_for('static', filename='images/front/youtube.webp') }}" class="youtube-footer" alt="Youtube" loading="lazy" width="50" height="50"></a>
+            <a href="https://t.me/melomanquizastana"><img src="{{ url_for('static', filename='images/front/telegram.webp') }}" alt="Telegram" loading="lazy" width="50" height="50"> </a>
         </div>
         <div class="numbers">
+            {% if social_networks %}
+                <a href="tel:{{ social_networks[1] }}"><h5>{{ social_networks[1] }}</h5></a>
+            {% else %}
           <a href="tel:+7 775 560 3383"><h5>+7 775 560 3383</h5></a>
+            {% endif %}
         </div>
       </div>
     </footer>

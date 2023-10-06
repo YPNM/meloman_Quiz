@@ -457,6 +457,9 @@ def admin_games_create():
                 elif (status == 3):
                     flash("Произошла непредвиденная ошибка!", "danger")
                     return redirect(url_for('admin_games'))
+                elif status == 4:
+                    flash("Слишком длинное описание!", "danger")
+                    return redirect(url_for('admin_games'))
             else:
                 flash("Заполните все необходимые поля", "danger")
                 return redirect(url_for('admin_games'))
@@ -1369,6 +1372,7 @@ def index():
         cities[allCities[i][1]] = allCities[i][0]
     if selected_city is not None:
         try:
+            social_networks = cityModel.get_city_socials(cities[selected_city])
             next_games = []
             all_games = gamesModel.get_all_games(cities.get(selected_city),
                                                  seasonsModel.get_last_season(cities.get(selected_city))[0][0])
@@ -1383,10 +1387,10 @@ def index():
             if len(last_photos) > 3:
                 del (last_photos[3:len(last_photos)])
             return render_template('index.html', cityNames=list(cities.keys()), next_games=next_games,
-                                   last_photos=last_photos, selected_city=selected_city)
+                                   last_photos=last_photos, selected_city=selected_city, social_networks=social_networks)
         except IndexError:
             pass
-    return render_template('index.html', cityNames=list(cities.keys()), selected_city='')
+    return render_template('index.html', cityNames=list(cities.keys()), selected_city='', social_networks=[])
 
 
 @app.route("/shedule", methods=['GET'])
@@ -1407,6 +1411,7 @@ def shedule():
 
     if selected_city is not None:
         try:
+            social_networks = cityModel.get_city_socials(cities[selected_city])
             all_games = gamesModel.get_all_published_games(cities.get(selected_city),
                                                            seasonsModel.get_last_season(cities.get(selected_city))[0][
                                                                0])
@@ -1423,11 +1428,11 @@ def shedule():
                     if all_games[i][3] == selected_game_type:
                         selected_games.append(all_games[i])
                 return render_template('shedule.html', cityNames=list(cities.keys()), game_types=game_types,
-                                       selected_games=selected_games, selected_city=selected_city)
+                                       selected_games=selected_games, selected_city=selected_city, social_networks=social_networks)
         except IndexError:
-            return render_template('shedule.html', game_types=game_types, cityNames=list(cities.keys()), selected_city=selected_city)
+            return render_template('shedule.html', game_types=game_types, cityNames=list(cities.keys()), selected_city=selected_city, social_networks=[])
 
-    return render_template('shedule.html', game_types=game_types, cityNames=list(cities.keys()), selected_city='')
+    return render_template('shedule.html', game_types=game_types, cityNames=list(cities.keys()), selected_city='', social_networks=[])
 
 
 @app.route("/photos")
@@ -1443,10 +1448,11 @@ def photos():
         cities[allCities[i][1]] = allCities[i][0]
 
     if selected_city is not None:
+        social_networks = cityModel.get_city_socials(cities[selected_city])
         all_photos = photosModel.get_all_photos(cities.get(selected_city))
         all_photos.reverse()
-        return render_template('photos.html', cityNames=list(cities.keys()), all_photos=all_photos, selected_city=selected_city)
-    return render_template('photos.html', cityNames=list(cities.keys()), selected_city='')
+        return render_template('photos.html', cityNames=list(cities.keys()), all_photos=all_photos, selected_city=selected_city, social_networks=social_networks)
+    return render_template('photos.html', cityNames=list(cities.keys()), selected_city='', social_networks=[])
 
 
 @app.route("/events")
@@ -1461,9 +1467,10 @@ def events():
         cities[allCities[i][1]] = allCities[i][0]
 
     if selected_city is not None:
+        social_networks = cityModel.get_city_socials(cities[selected_city])
         all_events = eventsModel.get_all_events(cities.get(selected_city))
-        return render_template('events.html', cityNames=list(cities.keys()), all_events=all_events, selected_city=selected_city)
-    return render_template('events.html', cityNames=list(cities.keys()), selected_city='')
+        return render_template('events.html', cityNames=list(cities.keys()), all_events=all_events, selected_city=selected_city, social_networks=social_networks)
+    return render_template('events.html', cityNames=list(cities.keys()), selected_city='', social_networkds=[])
 
 
 def sorting_table(game_id):
@@ -1591,7 +1598,7 @@ def table():
 
     if selected_city is not None:
         try:
-
+            social_networks = cityModel.get_city_socials(cities[selected_city])
             commands_score = {}
             all_results = []
             all_games = gamesModel.get_all_games_with_score(cities.get(selected_city),
@@ -1621,7 +1628,7 @@ def table():
                 return render_template('table.html', game_counter=dict(game_counter), comands_score=commands_score,
                                        game_result=game_result, selected_game=selected_game, game_names=games_names_id,
                                        round_counter=len(list(game_result.values())[0].get('items')),
-                                       cityNames=list(cities.keys()), selected_city=selected_city)
+                                       cityNames=list(cities.keys()), selected_city=selected_city, social_networks=social_networks)
             else:
                 game_result = sorting_table(
                     games_names_id.get(collections.deque(games_names_id, maxlen=1)[0]))
@@ -1630,17 +1637,17 @@ def table():
                                        game_result=game_result,
                                        selected_game=collections.deque(games_names_id, maxlen=1)[0],
                                        game_names=games_names_id, round_counter=round_counter,
-                                       cityNames=list(cities.keys()), selected_city=selected_city)
+                                       cityNames=list(cities.keys()), selected_city=selected_city, social_networks=social_networks)
         except IndexError:
             return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),
-                                   game_names={}, round_counter=0, game_result={}, selected_city=selected_city)
+                                   game_names={}, round_counter=0, game_result={}, selected_city=selected_city, social_networks=[])
         except AttributeError:
             return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),
-                                   game_names={}, round_counter=0, game_result={}, selected_city=selected_city)
+                                   game_names={}, round_counter=0, game_result={}, selected_city=selected_city, social_networks=[])
         # game_counter - {"Название команды": Количество посещённых игр}
         # Comands_score - {"Название команды": int(Количество набранных очков за все игры)}
     return render_template('table.html', game_counter={}, comands_score={}, cityNames=list(cities.keys()),
-                           game_names={}, round_counter=0, game_result={}, selected_city='')
+                           game_names={}, round_counter=0, game_result={}, selected_city='', social_networks=[])
 
 
 @app.route("/shop")
@@ -1648,13 +1655,27 @@ def table():
 def shop():
     catalogModel = db_init.CatalogDB()
     all_catalog = catalogModel.get_all_catalog()
-    return render_template('shop.html', all_catalog=all_catalog, selected_city='')
+    selected_city = request.args.get("selectedCity")
+    cityModel = db_init.CitiesDB()
+    allCities = cityModel.get_all_cities()
+    cities = {}
+    for i in range(len(allCities)):
+        cities[allCities[i][1]] = allCities[i][0]
+    social_networks = cityModel.get_city_socials(cities[selected_city])
+    return render_template('shop.html', all_catalog=all_catalog, selected_city='', social_networks=social_networks)
 
 
 @app.route("/contacts")
 @app.route("/contacts.html")
 def contacts():
-    return render_template('contacts.html', selected_city='')
+    selected_city = request.args.get("selectedCity")
+    cityModel = db_init.CitiesDB()
+    allCities = cityModel.get_all_cities()
+    cities = {}
+    for i in range(len(allCities)):
+        cities[allCities[i][1]] = allCities[i][0]
+    social_networks = cityModel.get_city_socials(cities[selected_city])
+    return render_template('contacts.html', selected_city='', social_networks=social_networks)
 
 
 if __name__ == "__main__":

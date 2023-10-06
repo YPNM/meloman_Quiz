@@ -1,4 +1,5 @@
 import mysql.connector as connection
+import mysql.connector.errors
 from mysql.connector import Error, IntegrityError, Warning
 import config
 import time
@@ -289,6 +290,15 @@ class CitiesDB():
         stop_connection(conn, cursor)
         return True
 
+    def get_city_socials(selfself, cityId):
+        conn, cursor = start_connection()
+        prepared_query = 'SELECT instagram_link, phone_number FROM cities WHERE city_id = %s'
+        data = (f'{cityId}',)
+        cursor.execute(prepared_query, data)
+        result = cursor.fetchone()
+        stop_connection(conn, cursor)
+        return result
+
 class SeasonsDB():
 
     def is_exists(self, seasonId):
@@ -399,13 +409,16 @@ class GamesDB():
     def create_new_game(self, gameName, gameDescription, gameDate, gameTypeId, location, season_id, price, city_id, bookingLink, previewPhotoBase64):
         status = self.is_exists(gameName)
         if(status):
-            conn, cursor = start_connection()
-            prepared_query = 'INSERT INTO games(game_id, game_name, game_description, game_type_id, game_time, location, season_id, city_id, price, published, score_published, booking_link, preview_photo) VALUES (UUID(),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-            data = (f'{gameName}', f'{gameDescription}', f'{gameTypeId}', f'{gameDate}', f'{location}', f'{season_id}', f'{city_id}', price, False, False, f'{bookingLink}', f'{previewPhotoBase64}')
-            cursor.execute(prepared_query, data)
-            conn.commit()
-            stop_connection(conn, cursor)
-            return True
+            try:
+                conn, cursor = start_connection()
+                prepared_query = 'INSERT INTO games(game_id, game_name, game_description, game_type_id, game_time, location, season_id, city_id, price, published, score_published, booking_link, preview_photo) VALUES (UUID(),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+                data = (f'{gameName}', f'{gameDescription}', f'{gameTypeId}', f'{gameDate}', f'{location}', f'{season_id}', f'{city_id}', price, False, False, f'{bookingLink}', f'{previewPhotoBase64}')
+                cursor.execute(prepared_query, data)
+                conn.commit()
+                stop_connection(conn, cursor)
+                return True
+            except mysql.connector.errors.DataError:
+                return 4
         else:
             return status
 
