@@ -830,7 +830,10 @@ def admin_pptx_export(game_id):
         if (request.method == 'GET'):
             try:
                 dir = tempfile.mkdtemp()
-                path = pptx_creator.create_powerpoint_with_table(dir, game_id)
+                if db_init.GamesDB().get_game_by_id(game_id)[4] == 'Meloman Quiz':
+                    path = pptx_creator.create_powerpoint_with_table(dir, game_id)
+                else:
+                    path = pptx_creator.create_garage_pptx(dir, game_id)
                 return send_file(path, as_attachment=True)
             except Exception as err:
                 print(err)
@@ -1662,7 +1665,10 @@ def shop():
     for i in range(len(allCities)):
         cities[allCities[i][1]] = allCities[i][0]
     social_networks = cityModel.get_city_socials(cities[selected_city])
-    return render_template('shop.html', all_catalog=all_catalog, selected_city='', social_networks=social_networks)
+    if selected_city is not None:
+        return render_template('shop.html', all_catalog=all_catalog, selected_city='', social_networks=social_networks)
+    else:
+        return render_template('shop.html', all_catalog=all_catalog, selected_city='', social_networks=[])
 
 
 @app.route("/contacts")
@@ -1675,7 +1681,10 @@ def contacts():
     for i in range(len(allCities)):
         cities[allCities[i][1]] = allCities[i][0]
     social_networks = cityModel.get_city_socials(cities[selected_city])
-    return render_template('contacts.html', selected_city='', social_networks=social_networks)
+    if selected_city is not None:
+        return render_template('contacts.html', selected_city='', social_networks=social_networks)
+    else:
+        return render_template('contacts.html', selected_city='', social_networks=[])
 
 
 if __name__ == "__main__":

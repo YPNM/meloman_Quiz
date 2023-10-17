@@ -287,4 +287,119 @@ def create_powerpoint_with_table(folder, game_id):
     prs.save(path)
     return path
 
+
+def create_garage_pptx(folder, game_id):
+    # Создаем новую презентацию
+
+    submitDict = sorting_table(game_id)
+
+    prs = Presentation('garage_preset.pptx')
+    game_result = {}
+
+    for key, value in submitDict.items():
+        game_result[key] = []
+        for i in range(0, len(value['items'])):
+            arr = value['items'][i]
+            arr.append(value['total'])
+            game_result[key].append(arr)
+
+    rows = len(game_result.keys()) + 1
+    cols = len(game_result.get(next(iter(game_result.keys())))) + 3
+    table_length = Inches(4 * 1.5) + Inches(1 * 1.5) + (cols - 2) * Inches(0.7 * 1.5)
+
+    commands = list(game_result.keys())
+    for i, slide in enumerate(prs.slides):
+        if i == 3:
+            if rows <= 15:
+                font_size = Pt(22*1.5)
+            elif rows <= 18:
+                font_size = Pt(18*1.5)
+            else:
+                font_size = Pt(14*1.5)
+            if 7.5 / rows < 0.5:
+                row_height = 7.5 / rows
+            else:
+                row_height = 0.5
+
+            table = slide.shapes.add_table(rows=rows, cols=cols, left=Inches(13.3 * 1.5 / 2) - table_length / 2,
+                                           top=Inches((7.5 * 1.5 / 2) - (rows * row_height / 2)),
+                                           width=Inches(9 * 1.5),
+                                           height=Inches(row_height * 1.5) * rows)
+
+            for cell in iter_cells(table.table):
+                fill = cell.fill
+                fill.solid()
+                fill.fore_color.rgb = RGBColor(255, 145, 77)
+
+            counter = 1
+            border_color = RGBColor(24, 37, 78)
+            text_color = RGBColor(24, 37, 78)
+
+            for i in range(rows):
+                for j in range(cols):
+                    cell = table.table.cell(i, j)
+                    if i == 0:
+                        # Заголовки
+                        if j == 0:
+                            cell.text = "№"
+                        elif j == 1:
+                            cell.text = "Название команды"
+                        elif j == cols - 1:
+                            cell.text = "Всего"
+                        else:
+                            cell.text = str(counter)
+                            counter += 1
+                    else:
+                        # Данные в таблице
+                        for paragraph in cell.text_frame.paragraphs:
+                            for run in paragraph.runs:
+                                run.font.color.rgb = text_color
+                        if j == 0:
+                            cell.text = str(i)
+                        elif j == 1:
+                            cell.text = str(commands[i - 1])
+                        elif j == cols - 1:
+                            cell.text = str(float(game_result.get(commands[i - 1])[0][5]))
+                        else:
+                            cell.text = str(game_result.get(commands[i - 1])[j - 2][3])
+                    cell.text_frame.paragraphs[0].font.size = font_size
+                    cell.text_frame.paragraphs[0].font.bold = True
+                    cell.text_frame.paragraphs[0].font.color.rgb = text_color
+
+
+            for i in range(cols):
+                if i == 1:
+                    table.table.columns[i].width = Inches(4 * 1.5)
+                elif i == cols - 1:
+                    table.table.columns[i].width = Inches(1 * 1.5)
+                else:
+                    table.table.columns[i].width = Inches(0.7 * 1.5)
+        else:
+            for shape in slide.shapes:
+                try:
+                    for paragraph in shape.text_frame.paragraphs:
+                        for run in paragraph.runs:
+                            if 'team' not in run.text:
+                                continue
+                            else:
+                                if i < 3:
+                                    try:
+                                        run.text = str(commands[i]).upper()
+                                    except IndexError:
+                                        pass
+                                else:
+                                    break
+                except AttributeError:
+                    pass
+
+    # Заканчиваю сортировку -------------------------------------------------------------------------------------------
+
+    # Создаю второй слайд с промежуточной таблицей ---------------------------------------------------------------------
+
+    path = f'{folder}/garage_table.pptx'
+    # Сохраняем презентацию
+    prs.save(path)
+    return path
+
+# create_garage_pptx('E:/Programming/WEB/meloman_Quiz', 'b8bfea64-4a3e-11ee-8a2c-6c2408aface6')
 # create_powerpoint_with_table('E:/Programming/WEB/meloman_Quiz', 'b8bfea64-4a3e-11ee-8a2c-6c2408aface6')
